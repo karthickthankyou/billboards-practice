@@ -17,6 +17,7 @@ import { BookingsModule } from './models/bookings/bookings.module'
 import { CampaignStatusesModule } from './models/campaign-statuses/campaign-statuses.module'
 import { CampaignTimelinesModule } from './models/campaign-timelines/campaign-timelines.module'
 import { PrismaModule } from './common/prisma/prisma.module'
+import { FirebaseModule } from './common/firebase/firebase.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PrismaModule } from './common/prisma/prisma.module'
     }),
 
     PrismaModule,
+    FirebaseModule,
 
     FavoritesModule,
     OwnersModule,

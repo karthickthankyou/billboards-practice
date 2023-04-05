@@ -27,7 +27,7 @@ export class AdvertiserWhereInput
   @Field(() => CampaignListRelationFilter, { nullable: true })
   campaigns: CampaignListRelationFilter
   @Field(() => FavoriteListRelationFilter, { nullable: true })
-  Favorite: FavoriteListRelationFilter
+  favorites: FavoriteListRelationFilter
 
   @Field(() => [AdvertiserWhereInput], { nullable: true })
   AND: AdvertiserWhereInput[]

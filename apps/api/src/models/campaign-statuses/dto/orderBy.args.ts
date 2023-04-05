@@ -25,7 +25,7 @@ export class CampaignStatusOrderByWithRelationInput
   @Field(() => CampaignTimelineOrderByRelationAggregateInput, {
     nullable: true,
   })
-  CampaignTimeline: CampaignTimelineOrderByRelationAggregateInput
+  campaignTimeline: CampaignTimelineOrderByRelationAggregateInput
 }
 
 @InputType()

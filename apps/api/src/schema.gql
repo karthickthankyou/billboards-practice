@@ -7,6 +7,8 @@ type Favorite {
   updatedAt: DateTime!
   advertiserId: String!
   billboardId: Int!
+  advertiser: Advertiser!
+  billboard: Billboard!
 }
 
 """
@@ -14,25 +16,13 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Owner {
-  uid: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-}
-
-type Agent {
-  uid: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-}
-
 type Advertiser {
   uid: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  campaigns: [Campaign!]!
+  favorites: [Favorite!]!
 }
 
 type Billboard {
@@ -52,6 +42,11 @@ type Billboard {
   height: Int!
   width: Int!
   ownerId: String!
+  owner: Owner!
+  billboardStatus: BillboardStatus!
+  bookings: [Booking!]!
+  billboardTimeline: [BillboardTimeline!]!
+  favorites: [Favorite!]!
 }
 
 enum BillboardType {
@@ -62,6 +57,25 @@ enum BillboardType {
   THREE_DIMENSIONAL
 }
 
+type Owner {
+  uid: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  billboards: [Billboard!]!
+}
+
+type Agent {
+  uid: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  billboardsStatuses: [BillboardStatus!]!
+  campaignsStatuses: [CampaignStatus!]!
+  billboardTimeline: [BillboardTimeline!]!
+  campaignTimeline: [CampaignTimeline!]!
+}
+
 type BillboardStatus {
   notes: String
   status: BillboardStatusType
@@ -69,9 +83,32 @@ type BillboardStatus {
   createdAt: DateTime!
   updatedAt: DateTime!
   billboardId: Int!
+  billboard: Billboard!
+  agent: Agent
 }
 
 enum BillboardStatusType {
+  NEW
+  VERIFIED
+  APPROVED
+  ON_HOLD
+  REJECTED
+  INSTALLATION_INPROGRESS
+  LIVE
+}
+
+type CampaignStatus {
+  status: CampaignStatusType
+  agentId: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  campaignId: Int!
+  campaign: Campaign!
+  agent: Agent!
+  campaignTimeline: [CampaignTimeline!]!
+}
+
+enum CampaignStatusType {
   NEW
   VERIFIED
   APPROVED
@@ -89,6 +126,20 @@ type BillboardTimeline {
   createdAt: DateTime!
   updatedAt: DateTime!
   billboardId: Int!
+  billboard: Billboard!
+  agent: Agent!
+}
+
+type CampaignTimeline {
+  notes: String
+  agentId: String
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  campaignId: Int!
+  campaign: Campaign!
+  agent: Agent!
+  campaignStatus: CampaignStatus!
 }
 
 type Campaign {
@@ -99,6 +150,10 @@ type Campaign {
   startDate: DateTime!
   endDate: DateTime!
   advertiserId: String!
+  advertiser: Advertiser!
+  status: CampaignStatus!
+  bookings: [Booking!]!
+  campaignTimeline: [CampaignTimeline!]!
 }
 
 type Booking {
@@ -108,33 +163,8 @@ type Booking {
   updatedAt: DateTime!
   campaignId: Int!
   billboardId: Int!
-}
-
-type CampaignStatus {
-  status: CampaignStatusType
-  agentId: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  campaignId: Int!
-}
-
-enum CampaignStatusType {
-  NEW
-  VERIFIED
-  APPROVED
-  ON_HOLD
-  REJECTED
-  INSTALLATION_INPROGRESS
-  LIVE
-}
-
-type CampaignTimeline {
-  notes: String
-  agentId: String
-  id: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  campaignId: Int!
+  campaign: Campaign!
+  billboard: Billboard!
 }
 
 type Query {
@@ -150,8 +180,9 @@ type Query {
   billboard(where: BillboardWhereUniqueInput): Billboard!
   billboardStatuses(where: BillboardStatusWhereInput, orderBy: [BillboardStatusOrderByWithRelationInput!], cursor: BillboardStatusWhereUniqueInput, take: Int, skip: Int, distinct: [BillboardStatusScalarFieldEnum!]): [BillboardStatus!]!
   billboardStatus(where: BillboardStatusWhereUniqueInput): BillboardStatus!
-  billboardTimelines(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
-  billboardTimeline(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
+  allBillboardTimelines(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
+  billboardTimeline(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
+  billboardTimelineInstance(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
   campaigns(where: CampaignWhereInput, orderBy: [CampaignOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignScalarFieldEnum!]): [Campaign!]!
   campaign(where: CampaignWhereUniqueInput): Campaign!
   bookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
@@ -226,7 +257,7 @@ input AdvertiserWhereInput {
   updatedAt: StringFilter
   name: StringFilter
   campaigns: CampaignListRelationFilter
-  Favorite: FavoriteListRelationFilter
+  favorites: FavoriteListRelationFilter
   AND: [AdvertiserWhereInput!]
   OR: [AdvertiserWhereInput!]
   NOT: [AdvertiserWhereInput!]
@@ -425,7 +456,7 @@ input CampaignStatusWhereInput {
   agentId: StringFilter
   campaign: CampaignRelationFilter
   agent: AgentRelationFilter
-  CampaignTimeline: CampaignTimelineListRelationFilter
+  campaignTimeline: CampaignTimelineListRelationFilter
   AND: [CampaignStatusWhereInput!]
   OR: [CampaignStatusWhereInput!]
   NOT: [CampaignStatusWhereInput!]
@@ -511,7 +542,7 @@ input AdvertiserOrderByWithRelationInput {
   updatedAt: SortOrder
   name: SortOrder
   campaigns: CampaignOrderByRelationAggregateInput
-  Favorite: FavoriteOrderByRelationAggregateInput
+  favorites: FavoriteOrderByRelationAggregateInput
 }
 
 input CampaignOrderByRelationAggregateInput {
@@ -737,7 +768,7 @@ input CampaignStatusOrderByWithRelationInput {
   agentId: SortOrder
   campaign: CampaignOrderByWithRelationInput
   agent: AgentOrderByWithRelationInput
-  CampaignTimeline: CampaignTimelineOrderByRelationAggregateInput
+  campaignTimeline: CampaignTimelineOrderByRelationAggregateInput
 }
 
 enum CampaignScalarFieldEnum {

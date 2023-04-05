@@ -30,11 +30,13 @@
     "@nestjs/graphql": "^11.0.4",
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "^4.12.0",
+    "firebase-admin": "^11.5.0",
     "graphql": "^16.6.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@billboards-org/types": "*",
     "@billboards-org/generators": "*",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",

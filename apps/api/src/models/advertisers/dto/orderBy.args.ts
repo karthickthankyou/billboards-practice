@@ -18,7 +18,7 @@ export class AdvertiserOrderByWithRelationInput
   @Field(() => CampaignOrderByRelationAggregateInput, { nullable: true })
   campaigns: CampaignOrderByRelationAggregateInput
   @Field(() => FavoriteOrderByRelationAggregateInput, { nullable: true })
-  Favorite: FavoriteOrderByRelationAggregateInput
+  favorites: FavoriteOrderByRelationAggregateInput
 }
 
 @InputType()

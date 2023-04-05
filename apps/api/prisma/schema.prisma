@@ -68,7 +68,7 @@ model Advertiser {
     name      String
 
     campaigns Campaign[]
-    Favorite  Favorite[]
+    favorites Favorite[]
 }
 
 model Favorite {
@@ -91,8 +91,8 @@ model BillboardStatus {
 
     billboard   Billboard @relation(fields: [billboardId], references: [id])
     billboardId Int       @id
-    agent       Agent     @relation(fields: [agentId], references: [uid])
-    agentId     String
+    agent       Agent?    @relation(fields: [agentId], references: [uid])
+    agentId     String?
 }
 
 model BillboardTimeline {
@@ -149,7 +149,7 @@ model CampaignStatus {
     campaignId       Int                @id
     agent            Agent?             @relation(fields: [agentId], references: [uid])
     agentId          String?
-    CampaignTimeline CampaignTimeline[]
+    campaignTimeline CampaignTimeline[]
 }
 
 model CampaignTimeline {

@@ -48,7 +48,7 @@ export class CampaignStatusWhereInput
   @Field(() => AgentRelationFilter, { nullable: true })
   agent: AgentRelationFilter
   @Field(() => CampaignTimelineListRelationFilter, { nullable: true })
-  CampaignTimeline: CampaignTimelineListRelationFilter
+  campaignTimeline: CampaignTimelineListRelationFilter
 
   @Field(() => [CampaignStatusWhereInput], { nullable: true })
   AND: CampaignStatusWhereInput[]
