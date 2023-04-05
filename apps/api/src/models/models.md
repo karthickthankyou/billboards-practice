@@ -1,0 +1,11 @@
+yarn resource Favorite
+yarn resource Owner
+yarn resource Agent
+yarn resource Advertiser
+yarn resource Billboard
+yarn resource BillboardStatus
+yarn resource BillboardTimeline
+yarn resource Campaign
+yarn resource Booking
+yarn resource CampaignStatus
+yarn resource CampaignTimeline

@@ -1,0 +1,203 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Owner {
+    uid       String   @id
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+
+    billboards Billboard[]
+}
+
+model Billboard {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    lat Float
+    lng Float
+
+    height Float
+    width  Float
+
+    pricePerDay       Float?
+    impressionsPerDay Int?
+    minBookingDays    Int?
+    address           String?
+    images            String[]
+
+    type    BillboardType
+    owner   Owner         @relation(fields: [ownerId], references: [uid])
+    ownerId String
+
+    bookings  Booking[]
+    angle     Int?
+    elevation Int?
+
+    status            BillboardStatus?
+    billboardTimeline BillboardTimeline[]
+    favorites         Favorite[]
+}
+
+model Agent {
+    uid       String   @id
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+
+    billboardsStatuses BillboardStatus[]
+    campaignsStatuses  CampaignStatus[]
+    billboardTimeline  BillboardTimeline[]
+    campaignTimeline   CampaignTimeline[]
+}
+
+model Advertiser {
+    uid       String   @id
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+
+    campaigns Campaign[]
+    Favorite  Favorite[]
+}
+
+model Favorite {
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
+    advertiserId String
+    billboardId  Int
+    advertiser   Advertiser @relation(fields: [advertiserId], references: [uid])
+    billboard    Billboard  @relation(fields: [billboardId], references: [id])
+
+    @@id([advertiserId, billboardId])
+}
+
+model BillboardStatus {
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    notes  String?
+    status BillboardStatusType
+
+    billboard   Billboard @relation(fields: [billboardId], references: [id])
+    billboardId Int       @id
+    agent       Agent     @relation(fields: [agentId], references: [uid])
+    agentId     String
+}
+
+model BillboardTimeline {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    notes String?
+
+    billboard   Billboard @relation(fields: [billboardId], references: [id])
+    billboardId Int
+
+    agent   Agent?  @relation(fields: [agentId], references: [uid])
+    agentId String?
+
+    status BillboardStatusType
+}
+
+model Campaign {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name      String
+    startDate DateTime @db.Date
+    endDate   DateTime @db.Date
+
+    advertiser   Advertiser         @relation(fields: [advertiserId], references: [uid])
+    advertiserId String
+    bookings     Booking[]
+    status       CampaignStatus?
+    timeline     CampaignTimeline[]
+}
+
+model Booking {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    pricePerDay Float?
+
+    campaign    Campaign? @relation(fields: [campaignId], references: [id])
+    campaignId  Int?
+    billboard   Billboard @relation(fields: [billboardId], references: [id])
+    billboardId Int
+}
+
+model CampaignStatus {
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    status           CampaignStatusType
+    campaign         Campaign           @relation(fields: [campaignId], references: [id])
+    campaignId       Int                @id
+    agent            Agent?             @relation(fields: [agentId], references: [uid])
+    agentId          String?
+    CampaignTimeline CampaignTimeline[]
+}
+
+model CampaignTimeline {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    notes String?
+
+    campaign   Campaign @relation(fields: [campaignId], references: [id])
+    campaignId Int
+
+    agent   Agent?  @relation(fields: [agentId], references: [uid])
+    agentId String?
+
+    status CampaignStatus @relation(fields: [id], references: [campaignId])
+}
+
+enum BillboardType {
+    CLASSIC
+    VINYL
+    LED
+    NEON
+    THREE_DIMENSIONAL
+}
+
+enum BillboardStatusType {
+    NEW
+    VERIFIED
+
+    APPROVED
+    ON_HOLD
+    REJECTED
+
+    INSTALLATION_INPROGRESS
+
+    LIVE
+}
+
+enum CampaignStatusType {
+    NEW
+    VERIFIED
+
+    APPROVED
+    ON_HOLD
+    REJECTED
+
+    INSTALLATION_INPROGRESS
+
+    LIVE
+}

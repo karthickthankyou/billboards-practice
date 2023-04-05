@@ -1,0 +1,1008 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Favorite {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  advertiserId: String!
+  billboardId: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Owner {
+  uid: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+}
+
+type Agent {
+  uid: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+}
+
+type Advertiser {
+  uid: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+}
+
+type Billboard {
+  pricePerDay: Int
+  impressionsPerDay: Int
+  minBookingDays: Int
+  address: String
+  images: [String!]
+  type: BillboardType!
+  angle: Int
+  elevation: Int
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  lat: Int!
+  lng: Int!
+  height: Int!
+  width: Int!
+  ownerId: String!
+}
+
+enum BillboardType {
+  CLASSIC
+  VINYL
+  LED
+  NEON
+  THREE_DIMENSIONAL
+}
+
+type BillboardStatus {
+  notes: String
+  status: BillboardStatusType
+  agentId: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  billboardId: Int!
+}
+
+enum BillboardStatusType {
+  NEW
+  VERIFIED
+  APPROVED
+  ON_HOLD
+  REJECTED
+  INSTALLATION_INPROGRESS
+  LIVE
+}
+
+type BillboardTimeline {
+  notes: String
+  agentId: String
+  status: BillboardStatusType
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  billboardId: Int!
+}
+
+type Campaign {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  advertiserId: String!
+}
+
+type Booking {
+  pricePerDay: Int
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  campaignId: Int!
+  billboardId: Int!
+}
+
+type CampaignStatus {
+  status: CampaignStatusType
+  agentId: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  campaignId: Int!
+}
+
+enum CampaignStatusType {
+  NEW
+  VERIFIED
+  APPROVED
+  ON_HOLD
+  REJECTED
+  INSTALLATION_INPROGRESS
+  LIVE
+}
+
+type CampaignTimeline {
+  notes: String
+  agentId: String
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  campaignId: Int!
+}
+
+type Query {
+  favorites(where: FavoriteWhereInput, orderBy: [FavoriteOrderByWithRelationInput!], cursor: FavoriteWhereUniqueInput, take: Int, skip: Int, distinct: [FavoriteScalarFieldEnum!]): [Favorite!]!
+  favorite(where: FavoriteWhereUniqueInput): Favorite!
+  owners(where: OwnerWhereInput, orderBy: [OwnerOrderByWithRelationInput!], cursor: OwnerWhereUniqueInput, take: Int, skip: Int, distinct: [OwnerScalarFieldEnum!]): [Owner!]!
+  owner(where: OwnerWhereUniqueInput): Owner!
+  agents(where: AgentWhereInput, orderBy: [AgentOrderByWithRelationInput!], cursor: AgentWhereUniqueInput, take: Int, skip: Int, distinct: [AgentScalarFieldEnum!]): [Agent!]!
+  agent(where: AgentWhereUniqueInput): Agent!
+  advertisers(where: AdvertiserWhereInput, orderBy: [AdvertiserOrderByWithRelationInput!], cursor: AdvertiserWhereUniqueInput, take: Int, skip: Int, distinct: [AdvertiserScalarFieldEnum!]): [Advertiser!]!
+  advertiser(where: AdvertiserWhereUniqueInput): Advertiser!
+  billboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
+  billboard(where: BillboardWhereUniqueInput): Billboard!
+  billboardStatuses(where: BillboardStatusWhereInput, orderBy: [BillboardStatusOrderByWithRelationInput!], cursor: BillboardStatusWhereUniqueInput, take: Int, skip: Int, distinct: [BillboardStatusScalarFieldEnum!]): [BillboardStatus!]!
+  billboardStatus(where: BillboardStatusWhereUniqueInput): BillboardStatus!
+  billboardTimelines(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
+  billboardTimeline(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
+  campaigns(where: CampaignWhereInput, orderBy: [CampaignOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignScalarFieldEnum!]): [Campaign!]!
+  campaign(where: CampaignWhereUniqueInput): Campaign!
+  bookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
+  booking(where: BookingWhereUniqueInput): Booking!
+  campaignStatuses(where: CampaignStatusWhereInput, orderBy: [CampaignStatusOrderByWithRelationInput!], cursor: CampaignStatusWhereUniqueInput, take: Int, skip: Int, distinct: [CampaignStatusScalarFieldEnum!]): [CampaignStatus!]!
+  campaignStatus(where: CampaignStatusWhereUniqueInput): CampaignStatus!
+  campaignTimelines(where: CampaignTimelineWhereInput, orderBy: [CampaignTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignTimelineScalarFieldEnum!]): [CampaignTimeline!]!
+  campaignTimeline(where: CampaignTimelineWhereUniqueInput): CampaignTimeline!
+}
+
+input FavoriteWhereInput {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  advertiserId: StringFilter
+  billboardId: IntFilter
+  advertiser: AdvertiserRelationFilter
+  billboard: BillboardRelationFilter
+  AND: [FavoriteWhereInput!]
+  OR: [FavoriteWhereInput!]
+  NOT: [FavoriteWhereInput!]
+}
+
+input DateTimeFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+}
+
+input StringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: String
+  mode: QueryMode
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+input IntFilter {
+  equals: Int
+  in: Int
+  notIn: Int
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: Int
+}
+
+input AdvertiserRelationFilter {
+  is: AdvertiserWhereInput
+  isNot: AdvertiserWhereInput
+}
+
+input AdvertiserWhereInput {
+  uid: StringFilter
+  createdAt: StringFilter
+  updatedAt: StringFilter
+  name: StringFilter
+  campaigns: CampaignListRelationFilter
+  Favorite: FavoriteListRelationFilter
+  AND: [AdvertiserWhereInput!]
+  OR: [AdvertiserWhereInput!]
+  NOT: [AdvertiserWhereInput!]
+}
+
+input CampaignListRelationFilter {
+  every: CampaignWhereInput
+  some: CampaignWhereInput
+  none: CampaignWhereInput
+}
+
+input CampaignWhereInput {
+  id: IntFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  name: StringFilter
+  startDate: DateTimeFilter
+  endDate: DateTimeFilter
+  advertiserId: StringFilter
+  advertiser: AdvertiserRelationFilter
+  bookings: BookingListRelationFilter
+  status: CampaignStatusRelationFilter
+  timeline: CampaignTimelineListRelationFilter
+  AND: [CampaignWhereInput!]
+  OR: [CampaignWhereInput!]
+  NOT: [CampaignWhereInput!]
+}
+
+input BookingListRelationFilter {
+  every: BookingWhereInput
+  some: BookingWhereInput
+  none: BookingWhereInput
+}
+
+input BookingWhereInput {
+  id: IntFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  pricePerDay: FloatFilter
+  campaignId: IntFilter
+  billboardId: IntFilter
+  campaign: CampaignRelationFilter
+  billboard: BillboardRelationFilter
+  AND: [BookingWhereInput!]
+  OR: [BookingWhereInput!]
+  NOT: [BookingWhereInput!]
+}
+
+input FloatFilter {
+  equals: Float
+  in: Float
+  notIn: Float
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: Float
+}
+
+input CampaignRelationFilter {
+  is: CampaignWhereInput
+  isNot: CampaignWhereInput
+}
+
+input BillboardRelationFilter {
+  is: BillboardWhereInput
+  isNot: BillboardWhereInput
+}
+
+input BillboardWhereInput {
+  id: IntFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  lat: FloatFilter
+  lng: FloatFilter
+  height: FloatFilter
+  width: FloatFilter
+  pricePerDay: FloatFilter
+  impressionsPerDay: IntFilter
+  minBookingDays: IntFilter
+  address: StringFilter
+  images: StringListFilter
+  type: EnumBillboardTypeFilter
+  ownerId: StringFilter
+  angle: IntFilter
+  elevation: IntFilter
+  owner: OwnerRelationFilter
+  bookings: BookingListRelationFilter
+  status: BillboardStatusRelationFilter
+  billboardTimeline: BillboardTimelineListRelationFilter
+  favorites: FavoriteListRelationFilter
+  AND: [BillboardWhereInput!]
+  OR: [BillboardWhereInput!]
+  NOT: [BillboardWhereInput!]
+}
+
+input StringListFilter {
+  equals: [String!]
+  has: String
+  hasEvery: [String!]
+  hasSome: [String!]
+  isEmpty: Boolean
+}
+
+input EnumBillboardTypeFilter {
+  equals: BillboardType
+  in: [BillboardType!]
+  notIn: [BillboardType!]
+  not: BillboardType
+}
+
+input OwnerRelationFilter {
+  is: OwnerWhereInput
+  isNot: OwnerWhereInput
+}
+
+input OwnerWhereInput {
+  uid: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  name: StringFilter
+  billboards: BillboardListRelationFilter
+  AND: [OwnerWhereInput!]
+  OR: [OwnerWhereInput!]
+  NOT: [OwnerWhereInput!]
+}
+
+input BillboardListRelationFilter {
+  every: BillboardWhereInput
+  some: BillboardWhereInput
+  none: BillboardWhereInput
+}
+
+input BillboardStatusRelationFilter {
+  is: BillboardStatusWhereInput
+  isNot: BillboardStatusWhereInput
+}
+
+input BillboardStatusWhereInput {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  notes: StringFilter
+  status: EnumBillboardStatusTypeFilter
+  billboardId: IntFilter
+  agentId: StringFilter
+  billboard: BillboardRelationFilter
+  agent: AgentRelationFilter
+  AND: [BillboardStatusWhereInput!]
+  OR: [BillboardStatusWhereInput!]
+  NOT: [BillboardStatusWhereInput!]
+}
+
+input EnumBillboardStatusTypeFilter {
+  equals: BillboardStatusType
+  in: [BillboardStatusType!]
+  notIn: [BillboardStatusType!]
+  not: BillboardStatusType
+}
+
+input AgentRelationFilter {
+  is: AgentWhereInput
+  isNot: AgentWhereInput
+}
+
+input AgentWhereInput {
+  uid: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  name: StringFilter
+  billboardsStatuses: BillboardStatusListRelationFilter
+  campaignsStatuses: CampaignStatusListRelationFilter
+  billboardTimeline: BillboardTimelineListRelationFilter
+  campaignTimeline: CampaignTimelineListRelationFilter
+  AND: [AgentWhereInput!]
+  OR: [AgentWhereInput!]
+  NOT: [AgentWhereInput!]
+}
+
+input BillboardStatusListRelationFilter {
+  every: BillboardStatusWhereInput
+  some: BillboardStatusWhereInput
+  none: BillboardStatusWhereInput
+}
+
+input CampaignStatusListRelationFilter {
+  every: CampaignStatusWhereInput
+  some: CampaignStatusWhereInput
+  none: CampaignStatusWhereInput
+}
+
+input CampaignStatusWhereInput {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  status: EnumCampaignStatusTypeFilter
+  campaignId: IntFilter
+  agentId: StringFilter
+  campaign: CampaignRelationFilter
+  agent: AgentRelationFilter
+  CampaignTimeline: CampaignTimelineListRelationFilter
+  AND: [CampaignStatusWhereInput!]
+  OR: [CampaignStatusWhereInput!]
+  NOT: [CampaignStatusWhereInput!]
+}
+
+input EnumCampaignStatusTypeFilter {
+  equals: CampaignStatusType
+  in: [CampaignStatusType!]
+  notIn: [CampaignStatusType!]
+  not: CampaignStatusType
+}
+
+input CampaignTimelineListRelationFilter {
+  every: CampaignTimelineWhereInput
+  some: CampaignTimelineWhereInput
+  none: CampaignTimelineWhereInput
+}
+
+input CampaignTimelineWhereInput {
+  id: IntFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  notes: StringFilter
+  campaignId: IntFilter
+  agentId: StringFilter
+  campaign: CampaignRelationFilter
+  agent: AgentRelationFilter
+  status: CampaignStatusRelationFilter
+  AND: [CampaignTimelineWhereInput!]
+  OR: [CampaignTimelineWhereInput!]
+  NOT: [CampaignTimelineWhereInput!]
+}
+
+input CampaignStatusRelationFilter {
+  is: CampaignStatusWhereInput
+  isNot: CampaignStatusWhereInput
+}
+
+input BillboardTimelineListRelationFilter {
+  every: BillboardTimelineWhereInput
+  some: BillboardTimelineWhereInput
+  none: BillboardTimelineWhereInput
+}
+
+input BillboardTimelineWhereInput {
+  id: IntFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  notes: StringFilter
+  billboardId: IntFilter
+  agentId: StringFilter
+  status: EnumBillboardStatusTypeFilter
+  billboard: BillboardRelationFilter
+  agent: AgentRelationFilter
+  AND: [BillboardTimelineWhereInput!]
+  OR: [BillboardTimelineWhereInput!]
+  NOT: [BillboardTimelineWhereInput!]
+}
+
+input FavoriteListRelationFilter {
+  every: FavoriteWhereInput
+  some: FavoriteWhereInput
+  none: FavoriteWhereInput
+}
+
+input FavoriteOrderByWithRelationInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  advertiserId: SortOrder
+  billboardId: SortOrder
+  advertiser: AdvertiserOrderByWithRelationInput
+  billboard: BillboardOrderByWithRelationInput
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input AdvertiserOrderByWithRelationInput {
+  uid: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+  campaigns: CampaignOrderByRelationAggregateInput
+  Favorite: FavoriteOrderByRelationAggregateInput
+}
+
+input CampaignOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input FavoriteOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input BillboardOrderByWithRelationInput {
+  id: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  lat: SortOrder
+  lng: SortOrder
+  height: SortOrder
+  width: SortOrder
+  pricePerDay: SortOrder
+  impressionsPerDay: SortOrder
+  minBookingDays: SortOrder
+  address: SortOrder
+  images: SortOrder
+  type: SortOrder
+  ownerId: SortOrder
+  angle: SortOrder
+  elevation: SortOrder
+  owner: OwnerOrderByWithRelationInput
+  bookings: BookingOrderByRelationAggregateInput
+  status: BillboardStatusOrderByWithRelationInput
+  billboardTimeline: BillboardTimelineOrderByRelationAggregateInput
+  favorites: FavoriteOrderByRelationAggregateInput
+}
+
+input OwnerOrderByWithRelationInput {
+  uid: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+  billboards: BillboardOrderByRelationAggregateInput
+}
+
+input BillboardOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input BookingOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input BillboardStatusOrderByWithRelationInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  notes: SortOrder
+  status: SortOrder
+  billboardId: SortOrder
+  agentId: SortOrder
+  billboard: BillboardOrderByWithRelationInput
+  agent: AgentOrderByWithRelationInput
+}
+
+input AgentOrderByWithRelationInput {
+  uid: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+  billboardsStatuses: BillboardStatusOrderByRelationAggregateInput
+  campaignsStatuses: CampaignStatusOrderByRelationAggregateInput
+  billboardTimeline: BillboardTimelineOrderByRelationAggregateInput
+  campaignTimeline: CampaignTimelineOrderByRelationAggregateInput
+}
+
+input BillboardStatusOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input CampaignStatusOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input BillboardTimelineOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input CampaignTimelineOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input FavoriteWhereUniqueInput {
+  advertiserId_billboardId: FavoriteUnique
+}
+
+input FavoriteUnique {
+  advertiserId: String!
+  billboardId: Int!
+}
+
+enum FavoriteScalarFieldEnum {
+  createdAt
+  updatedAt
+  advertiserId
+  billboardId
+}
+
+input OwnerWhereUniqueInput {
+  uid: String
+}
+
+enum OwnerScalarFieldEnum {
+  uid
+  createdAt
+  updatedAt
+  name
+}
+
+input AgentWhereUniqueInput {
+  uid: String
+}
+
+enum AgentScalarFieldEnum {
+  uid
+  createdAt
+  updatedAt
+  name
+}
+
+input AdvertiserWhereUniqueInput {
+  uid: String
+}
+
+enum AdvertiserScalarFieldEnum {
+  uid
+  createdAt
+  updatedAt
+  name
+}
+
+input WhereUniqueInputNumber {
+  id: Int
+}
+
+enum BillboardScalarFieldEnum {
+  id
+  createdAt
+  updatedAt
+  lat
+  lng
+  height
+  width
+  pricePerDay
+  impressionsPerDay
+  minBookingDays
+  address
+  images
+  type
+  ownerId
+  angle
+  elevation
+}
+
+input BillboardWhereUniqueInput {
+  id: Int
+}
+
+input BillboardStatusWhereUniqueInput {
+  billboardId: Int
+}
+
+enum BillboardStatusScalarFieldEnum {
+  createdAt
+  updatedAt
+  notes
+  status
+  billboardId
+  agentId
+}
+
+input BillboardTimelineOrderByWithRelationInput {
+  id: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  notes: SortOrder
+  billboardId: SortOrder
+  agentId: SortOrder
+  status: SortOrder
+  billboard: BillboardOrderByWithRelationInput
+  agent: AgentOrderByWithRelationInput
+}
+
+enum BillboardTimelineScalarFieldEnum {
+  id
+  createdAt
+  updatedAt
+  notes
+  billboardId
+  agentId
+  status
+}
+
+input BillboardTimelineWhereUniqueInput {
+  id: Int
+}
+
+input CampaignOrderByWithRelationInput {
+  id: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+  startDate: SortOrder
+  endDate: SortOrder
+  advertiserId: SortOrder
+  advertiser: AdvertiserOrderByWithRelationInput
+  bookings: BookingOrderByRelationAggregateInput
+  status: CampaignStatusOrderByWithRelationInput
+  timeline: CampaignTimelineOrderByRelationAggregateInput
+}
+
+input CampaignStatusOrderByWithRelationInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  status: SortOrder
+  campaignId: SortOrder
+  agentId: SortOrder
+  campaign: CampaignOrderByWithRelationInput
+  agent: AgentOrderByWithRelationInput
+  CampaignTimeline: CampaignTimelineOrderByRelationAggregateInput
+}
+
+enum CampaignScalarFieldEnum {
+  id
+  createdAt
+  updatedAt
+  name
+  startDate
+  endDate
+  advertiserId
+}
+
+input CampaignWhereUniqueInput {
+  id: Int
+}
+
+input BookingOrderByWithRelationInput {
+  id: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  pricePerDay: SortOrder
+  campaignId: SortOrder
+  billboardId: SortOrder
+  campaign: CampaignOrderByWithRelationInput
+  billboard: BillboardOrderByWithRelationInput
+}
+
+enum BookingScalarFieldEnum {
+  id
+  createdAt
+  updatedAt
+  pricePerDay
+  campaignId
+  billboardId
+}
+
+input BookingWhereUniqueInput {
+  id: Int
+}
+
+input CampaignStatusWhereUniqueInput {
+  campaignId: Int
+}
+
+enum CampaignStatusScalarFieldEnum {
+  createdAt
+  updatedAt
+  status
+  campaignId
+  agentId
+}
+
+input CampaignTimelineOrderByWithRelationInput {
+  id: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  notes: SortOrder
+  campaignId: SortOrder
+  agentId: SortOrder
+  campaign: CampaignOrderByWithRelationInput
+  agent: AgentOrderByWithRelationInput
+  status: CampaignStatusOrderByWithRelationInput
+}
+
+enum CampaignTimelineScalarFieldEnum {
+  id
+  createdAt
+  updatedAt
+  notes
+  campaignId
+  agentId
+}
+
+input CampaignTimelineWhereUniqueInput {
+  id: Int
+}
+
+type Mutation {
+  createFavorite(createFavoriteInput: CreateFavoriteInput!): Favorite!
+  updateFavorite(updateFavoriteInput: UpdateFavoriteInput!): Favorite!
+  removeFavorite(where: FavoriteWhereUniqueInput): Favorite!
+  createOwner(createOwnerInput: CreateOwnerInput!): Owner!
+  updateOwner(updateOwnerInput: UpdateOwnerInput!): Owner!
+  removeOwner(where: OwnerWhereUniqueInput): Owner!
+  createAgent(createAgentInput: CreateAgentInput!): Agent!
+  updateAgent(updateAgentInput: UpdateAgentInput!): Agent!
+  removeAgent(where: AgentWhereUniqueInput): Agent!
+  createAdvertiser(createAdvertiserInput: CreateAdvertiserInput!): Advertiser!
+  updateAdvertiser(updateAdvertiserInput: UpdateAdvertiserInput!): Advertiser!
+  removeAdvertiser(where: AdvertiserWhereUniqueInput): Advertiser!
+  createBillboard(createBillboardInput: CreateBillboardInput!): Billboard!
+  updateBillboard(updateBillboardInput: UpdateBillboardInput!): Billboard!
+  removeBillboard(where: BillboardWhereUniqueInput): Billboard!
+  createBillboardStatus(createBillboardStatusInput: CreateBillboardStatusInput!): BillboardStatus!
+  updateBillboardStatus(updateBillboardStatusInput: UpdateBillboardStatusInput!): BillboardStatus!
+  removeBillboardStatus(where: BillboardStatusWhereUniqueInput): BillboardStatus!
+  createBillboardTimeline(createBillboardTimelineInput: CreateBillboardTimelineInput!): BillboardTimeline!
+  updateBillboardTimeline(updateBillboardTimelineInput: UpdateBillboardTimelineInput!): BillboardTimeline!
+  removeBillboardTimeline(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
+  createCampaign(createCampaignInput: CreateCampaignInput!): Campaign!
+  updateCampaign(updateCampaignInput: UpdateCampaignInput!): Campaign!
+  removeCampaign(where: CampaignWhereUniqueInput): Campaign!
+  createBooking(createBookingInput: CreateBookingInput!): Booking!
+  updateBooking(updateBookingInput: UpdateBookingInput!): Booking!
+  removeBooking(where: BookingWhereUniqueInput): Booking!
+  createCampaignStatus(createCampaignStatusInput: CreateCampaignStatusInput!): CampaignStatus!
+  updateCampaignStatus(updateCampaignStatusInput: UpdateCampaignStatusInput!): CampaignStatus!
+  removeCampaignStatus(where: CampaignStatusWhereUniqueInput): CampaignStatus!
+  createCampaignTimeline(createCampaignTimelineInput: CreateCampaignTimelineInput!): CampaignTimeline!
+  updateCampaignTimeline(updateCampaignTimelineInput: UpdateCampaignTimelineInput!): CampaignTimeline!
+  removeCampaignTimeline(where: CampaignTimelineWhereUniqueInput): CampaignTimeline!
+}
+
+input CreateFavoriteInput {
+  advertiserId: String!
+  billboardId: Int!
+}
+
+input UpdateFavoriteInput {
+  advertiserId: String
+  billboardId: Int
+  advertiserId_billboardId: FavoriteUnique
+}
+
+input CreateOwnerInput {
+  uid: String!
+  name: String!
+}
+
+input UpdateOwnerInput {
+  uid: String!
+  name: String
+}
+
+input CreateAgentInput {
+  uid: String!
+  name: String!
+}
+
+input UpdateAgentInput {
+  uid: String!
+  name: String
+}
+
+input CreateAdvertiserInput {
+  uid: String!
+  name: String!
+}
+
+input UpdateAdvertiserInput {
+  uid: String!
+  name: String
+}
+
+input CreateBillboardInput {
+  pricePerDay: Int
+  impressionsPerDay: Int
+  minBookingDays: Int
+  address: String
+  images: [String!]
+  type: BillboardType!
+  angle: Int
+  elevation: Int
+  lat: Int!
+  lng: Int!
+  height: Int!
+  width: Int!
+  ownerId: String!
+}
+
+input UpdateBillboardInput {
+  pricePerDay: Int
+  impressionsPerDay: Int
+  minBookingDays: Int
+  address: String
+  images: [String!]
+  type: BillboardType
+  angle: Int
+  elevation: Int
+  lat: Int
+  lng: Int
+  height: Int
+  width: Int
+  ownerId: String
+  id: Int!
+}
+
+input CreateBillboardStatusInput {
+  notes: String
+  status: BillboardStatusType
+  agentId: String
+  billboardId: Int!
+}
+
+input UpdateBillboardStatusInput {
+  notes: String
+  status: BillboardStatusType
+  agentId: String
+  billboardId: Int!
+}
+
+input CreateBillboardTimelineInput {
+  notes: String
+  agentId: String
+  status: BillboardStatusType
+  billboardId: Int!
+}
+
+input UpdateBillboardTimelineInput {
+  notes: String
+  agentId: String
+  status: BillboardStatusType
+  billboardId: Int
+  id: Int!
+}
+
+input CreateCampaignInput {
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  advertiserId: String!
+}
+
+input UpdateCampaignInput {
+  name: String
+  startDate: DateTime
+  endDate: DateTime
+  advertiserId: String
+  id: Int!
+}
+
+input CreateBookingInput {
+  pricePerDay: Int
+  campaignId: Int!
+  billboardId: Int!
+}
+
+input UpdateBookingInput {
+  pricePerDay: Int
+  campaignId: Int
+  billboardId: Int
+  id: Int!
+}
+
+input CreateCampaignStatusInput {
+  status: CampaignStatusType
+  agentId: String
+  campaignId: Int!
+}
+
+input UpdateCampaignStatusInput {
+  status: CampaignStatusType
+  agentId: String
+  campaignId: Int!
+}
+
+input CreateCampaignTimelineInput {
+  notes: String
+  agentId: String
+  campaignId: Int!
+}
+
+input UpdateCampaignTimelineInput {
+  notes: String
+  agentId: String
+  campaignId: Int
+  id: Int!
+}
