@@ -1,0 +1,11 @@
+{
+  "name": "@zillow-org/forms",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@hookform/resolvers": "^3.0.1",
+    "react-hook-form": "^7.43.9",
+    "zod": "^3.21.4"
+  }
+}
