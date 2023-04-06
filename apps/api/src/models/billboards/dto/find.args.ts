@@ -1,4 +1,4 @@
-import { ArgsType, Field, registerEnumType } from '@nestjs/graphql'
+import { ArgsType, Field, InputType, registerEnumType } from '@nestjs/graphql'
 import { Prisma } from '@prisma/client'
 import { WhereUniqueInputNumber } from 'src/common/dtos/common.input'
 import { BillboardOrderByWithRelationInput } from './orderBy.args'

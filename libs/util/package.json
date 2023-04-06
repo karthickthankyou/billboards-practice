@@ -1,0 +1,9 @@
+{
+  "name": "@billboards-org/util",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@billboards-org/types": "*"
+  }
+}

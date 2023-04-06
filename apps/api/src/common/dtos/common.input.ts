@@ -4,19 +4,19 @@ import { Prisma } from '@prisma/client'
 @InputType()
 export class DateTimeFilter implements Prisma.DateTimeFilter {
   @Field(() => String, { nullable: true })
-  equals: string | Date;
+  equals?: string | Date;
   @Field(() => [String], { nullable: true })
-  in: string[] | Date[]
+  in?: string[] | Date[]
   @Field(() => [String], { nullable: true })
-  notIn: string[] | Date[]
+  notIn?: string[] | Date[]
   @Field(() => String, { nullable: true })
-  lt: string | Date
+  lt?: string | Date
   @Field(() => String, { nullable: true })
-  lte: string | Date
+  lte?: string | Date
   @Field(() => String, { nullable: true })
-  gt: string | Date
+  gt?: string | Date
   @Field(() => String, { nullable: true })
-  gte: string | Date
+  gte?: string | Date
 }
 
 registerEnumType(Prisma.QueryMode, {

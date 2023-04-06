@@ -10,6 +10,4 @@ export class Campaign implements CampaignType {
   startDate: Date
   endDate: Date
   advertiserId: string
-  // Todo fill all properties. To make it nullable add below.
-  // @Field(() => String, { nullable: true })
 }

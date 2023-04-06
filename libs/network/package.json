@@ -1,16 +1,20 @@
 {
-  "name": "@zillow-org/network",
+  "name": "@billboards-org/network",
   "version": "1.0.0",
   "main": "src/index.ts",
   "license": "MIT",
   "dependencies": {
+    "@billboards-org/store": "*",
+    "@billboards-org/network": "*",
     "@apollo/client": "3.7.10",
     "firebase": "9.19.0",
     "graphql": "16.6.0",
-    "graphql-request": "5.2.0"
+    "graphql-request": "5.2.0",
+    "jwt-decode": "^3.1.2"
   },
   "scripts": {
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "tsc": "tsc"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",

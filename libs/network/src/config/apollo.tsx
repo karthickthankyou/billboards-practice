@@ -5,15 +5,15 @@ import {
   createHttpLink,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { useAppSelector } from '@zillow/store'
-import { selectUser } from '@zillow/store/user'
+import { useAppSelector } from '@billboards-org/store'
+import { selectUser } from '@billboards-org/store/user'
 import { ReactNode } from 'react'
 import jwtDecode from 'jwt-decode'
 import {
   LoginDocument,
   LoginMutation,
   LoginMutationVariables,
-} from '@zillow/generated/types'
+} from '@billboards-org/network/src/generated'
 
 export interface IApolloProviderProps {
   children: ReactNode

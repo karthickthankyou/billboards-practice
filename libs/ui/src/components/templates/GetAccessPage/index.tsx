@@ -1,0 +1,1 @@
+export { GetAccessPage } from './GetAccessPage'

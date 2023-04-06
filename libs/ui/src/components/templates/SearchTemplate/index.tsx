@@ -1,0 +1,1 @@
+export { SearchPageTemplate } from './SearchTemplate'

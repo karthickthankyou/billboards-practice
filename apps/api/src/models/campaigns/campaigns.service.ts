@@ -7,9 +7,9 @@ import { UpdateCampaignInput } from './dto/update-campaign.input'
 @Injectable()
 export class CampaignsService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createCampaignInput: CreateCampaignInput) {
+  create({ bookings, ...createCampaignInput }: CreateCampaignInput) {
     return this.prisma.campaign.create({
-      data: createCampaignInput,
+      data: { ...createCampaignInput, bookings: { create: bookings } },
     })
   }
 

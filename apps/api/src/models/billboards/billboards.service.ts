@@ -3,14 +3,33 @@ import { FindManyBillboardArgs, FindUniqueBillboardArgs } from './dto/find.args'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { CreateBillboardInput } from './dto/create-billboard.input'
 import { UpdateBillboardInput } from './dto/update-billboard.input'
+import { BillboardStatus } from '../billboard-statuses/entities/billboard-status.entity'
+import { BillboardStatusType } from '@prisma/client'
 
 @Injectable()
 export class BillboardsService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createBillboardInput: CreateBillboardInput) {
-    return this.prisma.billboard.create({
+  async create(createBillboardInput: CreateBillboardInput) {
+    const billboard = await this.prisma.billboard.create({
       data: createBillboardInput,
     })
+    const timeline = await this.prisma.billboardTimeline.create({
+      data: {
+        status: BillboardStatusType.NEW,
+        billboardId: billboard.id,
+        notes: 'System generated',
+      },
+    })
+
+    const status = await this.prisma.billboardStatus.create({
+      data: {
+        status: BillboardStatusType.NEW,
+        billboardId: billboard.id,
+        notes: 'System generated',
+      },
+    })
+
+    return billboard
   }
 
   findAll(args: FindManyBillboardArgs) {

@@ -1,15 +1,15 @@
 import { gql } from 'graphql-request'
 
-export const Properties = gql`
-  query Properties(
-    $where: PropertyWhereInput
-    $orderBy: [PropertyOrderByWithRelationInput!]
+export const getBillboards = gql`
+  query GetBillboards(
+    $where: BillboardWhereInput
+    $orderBy: [BillboardOrderByWithRelationInput!]
     $cursor: WhereUniqueInputNumber
     $take: Int
     $skip: Int
-    $distinct: [PropertyScalarFieldEnum!]
+    $distinct: [BillboardScalarFieldEnum!]
   ) {
-    properties(
+    billboards(
       where: $where
       orderBy: $orderBy
       cursor: $cursor
@@ -18,22 +18,92 @@ export const Properties = gql`
       distinct: $distinct
     ) {
       id
+      height
+      width
+      angle
       address
-      bath
+      createdAt
+    }
+  }
+`
+export const createBillboard = gql`
+  mutation createBillboard($createBillboardInput: CreateBillboardInput!) {
+    createBillboard(createBillboardInput: $createBillboardInput) {
+      id
     }
   }
 `
 
-export const PropertiesDetailed = gql`
-  query SearchPropertiesDetailed(
-    $where: PropertyWhereInput
-    $orderBy: [PropertyOrderByWithRelationInput!]
+export const getCampaigns = gql`
+  query GetCampaigns(
+    $distinct: [CampaignScalarFieldEnum!]
+    $skip: Int
+    $take: Int
+    $cursor: WhereUniqueInputNumber
+    $orderBy: [CampaignOrderByWithRelationInput!]
+    $where: CampaignWhereInput
+  ) {
+    campaigns(
+      distinct: $distinct
+      skip: $skip
+      take: $take
+      cursor: $cursor
+      orderBy: $orderBy
+      where: $where
+    ) {
+      id
+      name
+      startDate
+      endDate
+      createdAt
+      advertiserId
+      updatedAt
+      status {
+        status
+      }
+    }
+  }
+`
+
+export const createAgent = gql`
+  mutation CreateAgent($createAgentInput: CreateAgentInput!) {
+    createAgent(createAgentInput: $createAgentInput) {
+      name
+      createdAt
+      uid
+      updatedAt
+    }
+  }
+`
+
+export const Login = gql`
+  mutation Login($credentials: LoginInput!) {
+    login(credentials: $credentials) {
+      refreshToken
+      localId
+      kind
+      idToken
+      expiresIn
+      email
+      displayName
+    }
+  }
+`
+
+export const searchBillboards = gql`
+  query SearchBillboards(
+    $locationFilter: LocationFilterInput!
+    $dateFilter: DateFilterInput
+    $where: BillboardWhereInput
+    $orderBy: [BillboardOrderByWithRelationInput!]
     $cursor: WhereUniqueInputNumber
     $take: Int
     $skip: Int
-    $distinct: [PropertyScalarFieldEnum!]
+    $distinct: [BillboardScalarFieldEnum!]
   ) {
-    properties(
+    searchBillboards(
+      locationFilter: $locationFilter
+      dateFilter: $dateFilter
       where: $where
       orderBy: $orderBy
       cursor: $cursor
@@ -42,88 +112,89 @@ export const PropertiesDetailed = gql`
       distinct: $distinct
     ) {
       id
-      address
-      bath
-      beds
-      price
-      sqft
-      plan
-      imgs
-      published
-    }
-  }
-`
-
-export const Property = gql`
-  query Property($where: PropertyWhereUniqueInput) {
-    property(where: $where) {
-      id
-      bath
-      address
-    }
-  }
-`
-
-export const UserHomes = gql`
-  query UserHomes(
-    $where: UserHomeWhereInput
-    $orderBy: [UserHomeOrderByWithRelationInput!]
-    $cursor: UserHomeWhereUniqueInput
-    $take: Int
-    $skip: Int
-    $distinct: [UserHomeScalarFieldEnum!]
-  ) {
-    userHomes(
-      where: $where
-      orderBy: $orderBy
-      cursor: $cursor
-      take: $take
-      skip: $skip
-      distinct: $distinct
-    ) {
-      id
-      propertyId
-      type
-    }
-  }
-`
-
-export const LocationStats = gql`
-  query LocationStats(
-    $where: LocationStatsWhereInput
-    $orderBy: [LocationStatsOrderByWithRelationInput!]
-    $cursor: WhereUniqueInputNumber
-    $take: Int
-    $skip: Int
-    $distinct: [LocationStatsScalarFieldEnum!]
-  ) {
-    locationStats(
-      where: $where
-      orderBy: $orderBy
-      cursor: $cursor
-      take: $take
-      skip: $skip
-      distinct: $distinct
-    ) {
-      id
+      pricePerDay
+      minBookingDays
+      images
       lat
       lng
-      priceSqft
-      totalHomes
+      elevation
+      height
+      width
       type
+      impressionsPerDay
     }
   }
 `
 
-export const LocationStat = gql`
-  query LocationStat($where: LocationStatsWhereUniqueInput) {
-    locationStat(where: $where) {
+export const createOwner = gql`
+  mutation createOwner($createOwnerInput: CreateOwnerInput!) {
+    createOwner(createOwnerInput: $createOwnerInput) {
+      updatedAt
+      uid
+      name
+      createdAt
+    }
+  }
+`
+
+export const getOwner = gql`
+  query getOwner($where: OwnerWhereUniqueInput) {
+    owner {
+      updatedAt
+      uid
+      name
+      createdAt
+      billboards {
+        id
+      }
+    }
+  }
+`
+
+export const getRoles = gql`
+  query getRoles($where: AgentWhereUniqueInput) {
+    agent {
+      uid
+    }
+    owner {
+      uid
+    }
+    advertiser {
+      uid
+    }
+  }
+`
+
+export const createCampaign = gql`
+  mutation createCampaign($createCampaignInput: CreateCampaignInput!) {
+    createCampaign(createCampaignInput: $createCampaignInput) {
       id
-      lat
-      lng
-      priceSqft
-      totalHomes
-      type
+    }
+  }
+`
+
+export const removeFavorite = gql`
+  mutation removeFavorite($where: FavoriteWhereUniqueInput) {
+    removeFavorite(where: $where) {
+      advertiserId
+      billboardId
+    }
+  }
+`
+
+export const createFavorite = gql`
+  mutation createFavorite($createFavoriteInput: CreateFavoriteInput!) {
+    createFavorite(createFavoriteInput: $createFavoriteInput) {
+      advertiserId
+      billboardId
+    }
+  }
+`
+export const getFavorite = gql`
+  query getFavorite($where: FavoriteWhereUniqueInput) {
+    favorite(where: $where) {
+      advertiserId
+      billboardId
     }
   }
 `

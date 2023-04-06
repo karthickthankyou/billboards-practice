@@ -23,6 +23,8 @@ import {
 } from 'src/common/decorators/auth/auth.decorator'
 import { GetUserType } from '@billboards-org/types'
 import { checkRowLevelPermission } from 'src/common/guards'
+import { BillboardPublic } from './dto/billboard-public.output'
+import { DateFilterInput, LocationFilterInput } from './dto/filters.input'
 
 @Resolver(() => Billboard)
 export class BillboardsResolver {
@@ -44,6 +46,55 @@ export class BillboardsResolver {
   @Query(() => [Billboard], { name: 'billboards' })
   findAll(@Args() args: FindManyBillboardArgs) {
     return this.billboardsService.findAll(args)
+  }
+
+  @Query(() => [BillboardPublic], { name: 'searchBillboards' })
+  async search(
+    @Args('dateFilter', { nullable: true }) dateFilter: DateFilterInput,
+    @Args('locationFilter')
+    locationFilter: LocationFilterInput,
+    @Args() args: FindManyBillboardArgs,
+  ) {
+    const { endDate, startDate } = dateFilter
+    const { nw_lat, nw_lng, se_lat, se_lng } = locationFilter
+
+    const days = Math.floor(
+      (new Date(endDate).getTime() - new Date(startDate).getTime()) /
+        (1000 * 3600 * 24),
+    )
+
+    const billboards = await this.prisma.billboard.findMany({
+      ...args,
+      where: {
+        ...args.where,
+        lat: { lte: nw_lat, gte: se_lat },
+        lng: { gte: nw_lng, lte: se_lng },
+        minBookingDays: { lte: days },
+        status: { status: 'APPROVED' },
+        bookings: {
+          none: {
+            campaign: {
+              is: {
+                status: { status: 'APPROVED' },
+                OR: [
+                  {
+                    startDate: { lt: new Date(endDate) },
+                    endDate: { gt: new Date(startDate) },
+                  },
+                  {
+                    startDate: { gt: new Date(startDate) },
+                    endDate: { lt: new Date(endDate) },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    })
+
+    console.log('billboards: ', billboards)
+    return billboards
   }
 
   @Query(() => Billboard, { name: 'billboard' })

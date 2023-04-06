@@ -1,0 +1,13 @@
+{
+  "name": "@billboards-org/hooks",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@billboards-org/store": "*",
+    "@billboards-org/hooks": "*"
+  },
+  "scripts": {
+    "tsc": "tsc"
+  }
+}

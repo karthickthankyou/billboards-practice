@@ -18,6 +18,7 @@ import { CampaignStatusesModule } from './models/campaign-statuses/campaign-stat
 import { CampaignTimelinesModule } from './models/campaign-timelines/campaign-timelines.module'
 import { PrismaModule } from './common/prisma/prisma.module'
 import { FirebaseModule } from './common/firebase/firebase.module'
+import { AuthModule } from './models/auth/auth.module'
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { FirebaseModule } from './common/firebase/firebase.module'
 
     PrismaModule,
     FirebaseModule,
+    AuthModule,
 
     FavoritesModule,
     OwnersModule,
