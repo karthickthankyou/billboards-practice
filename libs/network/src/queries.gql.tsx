@@ -63,6 +63,7 @@ export const getCampaigns = gql`
       }
       bookings {
         billboardId
+        pricePerDay
       }
     }
   }
@@ -71,6 +72,17 @@ export const getCampaigns = gql`
 export const createAgent = gql`
   mutation CreateAgent($createAgentInput: CreateAgentInput!) {
     createAgent(createAgentInput: $createAgentInput) {
+      name
+      createdAt
+      uid
+      updatedAt
+    }
+  }
+`
+
+export const createAdvertiser = gql`
+  mutation CreateAdvertiser($createAdvertiserInput: CreateAdvertiserInput!) {
+    createAdvertiser(createAdvertiserInput: $createAdvertiserInput) {
       name
       createdAt
       uid
@@ -205,6 +217,16 @@ export const getFavorite = gql`
 export const getAgent = gql`
   query getAgent($where: AgentWhereUniqueInput) {
     agent(where: $where) {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const getAdvertiser = gql`
+  query getAdvertiser($where: AdvertiserWhereUniqueInput) {
+    advertiser(where: $where) {
       name
       uid
       createdAt

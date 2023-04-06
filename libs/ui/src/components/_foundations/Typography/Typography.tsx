@@ -19,7 +19,7 @@ const Ok = ({ className }: { className?: string }) => (
   </div>
 )
 
-const Heading = ({ children }: { children: ReactNode }) => (
+export const Heading = ({ children }: { children: ReactNode }) => (
   <div className="mt-2 mb-4 text-xl font-bold">{children}</div>
 )
 

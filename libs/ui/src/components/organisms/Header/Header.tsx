@@ -89,8 +89,10 @@ const NavSidebarUser = ({
           <div className="py-1 bg-gray-100 h-0.5" />
           {[
             { name: 'My account', href: '/profile' },
-            { name: 'Support', href: '/support' },
-            { name: 'Get access', href: '/get-access' },
+            { name: 'Contact', href: '/contact' },
+            { name: 'Owner', href: '/owner' },
+            { name: 'Agent', href: '/agent' },
+            { name: 'Advertiser', href: '/advertiser' },
           ].map((item) => (
             <Link
               key={item.name}
@@ -100,9 +102,6 @@ const NavSidebarUser = ({
               {item.name}
             </Link>
           ))}
-        </div>
-        <div>
-          <Link href={'/owner'}>Owner</Link>
         </div>
       </Sidebar.Body>
       <Sidebar.Footer>

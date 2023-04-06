@@ -24,8 +24,8 @@ const About = () => {
   // create a component
   return (
     <Container className="grid grid-cols-2 mt-6">
-      <div className="flex flex-col max-w-md gap-4 leading-loose text-gray-600">
-        <h1 className="text-2xl"> About </h1>
+      <div className="flex flex-col max-w-md gap-4 text-lg leading-loose">
+        <h1 className="text-2xl font-semibold"> About </h1>
         <p>What&apos;s up, buttercups?</p>
         <p>
           Welcome to Billboards, the company that makes it easy for advertisers

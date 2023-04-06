@@ -5,9 +5,9 @@ import { Container } from '@billboards-org/ui/src/components/atoms/Container'
 const How = () => {
   // create a component
   return (
-    <Container className="flex leading-loose text-gray-700">
+    <Container className="flex text-lg leading-loose">
       <div className="max-w-md gap-4">
-        <h1 className="font-medium text-black"> How it works? </h1>
+        <h1 className="mb-6 text-xl font-medium text-black"> How it works? </h1>
         <ul className="space-y-4">
           <li>Owners request to place their billboards on our site</li>
           <li>
@@ -33,6 +33,7 @@ const How = () => {
           </li>{' '}
           Thanks for considering us!
         </ul>
+        <br />
         The Billboards Team
       </div>
     </Container>

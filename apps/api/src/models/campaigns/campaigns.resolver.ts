@@ -58,7 +58,7 @@ export class CampaignsResolver {
     return campaign
   }
 
-  @AllowAuthenticated('admin', 'agent')
+  @AllowAuthenticated()
   @Query(() => [Campaign], { name: 'campaigns' })
   findAll(@Args() args: FindManyCampaignArgs) {
     return this.campaignsService.findAll(args)

@@ -1547,7 +1547,11 @@ export type GetCampaignsQuery = {
     advertiserId: string
     updatedAt: any
     status: { __typename?: 'CampaignStatus'; status: CampaignStatusType }
-    bookings: Array<{ __typename?: 'Booking'; billboardId: number }>
+    bookings: Array<{
+      __typename?: 'Booking'
+      billboardId: number
+      pricePerDay?: number | null
+    }>
   }>
 }
 
@@ -1559,6 +1563,21 @@ export type CreateAgentMutation = {
   __typename?: 'Mutation'
   createAgent: {
     __typename?: 'Agent'
+    name: string
+    createdAt: any
+    uid: string
+    updatedAt: any
+  }
+}
+
+export type CreateAdvertiserMutationVariables = Exact<{
+  createAdvertiserInput: CreateAdvertiserInput
+}>
+
+export type CreateAdvertiserMutation = {
+  __typename?: 'Mutation'
+  createAdvertiser: {
+    __typename?: 'Advertiser'
     name: string
     createdAt: any
     uid: string
@@ -1715,6 +1734,21 @@ export type GetAgentQuery = {
   __typename?: 'Query'
   agent?: {
     __typename?: 'Agent'
+    name: string
+    uid: string
+    createdAt: any
+    updatedAt: any
+  } | null
+}
+
+export type GetAdvertiserQueryVariables = Exact<{
+  where?: InputMaybe<AdvertiserWhereUniqueInput>
+}>
+
+export type GetAdvertiserQuery = {
+  __typename?: 'Query'
+  advertiser?: {
+    __typename?: 'Advertiser'
     name: string
     uid: string
     createdAt: any
@@ -1901,6 +1935,7 @@ export const GetCampaignsDocument = /*#__PURE__*/ gql`
       }
       bookings {
         billboardId
+        pricePerDay
       }
     }
   }
@@ -2013,6 +2048,59 @@ export type CreateAgentMutationResult =
 export type CreateAgentMutationOptions = Apollo.BaseMutationOptions<
   CreateAgentMutation,
   CreateAgentMutationVariables
+>
+export const CreateAdvertiserDocument = /*#__PURE__*/ gql`
+  mutation CreateAdvertiser($createAdvertiserInput: CreateAdvertiserInput!) {
+    createAdvertiser(createAdvertiserInput: $createAdvertiserInput) {
+      name
+      createdAt
+      uid
+      updatedAt
+    }
+  }
+`
+export type CreateAdvertiserMutationFn = Apollo.MutationFunction<
+  CreateAdvertiserMutation,
+  CreateAdvertiserMutationVariables
+>
+
+/**
+ * __useCreateAdvertiserMutation__
+ *
+ * To run a mutation, you first call `useCreateAdvertiserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAdvertiserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAdvertiserMutation, { data, loading, error }] = useCreateAdvertiserMutation({
+ *   variables: {
+ *      createAdvertiserInput: // value for 'createAdvertiserInput'
+ *   },
+ * });
+ */
+export function useCreateAdvertiserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAdvertiserMutation,
+    CreateAdvertiserMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateAdvertiserMutation,
+    CreateAdvertiserMutationVariables
+  >(CreateAdvertiserDocument, options)
+}
+export type CreateAdvertiserMutationHookResult = ReturnType<
+  typeof useCreateAdvertiserMutation
+>
+export type CreateAdvertiserMutationResult =
+  Apollo.MutationResult<CreateAdvertiserMutation>
+export type CreateAdvertiserMutationOptions = Apollo.BaseMutationOptions<
+  CreateAdvertiserMutation,
+  CreateAdvertiserMutationVariables
 >
 export const LoginDocument = /*#__PURE__*/ gql`
   mutation Login($credentials: LoginInput!) {
@@ -2595,6 +2683,67 @@ export type GetAgentLazyQueryHookResult = ReturnType<
 export type GetAgentQueryResult = Apollo.QueryResult<
   GetAgentQuery,
   GetAgentQueryVariables
+>
+export const GetAdvertiserDocument = /*#__PURE__*/ gql`
+  query getAdvertiser($where: AdvertiserWhereUniqueInput) {
+    advertiser(where: $where) {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useGetAdvertiserQuery__
+ *
+ * To run a query within a React component, call `useGetAdvertiserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdvertiserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdvertiserQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAdvertiserQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAdvertiserQuery,
+    GetAdvertiserQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAdvertiserQuery, GetAdvertiserQueryVariables>(
+    GetAdvertiserDocument,
+    options,
+  )
+}
+export function useGetAdvertiserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAdvertiserQuery,
+    GetAdvertiserQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAdvertiserQuery, GetAdvertiserQueryVariables>(
+    GetAdvertiserDocument,
+    options,
+  )
+}
+export type GetAdvertiserQueryHookResult = ReturnType<
+  typeof useGetAdvertiserQuery
+>
+export type GetAdvertiserLazyQueryHookResult = ReturnType<
+  typeof useGetAdvertiserLazyQuery
+>
+export type GetAdvertiserQueryResult = Apollo.QueryResult<
+  GetAdvertiserQuery,
+  GetAdvertiserQueryVariables
 >
 export const CreateBillboardTimelineDocument = /*#__PURE__*/ gql`
   mutation createBillboardTimeline(

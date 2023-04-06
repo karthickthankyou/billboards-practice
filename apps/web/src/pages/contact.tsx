@@ -10,7 +10,7 @@ import { Button } from '@billboards-org/ui/src/components/atoms/Button'
 import { Container } from '@billboards-org/ui/src/components/atoms/Container'
 
 const TextComment = ({ children }: { children: ReactNode }) => (
-  <span className="text-gray-600">{children}</span>
+  <span className="text-gray-700">{children}</span>
 )
 
 const Contact = () => {
@@ -37,7 +37,7 @@ const Contact = () => {
     console.log(data)
   })
   return (
-    <Container className="grid gap-8 py-12 leading-loose lg:grid-cols-3">
+    <Container className="grid gap-8 py-12 text-lg leading-loose lg:grid-cols-3">
       <div className="flex flex-col max-w-md col-span-1 gap-4">
         <h1 className="text-xl font-black">Get in touch</h1>
         <p>
@@ -75,16 +75,23 @@ const Contact = () => {
           className="grid grid-cols-2 gap-4 lg:p-12 lg:bg-white "
         >
           <HtmlLabel title="Fullname" error={errors.fullName?.message}>
-            <HtmlInput {...register('fullName')} />
+            <HtmlInput placeholder="Enter name" {...register('fullName')} />
           </HtmlLabel>
           <HtmlLabel title="Email" error={errors.email?.message}>
-            <HtmlInput type="email" {...register('email')} />
+            <HtmlInput
+              placeholder="Enter email"
+              type="email"
+              {...register('email')}
+            />
           </HtmlLabel>
           <HtmlLabel title="Phone" error={errors.phone?.message} optional>
-            <HtmlInput {...register('phone')} />
+            <HtmlInput placeholder="Enter phone" {...register('phone')} />
           </HtmlLabel>
           <HtmlLabel title="Message" error={errors.message?.message}>
-            <HtmlTextArea {...register('message')} />
+            <HtmlTextArea
+              placeholder="Enter what is in your heart"
+              {...register('message')}
+            />
           </HtmlLabel>
           <Button type="submit">Submit</Button>
         </form>

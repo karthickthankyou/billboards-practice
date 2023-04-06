@@ -6,7 +6,6 @@ import { useEffect } from 'react'
 
 export const useUserListener = () => {
   //   useRefreshToken()
-  console.log('Hello listener starsts: ')
   const dispatch = useAppDispatch()
 
   useEffect(
