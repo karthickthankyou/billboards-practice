@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { Form } from '../../atoms/Form'
 import { HtmlLabel } from '../../atoms/HtmlLabel'
 import { HtmlInput } from '../../atoms/HtmlInput'
+
 import { useCreateBillboardForm } from '@billboards-org/forms/src/createBillboard'
 import HtmlSelect from '../../atoms/HtmlSelect'
 import { Button } from '../../atoms/Button'
@@ -10,11 +11,10 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 
 import { ChangeEvent, useEffect, useState } from 'react'
 import { ProgressBar } from '../../atoms/ProgressBar'
-import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { SearchPlaceBox } from '../../organisms/SearchPlaceBox'
 
-import Map, { Marker, NavigationControl } from 'react-map-gl'
+import Map, { Marker } from 'react-map-gl'
 
 import { RangeSlider } from '../../molecules/RangeSlider'
 
@@ -27,6 +27,8 @@ import { useAppSelector } from '@billboards-org/store'
 import { selectUser } from '@billboards-org/store/user'
 import { notification$ } from '@billboards-org/util/subjects'
 import { storage } from '@billboards-org/network/src/config/firebase'
+import { Panel } from '../../organisms/Map/Panel'
+import { DefaultZoomControls } from '../../organisms/Map/ZoomControls/ZoomControls'
 
 export interface IOwnerPageProps {
   data: GetOwnerQuery
@@ -52,7 +54,13 @@ export const OwnerPage = ({ data }: IOwnerPageProps) => {
     latitude: 40,
   })
 
-  const [mutateAsync, { loading }] = useCreateBillboardMutation()
+  const [mutateAsync, { loading, data: newlyCreatedBillboard }] =
+    useCreateBillboardMutation()
+
+  useEffect(() => {
+    if (newlyCreatedBillboard?.createBillboard) {
+    }
+  }, [newlyCreatedBillboard])
 
   const [markerRotation, setMarkerRotation] = useState(0)
 
@@ -109,11 +117,11 @@ export const OwnerPage = ({ data }: IOwnerPageProps) => {
 
   return (
     <Container className="space-y-2">
-      <div className="text-xl font-bold">{data.owner.name}</div>
+      <div className="text-xl font-bold">{data.owner?.name}</div>
       <div className="text-sm">
-        Role granted on {format(new Date(data.owner.createdAt), 'PPPP')}
+        Role granted on {format(new Date(data.owner?.createdAt), 'PPPP')}
       </div>
-      <div>{JSON.stringify(data.owner.billboards)}</div>
+      <div>{JSON.stringify(data.owner?.billboards)}</div>
       <Form
         onSubmit={handleSubmit(async (data) => {
           if (!user.uid) {
@@ -235,7 +243,7 @@ export const OwnerPage = ({ data }: IOwnerPageProps) => {
                 <div className="w-2 h-0.5 bg-black" />
               </div>
             </Marker>
-            {/* <Panel position="left-top">
+            <Panel position="left-top">
               <SearchPlaceBox
                 setLocationInfo={(locationInfo) => {
                   const { latLng } = locationInfo
@@ -263,7 +271,7 @@ export const OwnerPage = ({ data }: IOwnerPageProps) => {
                   setValue('angle', newValue as number)
                 }}
               />
-            </Panel> */}
+            </Panel>
           </Map>
         </div>
       </Form>

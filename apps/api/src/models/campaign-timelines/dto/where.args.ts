@@ -6,7 +6,7 @@ import {
   StringFilter,
 } from 'src/common/dtos/common.input'
 import { AgentRelationFilter } from 'src/models/agents/dto/where.args'
-import { CampaignStatusRelationFilter } from 'src/models/campaign-statuses/dto/where.args'
+import { EnumCampaignStatusTypeFilter } from 'src/models/campaign-statuses/dto/where.args'
 import { CampaignRelationFilter } from 'src/models/campaigns/dto/where.args'
 
 @InputType()
@@ -21,6 +21,8 @@ export class CampaignTimelineWhereUniqueInput
 export class CampaignTimelineWhereInput
   implements Required<Prisma.CampaignTimelineWhereInput>
 {
+  @Field(() => EnumCampaignStatusTypeFilter, { nullable: true })
+  status: EnumCampaignStatusTypeFilter
   @Field(() => IntFilter, { nullable: true })
   id: IntFilter
   @Field(() => DateTimeFilter, { nullable: true })
@@ -37,8 +39,6 @@ export class CampaignTimelineWhereInput
   campaign: CampaignRelationFilter
   @Field(() => AgentRelationFilter, { nullable: true })
   agent: AgentRelationFilter
-  @Field(() => CampaignStatusRelationFilter, { nullable: true })
-  status: CampaignStatusRelationFilter
 
   @Field(() => [CampaignTimelineWhereInput], { nullable: true })
   AND: CampaignTimelineWhereInput[]

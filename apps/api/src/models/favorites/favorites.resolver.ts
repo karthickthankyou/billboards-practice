@@ -31,12 +31,21 @@ export class FavoritesResolver {
 
   @AllowAuthenticated()
   @Mutation(() => Favorite)
-  createFavorite(
+  async createFavorite(
     @Args('createFavoriteInput') args: CreateFavoriteInput,
     @GetUser() user: GetUserType,
   ) {
     checkRowLevelPermission(user, args.advertiserId)
 
+    const advertiser = await this.prisma.advertiser.findUnique({
+      where: { uid: args.advertiserId },
+    })
+
+    if (!advertiser?.uid) {
+      await this.prisma.advertiser.create({
+        data: { uid: args.advertiserId, name: '' },
+      })
+    }
     return this.favoritesService.create(args)
   }
 

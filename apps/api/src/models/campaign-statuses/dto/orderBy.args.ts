@@ -1,7 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql'
 import { Prisma } from '@prisma/client'
 import { AgentOrderByWithRelationInput } from 'src/models/agents/dto/orderBy.args'
-import { CampaignTimelineOrderByRelationAggregateInput } from 'src/models/campaign-timelines/dto/orderBy.args'
 import { CampaignOrderByWithRelationInput } from 'src/models/campaigns/dto/orderBy.args'
 
 @InputType()
@@ -22,10 +21,6 @@ export class CampaignStatusOrderByWithRelationInput
   campaign: CampaignOrderByWithRelationInput
   @Field(() => AgentOrderByWithRelationInput, { nullable: true })
   agent: AgentOrderByWithRelationInput
-  @Field(() => CampaignTimelineOrderByRelationAggregateInput, {
-    nullable: true,
-  })
-  campaignTimeline: CampaignTimelineOrderByRelationAggregateInput
 }
 
 @InputType()

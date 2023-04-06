@@ -44,7 +44,7 @@ export class OwnersResolver {
     return this.ownersService.findAll(args)
   }
 
-  @Query(() => Owner, { name: 'owner' })
+  @Query(() => Owner, { name: 'owner', nullable: true })
   findOne(@Args() args: FindUniqueOwnerArgs) {
     return this.ownersService.findOne(args)
   }
@@ -67,9 +67,9 @@ export class OwnersResolver {
   }
 
   @ResolveField(() => [Billboard])
-  billboards(@Parent() billboardStatus: BillboardStatus) {
-    return this.prisma.billboard.findUnique({
-      where: { id: billboardStatus.billboardId },
+  billboards(@Parent() owner: Owner) {
+    return this.prisma.billboard.findMany({
+      where: { ownerId: owner.uid },
     })
   }
 }

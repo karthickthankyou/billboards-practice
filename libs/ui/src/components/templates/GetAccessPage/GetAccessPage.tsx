@@ -17,14 +17,11 @@ export interface IGetAccessPageProps {}
 
 export const GetAccessPage = ({}: IGetAccessPageProps) => {
   const user = useAppSelector(selectUser)
-  const { data: allRolesData } = useGetRolesQuery({
-    variables: { where: { uid: user.uid } },
-  })
+
   if (!user.uid) return <Link href="/login">Login</Link>
 
   return (
     <div>
-      <div>{allRolesData?.advertiser.uid}</div>
       <CreateOwner uid={user.uid} />
     </div>
   )
@@ -46,6 +43,7 @@ export const CreateOwner = ({ uid }: { uid: string }) => {
   if (!data?.owner) {
     return (
       <Form
+        className="w-full max-w-md mx-auto"
         onSubmit={handleSubmit(async ({ name }) => {
           console.log(data)
           await createOwnerAsync({

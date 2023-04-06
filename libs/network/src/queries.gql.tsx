@@ -61,6 +61,9 @@ export const getCampaigns = gql`
       status {
         status
       }
+      bookings {
+        billboardId
+      }
     }
   }
 `
@@ -139,7 +142,7 @@ export const createOwner = gql`
 
 export const getOwner = gql`
   query getOwner($where: OwnerWhereUniqueInput) {
-    owner {
+    owner(where: $where) {
       updatedAt
       uid
       name
@@ -152,14 +155,14 @@ export const getOwner = gql`
 `
 
 export const getRoles = gql`
-  query getRoles($where: AgentWhereUniqueInput) {
-    agent {
+  query getRoles($uid: String) {
+    agent: agent(where: { uid: $uid }) {
       uid
     }
-    owner {
+    owner: owner(where: { uid: $uid }) {
       uid
     }
-    advertiser {
+    advertiser: advertiser(where: { uid: $uid }) {
       uid
     }
   }
@@ -195,6 +198,41 @@ export const getFavorite = gql`
     favorite(where: $where) {
       advertiserId
       billboardId
+    }
+  }
+`
+
+export const getAgent = gql`
+  query getAgent($where: AgentWhereUniqueInput) {
+    agent(where: $where) {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const createBillboardTimeline = gql`
+  mutation createBillboardTimeline(
+    $createBillboardTimelineInput: CreateBillboardTimelineInput!
+  ) {
+    createBillboardTimeline(
+      createBillboardTimelineInput: $createBillboardTimelineInput
+    ) {
+      id
+    }
+  }
+`
+
+export const createCampaignTimeline = gql`
+  mutation createCampaignTimeline(
+    $createCampaignTimelineInput: CreateCampaignTimelineInput!
+  ) {
+    createCampaignTimeline(
+      createCampaignTimelineInput: $createCampaignTimelineInput
+    ) {
+      id
     }
   }
 `

@@ -10,10 +10,32 @@ import { UpdateCampaignTimelineInput } from './dto/update-campaign-timeline.inpu
 @Injectable()
 export class CampaignTimelinesService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createCampaignTimelineInput: CreateCampaignTimelineInput) {
-    return this.prisma.campaignTimeline.create({
-      data: createCampaignTimelineInput,
-    })
+  async create({
+    agentId,
+    campaignId,
+    notes,
+    status,
+  }: CreateCampaignTimelineInput) {
+    const [campaignStatus, campaignTimeline] = await this.prisma.$transaction([
+      this.prisma.campaignStatus.update({
+        where: {
+          campaignId,
+        },
+        data: {
+          status,
+          agentId,
+        },
+      }),
+      this.prisma.campaignTimeline.create({
+        data: {
+          campaignId,
+          notes,
+          agentId,
+          status,
+        },
+      }),
+    ])
+    return campaignTimeline
   }
 
   findAll(args: FindManyCampaignTimelineArgs) {

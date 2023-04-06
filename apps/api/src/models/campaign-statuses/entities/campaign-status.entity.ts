@@ -12,11 +12,9 @@ registerEnumType(CampaignStatusType, {
 export class CampaignStatus implements CampaignStatusObjectType {
   createdAt: Date
   updatedAt: Date
-  @Field(() => CampaignStatusType, { nullable: true })
+  @Field(() => CampaignStatusType)
   status: CampaignStatusType
   campaignId: number
   @Field(() => String, { nullable: true })
   agentId: string
-  // Todo fill all properties. To make it nullable add below.
-  // @Field(() => String, { nullable: true })
 }

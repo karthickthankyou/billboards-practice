@@ -527,7 +527,7 @@ export type CampaignStatus = {
   campaignId: Scalars['Int']
   campaignTimeline: Array<CampaignTimeline>
   createdAt: Scalars['DateTime']
-  status?: Maybe<CampaignStatusType>
+  status: CampaignStatusType
   updatedAt: Scalars['DateTime']
 }
 
@@ -546,7 +546,6 @@ export type CampaignStatusOrderByWithRelationInput = {
   agentId?: InputMaybe<SortOrder>
   campaign?: InputMaybe<CampaignOrderByWithRelationInput>
   campaignId?: InputMaybe<SortOrder>
-  campaignTimeline?: InputMaybe<CampaignTimelineOrderByRelationAggregateInput>
   createdAt?: InputMaybe<SortOrder>
   status?: InputMaybe<SortOrder>
   updatedAt?: InputMaybe<SortOrder>
@@ -583,7 +582,6 @@ export type CampaignStatusWhereInput = {
   agentId?: InputMaybe<StringFilter>
   campaign?: InputMaybe<CampaignRelationFilter>
   campaignId?: InputMaybe<IntFilter>
-  campaignTimeline?: InputMaybe<CampaignTimelineListRelationFilter>
   createdAt?: InputMaybe<DateTimeFilter>
   status?: InputMaybe<EnumCampaignStatusTypeFilter>
   updatedAt?: InputMaybe<DateTimeFilter>
@@ -603,6 +601,7 @@ export type CampaignTimeline = {
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
   notes?: Maybe<Scalars['String']>
+  status: CampaignStatusType
   updatedAt: Scalars['DateTime']
 }
 
@@ -624,7 +623,7 @@ export type CampaignTimelineOrderByWithRelationInput = {
   createdAt?: InputMaybe<SortOrder>
   id?: InputMaybe<SortOrder>
   notes?: InputMaybe<SortOrder>
-  status?: InputMaybe<CampaignStatusOrderByWithRelationInput>
+  status?: InputMaybe<SortOrder>
   updatedAt?: InputMaybe<SortOrder>
 }
 
@@ -634,6 +633,7 @@ export enum CampaignTimelineScalarFieldEnum {
   CreatedAt = 'createdAt',
   Id = 'id',
   Notes = 'notes',
+  Status = 'status',
   UpdatedAt = 'updatedAt',
 }
 
@@ -648,7 +648,7 @@ export type CampaignTimelineWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>
   id?: InputMaybe<IntFilter>
   notes?: InputMaybe<StringFilter>
-  status?: InputMaybe<CampaignStatusRelationFilter>
+  status?: InputMaybe<EnumCampaignStatusTypeFilter>
   updatedAt?: InputMaybe<DateTimeFilter>
 }
 
@@ -738,13 +738,14 @@ export type CreateCampaignInput = {
 export type CreateCampaignStatusInput = {
   agentId?: InputMaybe<Scalars['String']>
   campaignId: Scalars['Int']
-  status?: InputMaybe<CampaignStatusType>
+  status: CampaignStatusType
 }
 
 export type CreateCampaignTimelineInput = {
   agentId?: InputMaybe<Scalars['String']>
   campaignId: Scalars['Int']
   notes?: InputMaybe<Scalars['String']>
+  status: CampaignStatusType
 }
 
 export type CreateFavoriteInput = {
@@ -1135,9 +1136,9 @@ export type OwnerWhereUniqueInput = {
 
 export type Query = {
   __typename?: 'Query'
-  advertiser: Advertiser
+  advertiser?: Maybe<Advertiser>
   advertisers: Array<Advertiser>
-  agent: Agent
+  agent?: Maybe<Agent>
   agents: Array<Agent>
   allBillboardTimelines: Array<BillboardTimeline>
   billboard: Billboard
@@ -1156,7 +1157,7 @@ export type Query = {
   campaigns: Array<Campaign>
   favorite: Favorite
   favorites: Array<Favorite>
-  owner: Owner
+  owner?: Maybe<Owner>
   owners: Array<Owner>
   searchBillboards: Array<BillboardPublic>
 }
@@ -1468,6 +1469,7 @@ export type UpdateCampaignTimelineInput = {
   campaignId?: InputMaybe<Scalars['Int']>
   id: Scalars['Int']
   notes?: InputMaybe<Scalars['String']>
+  status?: InputMaybe<CampaignStatusType>
 }
 
 export type UpdateFavoriteInput = {
@@ -1544,10 +1546,8 @@ export type GetCampaignsQuery = {
     createdAt: any
     advertiserId: string
     updatedAt: any
-    status: {
-      __typename?: 'CampaignStatus'
-      status?: CampaignStatusType | null
-    }
+    status: { __typename?: 'CampaignStatus'; status: CampaignStatusType }
+    bookings: Array<{ __typename?: 'Booking'; billboardId: number }>
   }>
 }
 
@@ -1638,25 +1638,25 @@ export type GetOwnerQueryVariables = Exact<{
 
 export type GetOwnerQuery = {
   __typename?: 'Query'
-  owner: {
+  owner?: {
     __typename?: 'Owner'
     updatedAt: any
     uid: string
     name: string
     createdAt: any
     billboards: Array<{ __typename?: 'Billboard'; id: number }>
-  }
+  } | null
 }
 
 export type GetRolesQueryVariables = Exact<{
-  where?: InputMaybe<AgentWhereUniqueInput>
+  uid?: InputMaybe<Scalars['String']>
 }>
 
 export type GetRolesQuery = {
   __typename?: 'Query'
-  agent: { __typename?: 'Agent'; uid: string }
-  owner: { __typename?: 'Owner'; uid: string }
-  advertiser: { __typename?: 'Advertiser'; uid: string }
+  agent?: { __typename?: 'Agent'; uid: string } | null
+  owner?: { __typename?: 'Owner'; uid: string } | null
+  advertiser?: { __typename?: 'Advertiser'; uid: string } | null
 }
 
 export type CreateCampaignMutationVariables = Exact<{
@@ -1705,6 +1705,39 @@ export type GetFavoriteQuery = {
     advertiserId: string
     billboardId: number
   }
+}
+
+export type GetAgentQueryVariables = Exact<{
+  where?: InputMaybe<AgentWhereUniqueInput>
+}>
+
+export type GetAgentQuery = {
+  __typename?: 'Query'
+  agent?: {
+    __typename?: 'Agent'
+    name: string
+    uid: string
+    createdAt: any
+    updatedAt: any
+  } | null
+}
+
+export type CreateBillboardTimelineMutationVariables = Exact<{
+  createBillboardTimelineInput: CreateBillboardTimelineInput
+}>
+
+export type CreateBillboardTimelineMutation = {
+  __typename?: 'Mutation'
+  createBillboardTimeline: { __typename?: 'BillboardTimeline'; id: number }
+}
+
+export type CreateCampaignTimelineMutationVariables = Exact<{
+  createCampaignTimelineInput: CreateCampaignTimelineInput
+}>
+
+export type CreateCampaignTimelineMutation = {
+  __typename?: 'Mutation'
+  createCampaignTimeline: { __typename?: 'CampaignTimeline'; id: number }
 }
 
 export const GetBillboardsDocument = /*#__PURE__*/ gql`
@@ -1865,6 +1898,9 @@ export const GetCampaignsDocument = /*#__PURE__*/ gql`
       updatedAt
       status {
         status
+      }
+      bookings {
+        billboardId
       }
     }
   }
@@ -2179,7 +2215,7 @@ export type CreateOwnerMutationOptions = Apollo.BaseMutationOptions<
 >
 export const GetOwnerDocument = /*#__PURE__*/ gql`
   query getOwner($where: OwnerWhereUniqueInput) {
-    owner {
+    owner(where: $where) {
       updatedAt
       uid
       name
@@ -2237,14 +2273,14 @@ export type GetOwnerQueryResult = Apollo.QueryResult<
   GetOwnerQueryVariables
 >
 export const GetRolesDocument = /*#__PURE__*/ gql`
-  query getRoles($where: AgentWhereUniqueInput) {
-    agent {
+  query getRoles($uid: String) {
+    agent: agent(where: { uid: $uid }) {
       uid
     }
-    owner {
+    owner: owner(where: { uid: $uid }) {
       uid
     }
-    advertiser {
+    advertiser: advertiser(where: { uid: $uid }) {
       uid
     }
   }
@@ -2262,7 +2298,7 @@ export const GetRolesDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useGetRolesQuery({
  *   variables: {
- *      where: // value for 'where'
+ *      uid: // value for 'uid'
  *   },
  * });
  */
@@ -2503,4 +2539,168 @@ export type GetFavoriteLazyQueryHookResult = ReturnType<
 export type GetFavoriteQueryResult = Apollo.QueryResult<
   GetFavoriteQuery,
   GetFavoriteQueryVariables
+>
+export const GetAgentDocument = /*#__PURE__*/ gql`
+  query getAgent($where: AgentWhereUniqueInput) {
+    agent(where: $where) {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useGetAgentQuery__
+ *
+ * To run a query within a React component, call `useGetAgentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgentQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAgentQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAgentQuery, GetAgentQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAgentQuery, GetAgentQueryVariables>(
+    GetAgentDocument,
+    options,
+  )
+}
+export function useGetAgentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAgentQuery,
+    GetAgentQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAgentQuery, GetAgentQueryVariables>(
+    GetAgentDocument,
+    options,
+  )
+}
+export type GetAgentQueryHookResult = ReturnType<typeof useGetAgentQuery>
+export type GetAgentLazyQueryHookResult = ReturnType<
+  typeof useGetAgentLazyQuery
+>
+export type GetAgentQueryResult = Apollo.QueryResult<
+  GetAgentQuery,
+  GetAgentQueryVariables
+>
+export const CreateBillboardTimelineDocument = /*#__PURE__*/ gql`
+  mutation createBillboardTimeline(
+    $createBillboardTimelineInput: CreateBillboardTimelineInput!
+  ) {
+    createBillboardTimeline(
+      createBillboardTimelineInput: $createBillboardTimelineInput
+    ) {
+      id
+    }
+  }
+`
+export type CreateBillboardTimelineMutationFn = Apollo.MutationFunction<
+  CreateBillboardTimelineMutation,
+  CreateBillboardTimelineMutationVariables
+>
+
+/**
+ * __useCreateBillboardTimelineMutation__
+ *
+ * To run a mutation, you first call `useCreateBillboardTimelineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBillboardTimelineMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBillboardTimelineMutation, { data, loading, error }] = useCreateBillboardTimelineMutation({
+ *   variables: {
+ *      createBillboardTimelineInput: // value for 'createBillboardTimelineInput'
+ *   },
+ * });
+ */
+export function useCreateBillboardTimelineMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateBillboardTimelineMutation,
+    CreateBillboardTimelineMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateBillboardTimelineMutation,
+    CreateBillboardTimelineMutationVariables
+  >(CreateBillboardTimelineDocument, options)
+}
+export type CreateBillboardTimelineMutationHookResult = ReturnType<
+  typeof useCreateBillboardTimelineMutation
+>
+export type CreateBillboardTimelineMutationResult =
+  Apollo.MutationResult<CreateBillboardTimelineMutation>
+export type CreateBillboardTimelineMutationOptions = Apollo.BaseMutationOptions<
+  CreateBillboardTimelineMutation,
+  CreateBillboardTimelineMutationVariables
+>
+export const CreateCampaignTimelineDocument = /*#__PURE__*/ gql`
+  mutation createCampaignTimeline(
+    $createCampaignTimelineInput: CreateCampaignTimelineInput!
+  ) {
+    createCampaignTimeline(
+      createCampaignTimelineInput: $createCampaignTimelineInput
+    ) {
+      id
+    }
+  }
+`
+export type CreateCampaignTimelineMutationFn = Apollo.MutationFunction<
+  CreateCampaignTimelineMutation,
+  CreateCampaignTimelineMutationVariables
+>
+
+/**
+ * __useCreateCampaignTimelineMutation__
+ *
+ * To run a mutation, you first call `useCreateCampaignTimelineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCampaignTimelineMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCampaignTimelineMutation, { data, loading, error }] = useCreateCampaignTimelineMutation({
+ *   variables: {
+ *      createCampaignTimelineInput: // value for 'createCampaignTimelineInput'
+ *   },
+ * });
+ */
+export function useCreateCampaignTimelineMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCampaignTimelineMutation,
+    CreateCampaignTimelineMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateCampaignTimelineMutation,
+    CreateCampaignTimelineMutationVariables
+  >(CreateCampaignTimelineDocument, options)
+}
+export type CreateCampaignTimelineMutationHookResult = ReturnType<
+  typeof useCreateCampaignTimelineMutation
+>
+export type CreateCampaignTimelineMutationResult =
+  Apollo.MutationResult<CreateCampaignTimelineMutation>
+export type CreateCampaignTimelineMutationOptions = Apollo.BaseMutationOptions<
+  CreateCampaignTimelineMutation,
+  CreateCampaignTimelineMutationVariables
 >

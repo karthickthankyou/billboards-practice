@@ -1,4 +1,6 @@
 import '@billboards-web/styles/globals.css'
+import 'mapbox-gl/dist/mapbox-gl.css'
+
 import type { AppProps } from 'next/app'
 import { ReduxProvider } from '@billboards-org/store/provider'
 import { ApolloProvider } from '@billboards-org/network/src/config/apollo'

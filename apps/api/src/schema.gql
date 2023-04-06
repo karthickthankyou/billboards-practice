@@ -98,7 +98,7 @@ enum BillboardStatusType {
 }
 
 type CampaignStatus {
-  status: CampaignStatusType
+  status: CampaignStatusType!
   agentId: String
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -131,6 +131,7 @@ type BillboardTimeline {
 }
 
 type CampaignTimeline {
+  status: CampaignStatusType!
   notes: String
   agentId: String
   id: Int!
@@ -216,11 +217,11 @@ type Query {
   favorites(where: FavoriteWhereInput, orderBy: [FavoriteOrderByWithRelationInput!], cursor: FavoriteWhereUniqueInput, take: Int, skip: Int, distinct: [FavoriteScalarFieldEnum!]): [Favorite!]!
   favorite(where: FavoriteWhereUniqueInput): Favorite!
   owners(where: OwnerWhereInput, orderBy: [OwnerOrderByWithRelationInput!], cursor: OwnerWhereUniqueInput, take: Int, skip: Int, distinct: [OwnerScalarFieldEnum!]): [Owner!]!
-  owner(where: OwnerWhereUniqueInput): Owner!
+  owner(where: OwnerWhereUniqueInput): Owner
   agents(where: AgentWhereInput, orderBy: [AgentOrderByWithRelationInput!], cursor: AgentWhereUniqueInput, take: Int, skip: Int, distinct: [AgentScalarFieldEnum!]): [Agent!]!
-  agent(where: AgentWhereUniqueInput): Agent!
+  agent(where: AgentWhereUniqueInput): Agent
   advertisers(where: AdvertiserWhereInput, orderBy: [AdvertiserOrderByWithRelationInput!], cursor: AdvertiserWhereUniqueInput, take: Int, skip: Int, distinct: [AdvertiserScalarFieldEnum!]): [Advertiser!]!
-  advertiser(where: AdvertiserWhereUniqueInput): Advertiser!
+  advertiser(where: AdvertiserWhereUniqueInput): Advertiser
   billboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
   searchBillboards(dateFilter: DateFilterInput, locationFilter: LocationFilterInput!, where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [BillboardPublic!]!
   billboard(where: BillboardWhereUniqueInput): Billboard!
@@ -502,7 +503,6 @@ input CampaignStatusWhereInput {
   agentId: StringFilter
   campaign: CampaignRelationFilter
   agent: AgentRelationFilter
-  campaignTimeline: CampaignTimelineListRelationFilter
   AND: [CampaignStatusWhereInput!]
   OR: [CampaignStatusWhereInput!]
   NOT: [CampaignStatusWhereInput!]
@@ -513,32 +513,6 @@ input EnumCampaignStatusTypeFilter {
   in: [CampaignStatusType!]
   notIn: [CampaignStatusType!]
   not: CampaignStatusType
-}
-
-input CampaignTimelineListRelationFilter {
-  every: CampaignTimelineWhereInput
-  some: CampaignTimelineWhereInput
-  none: CampaignTimelineWhereInput
-}
-
-input CampaignTimelineWhereInput {
-  id: IntFilter
-  createdAt: DateTimeFilter
-  updatedAt: DateTimeFilter
-  notes: StringFilter
-  campaignId: IntFilter
-  agentId: StringFilter
-  campaign: CampaignRelationFilter
-  agent: AgentRelationFilter
-  status: CampaignStatusRelationFilter
-  AND: [CampaignTimelineWhereInput!]
-  OR: [CampaignTimelineWhereInput!]
-  NOT: [CampaignTimelineWhereInput!]
-}
-
-input CampaignStatusRelationFilter {
-  is: CampaignStatusWhereInput
-  isNot: CampaignStatusWhereInput
 }
 
 input BillboardTimelineListRelationFilter {
@@ -562,10 +536,36 @@ input BillboardTimelineWhereInput {
   NOT: [BillboardTimelineWhereInput!]
 }
 
+input CampaignTimelineListRelationFilter {
+  every: CampaignTimelineWhereInput
+  some: CampaignTimelineWhereInput
+  none: CampaignTimelineWhereInput
+}
+
+input CampaignTimelineWhereInput {
+  status: EnumCampaignStatusTypeFilter
+  id: IntFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  notes: StringFilter
+  campaignId: IntFilter
+  agentId: StringFilter
+  campaign: CampaignRelationFilter
+  agent: AgentRelationFilter
+  AND: [CampaignTimelineWhereInput!]
+  OR: [CampaignTimelineWhereInput!]
+  NOT: [CampaignTimelineWhereInput!]
+}
+
 input FavoriteListRelationFilter {
   every: FavoriteWhereInput
   some: FavoriteWhereInput
   none: FavoriteWhereInput
+}
+
+input CampaignStatusRelationFilter {
+  is: CampaignStatusWhereInput
+  isNot: CampaignStatusWhereInput
 }
 
 input FavoriteOrderByWithRelationInput {
@@ -826,7 +826,6 @@ input CampaignStatusOrderByWithRelationInput {
   agentId: SortOrder
   campaign: CampaignOrderByWithRelationInput
   agent: AgentOrderByWithRelationInput
-  campaignTimeline: CampaignTimelineOrderByRelationAggregateInput
 }
 
 enum CampaignScalarFieldEnum {
@@ -880,6 +879,7 @@ enum CampaignStatusScalarFieldEnum {
 }
 
 input CampaignTimelineOrderByWithRelationInput {
+  status: SortOrder
   id: SortOrder
   createdAt: SortOrder
   updatedAt: SortOrder
@@ -888,7 +888,6 @@ input CampaignTimelineOrderByWithRelationInput {
   agentId: SortOrder
   campaign: CampaignOrderByWithRelationInput
   agent: AgentOrderByWithRelationInput
-  status: CampaignStatusOrderByWithRelationInput
 }
 
 enum CampaignTimelineScalarFieldEnum {
@@ -898,6 +897,7 @@ enum CampaignTimelineScalarFieldEnum {
   notes
   campaignId
   agentId
+  status
 }
 
 input CampaignTimelineWhereUniqueInput {
@@ -1113,7 +1113,7 @@ input UpdateBookingInput {
 }
 
 input CreateCampaignStatusInput {
-  status: CampaignStatusType
+  status: CampaignStatusType!
   agentId: String
   campaignId: Int!
 }
@@ -1125,12 +1125,14 @@ input UpdateCampaignStatusInput {
 }
 
 input CreateCampaignTimelineInput {
+  status: CampaignStatusType!
   notes: String
   agentId: String
   campaignId: Int!
 }
 
 input UpdateCampaignTimelineInput {
+  status: CampaignStatusType
   notes: String
   agentId: String
   campaignId: Int

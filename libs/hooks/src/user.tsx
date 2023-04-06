@@ -4,41 +4,34 @@ import { setUser } from '@billboards-org/store/user'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect } from 'react'
 
-interface User {
-  uid: string
-  email: string
-  displayName: string
-  roles: string[]
-  token: string | undefined
-}
-
-type OnUserChangedCallback = (user: User | null) => void
-
 export const useUserListener = () => {
   //   useRefreshToken()
+  console.log('Hello listener starsts: ')
   const dispatch = useAppDispatch()
 
-  useEffect(() => {
-    return onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        setUser(null)
-        return
-      }
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          dispatch(setUser({}))
+          return
+        }
 
-      const tokenResult = await auth.currentUser?.getIdTokenResult()
-      const roles = tokenResult?.claims.roles || []
-      const { displayName, email, uid } = user
-      dispatch(
-        setUser({
-          uid,
-          email: email || '',
-          displayName: displayName || '',
-          roles,
-          token: tokenResult?.token,
-        }),
-      )
-    })
-  }, [setUser])
+        const tokenResult = await auth.currentUser?.getIdTokenResult()
+        const roles = tokenResult?.claims.roles || []
+        const { displayName, email, uid } = user
+        dispatch(
+          setUser({
+            uid,
+            email: email || '',
+            displayName: displayName || '',
+            roles,
+            token: tokenResult?.token,
+          }),
+        )
+      }),
+    [],
+  )
 }
 
 // export const useRefreshToken = () => {

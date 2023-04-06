@@ -1,8 +1,13 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { CampaignTimeline as CampaignTimelineType } from '@prisma/client'
+import {
+  CampaignStatusType,
+  CampaignTimeline as CampaignTimelineType,
+} from '@prisma/client'
 
 @ObjectType()
 export class CampaignTimeline implements CampaignTimelineType {
+  @Field(() => CampaignStatusType)
+  status: CampaignStatusType
   id: number
   createdAt: Date
   updatedAt: Date
@@ -11,6 +16,4 @@ export class CampaignTimeline implements CampaignTimelineType {
   campaignId: number
   @Field(() => String, { nullable: true })
   agentId: string
-  // Todo fill all properties. To make it nullable add below.
-  // @Field(() => String, { nullable: true })
 }

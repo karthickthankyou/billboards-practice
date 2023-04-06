@@ -71,7 +71,7 @@ export const MarkerWithPopup = ({
     useGetFavoriteLazyQuery()
 
   useEffect(() => {
-    if (user.uid) {
+    if (user.uid && marker.id) {
       refetchFavorite({
         variables: {
           where: {

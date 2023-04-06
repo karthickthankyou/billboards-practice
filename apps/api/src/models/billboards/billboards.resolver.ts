@@ -53,7 +53,8 @@ export class BillboardsResolver {
     @Args('dateFilter', { nullable: true }) dateFilter: DateFilterInput,
     @Args('locationFilter')
     locationFilter: LocationFilterInput,
-    @Args() args: FindManyBillboardArgs,
+    @Args()
+    { cursor, distinct, orderBy, skip, take, where }: FindManyBillboardArgs,
   ) {
     const { endDate, startDate } = dateFilter
     const { nw_lat, nw_lng, se_lat, se_lng } = locationFilter
@@ -64,9 +65,13 @@ export class BillboardsResolver {
     )
 
     const billboards = await this.prisma.billboard.findMany({
-      ...args,
+      cursor,
+      distinct,
+      orderBy,
+      skip,
+      take,
       where: {
-        ...args.where,
+        ...where,
         lat: { lte: nw_lat, gte: se_lat },
         lng: { gte: nw_lng, lte: se_lng },
         minBookingDays: { lte: days },

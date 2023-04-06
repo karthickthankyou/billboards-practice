@@ -87,7 +87,7 @@ model BillboardStatus {
     updatedAt DateTime @updatedAt
 
     notes  String?
-    status BillboardStatusType
+    status BillboardStatusType @default(NEW)
 
     billboard   Billboard @relation(fields: [billboardId], references: [id])
     billboardId Int       @id
@@ -108,7 +108,7 @@ model BillboardTimeline {
     agent   Agent?  @relation(fields: [agentId], references: [uid])
     agentId String?
 
-    status BillboardStatusType
+    status BillboardStatusType @default(NEW)
 }
 
 model Campaign {
@@ -144,12 +144,11 @@ model CampaignStatus {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    status           CampaignStatusType
-    campaign         Campaign           @relation(fields: [campaignId], references: [id])
-    campaignId       Int                @id
-    agent            Agent?             @relation(fields: [agentId], references: [uid])
-    agentId          String?
-    campaignTimeline CampaignTimeline[]
+    status     CampaignStatusType
+    campaign   Campaign           @relation(fields: [campaignId], references: [id])
+    campaignId Int                @id
+    agent      Agent?             @relation(fields: [agentId], references: [uid])
+    agentId    String?
 }
 
 model CampaignTimeline {
@@ -165,7 +164,7 @@ model CampaignTimeline {
     agent   Agent?  @relation(fields: [agentId], references: [uid])
     agentId String?
 
-    status CampaignStatus @relation(fields: [id], references: [campaignId])
+    status CampaignStatusType @default(NEW)
 }
 
 enum BillboardType {

@@ -27,6 +27,6 @@ export class FindManyOwnerArgs
 
 @ArgsType()
 export class FindUniqueOwnerArgs {
-  @Field({ nullable: true })
+  @Field(() => OwnerWhereUniqueInput, { nullable: true })
   where: OwnerWhereUniqueInput
 }

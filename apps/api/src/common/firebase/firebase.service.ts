@@ -21,13 +21,14 @@ export class FirebaseService {
     return this.firebaseApp.auth()
   }
   async setRole(user: GetUserType, role: Role) {
-    if (user.roles.includes(role)) {
+    const existingroles = user?.roles || []
+    if (existingroles.includes(role)) {
       //   throw new BadRequestException(`User already has this role. ${role}`)
       console.error(`User already has this role. ${role}`)
       return
     }
 
-    const updatedRoles = [...user.roles, role]
+    const updatedRoles = [...existingroles, role]
 
     await this.firebaseApp
       .auth()

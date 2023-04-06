@@ -526,7 +526,7 @@ export type CampaignStatus = {
   campaignId: Scalars['Int']
   campaignTimeline: Array<CampaignTimeline>
   createdAt: Scalars['DateTime']
-  status?: Maybe<CampaignStatusType>
+  status: CampaignStatusType
   updatedAt: Scalars['DateTime']
 }
 
@@ -545,7 +545,6 @@ export type CampaignStatusOrderByWithRelationInput = {
   agentId?: InputMaybe<SortOrder>
   campaign?: InputMaybe<CampaignOrderByWithRelationInput>
   campaignId?: InputMaybe<SortOrder>
-  campaignTimeline?: InputMaybe<CampaignTimelineOrderByRelationAggregateInput>
   createdAt?: InputMaybe<SortOrder>
   status?: InputMaybe<SortOrder>
   updatedAt?: InputMaybe<SortOrder>
@@ -582,7 +581,6 @@ export type CampaignStatusWhereInput = {
   agentId?: InputMaybe<StringFilter>
   campaign?: InputMaybe<CampaignRelationFilter>
   campaignId?: InputMaybe<IntFilter>
-  campaignTimeline?: InputMaybe<CampaignTimelineListRelationFilter>
   createdAt?: InputMaybe<DateTimeFilter>
   status?: InputMaybe<EnumCampaignStatusTypeFilter>
   updatedAt?: InputMaybe<DateTimeFilter>
@@ -602,6 +600,7 @@ export type CampaignTimeline = {
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
   notes?: Maybe<Scalars['String']>
+  status: CampaignStatusType
   updatedAt: Scalars['DateTime']
 }
 
@@ -623,7 +622,7 @@ export type CampaignTimelineOrderByWithRelationInput = {
   createdAt?: InputMaybe<SortOrder>
   id?: InputMaybe<SortOrder>
   notes?: InputMaybe<SortOrder>
-  status?: InputMaybe<CampaignStatusOrderByWithRelationInput>
+  status?: InputMaybe<SortOrder>
   updatedAt?: InputMaybe<SortOrder>
 }
 
@@ -633,6 +632,7 @@ export enum CampaignTimelineScalarFieldEnum {
   CreatedAt = 'createdAt',
   Id = 'id',
   Notes = 'notes',
+  Status = 'status',
   UpdatedAt = 'updatedAt',
 }
 
@@ -647,7 +647,7 @@ export type CampaignTimelineWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>
   id?: InputMaybe<IntFilter>
   notes?: InputMaybe<StringFilter>
-  status?: InputMaybe<CampaignStatusRelationFilter>
+  status?: InputMaybe<EnumCampaignStatusTypeFilter>
   updatedAt?: InputMaybe<DateTimeFilter>
 }
 
@@ -737,13 +737,14 @@ export type CreateCampaignInput = {
 export type CreateCampaignStatusInput = {
   agentId?: InputMaybe<Scalars['String']>
   campaignId: Scalars['Int']
-  status?: InputMaybe<CampaignStatusType>
+  status: CampaignStatusType
 }
 
 export type CreateCampaignTimelineInput = {
   agentId?: InputMaybe<Scalars['String']>
   campaignId: Scalars['Int']
   notes?: InputMaybe<Scalars['String']>
+  status: CampaignStatusType
 }
 
 export type CreateFavoriteInput = {
@@ -1134,9 +1135,9 @@ export type OwnerWhereUniqueInput = {
 
 export type Query = {
   __typename?: 'Query'
-  advertiser: Advertiser
+  advertiser?: Maybe<Advertiser>
   advertisers: Array<Advertiser>
-  agent: Agent
+  agent?: Maybe<Agent>
   agents: Array<Agent>
   allBillboardTimelines: Array<BillboardTimeline>
   billboard: Billboard
@@ -1155,7 +1156,7 @@ export type Query = {
   campaigns: Array<Campaign>
   favorite: Favorite
   favorites: Array<Favorite>
-  owner: Owner
+  owner?: Maybe<Owner>
   owners: Array<Owner>
   searchBillboards: Array<BillboardPublic>
 }
@@ -1467,6 +1468,7 @@ export type UpdateCampaignTimelineInput = {
   campaignId?: InputMaybe<Scalars['Int']>
   id: Scalars['Int']
   notes?: InputMaybe<Scalars['String']>
+  status?: InputMaybe<CampaignStatusType>
 }
 
 export type UpdateFavoriteInput = {

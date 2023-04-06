@@ -32,7 +32,7 @@ export class AgentsResolver {
     private readonly firebase: FirebaseService,
   ) {}
 
-  @AllowAuthenticated('admin')
+  @AllowAuthenticated()
   @Mutation(() => Agent)
   async createAgent(
     @Args('createAgentInput') args: CreateAgentInput,
@@ -49,7 +49,7 @@ export class AgentsResolver {
     return this.agentsService.findAll(args)
   }
 
-  @Query(() => Agent, { name: 'agent' })
+  @Query(() => Agent, { name: 'agent', nullable: true })
   findOne(@Args() args: FindUniqueAgentArgs) {
     return this.agentsService.findOne(args)
   }

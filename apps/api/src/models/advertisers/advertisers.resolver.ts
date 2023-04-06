@@ -47,7 +47,7 @@ export class AdvertisersResolver {
     return this.advertisersService.findAll(args)
   }
 
-  @Query(() => Advertiser, { name: 'advertiser' })
+  @Query(() => Advertiser, { name: 'advertiser', nullable: true })
   findOne(@Args() args: FindUniqueAdvertiserArgs) {
     return this.advertisersService.findOne(args)
   }

@@ -20,6 +20,8 @@ import { signOut } from '@billboards-org/network/src/auth'
 import { Role, selectUser } from '@billboards-org/store/user'
 
 const MENUITEMS = [
+  ['Owner', '/owner'],
+  ['Search', '/search'],
   ['About', '/about'],
   ['How it works', '/how-it-works'],
   ['Contact', '/contact'],

@@ -2,7 +2,6 @@ import Map, { LngLatBounds, useMap } from 'react-map-gl'
 
 import { SearchPlaceBox } from '../../organisms/SearchPlaceBox'
 import { useEffect, useState } from 'react'
-import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { Button } from '../../atoms/Button'
 import {
@@ -42,6 +41,8 @@ import {
   BookingWithInCampaign,
   useCreateCampaignMutation,
 } from '@billboards-org/network/src/generated'
+import { Panel } from '../../organisms/Map/Panel'
+import { DefaultZoomControls } from '../../organisms/Map/ZoomControls/ZoomControls'
 
 export interface ISearchPageTemplateProps {}
 
@@ -127,7 +128,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
         scrollZoom={false}
       >
         <DisplayMarkers variables={variables} switchMode={switchMode} />
-        {/* <Panel position="right-center">
+        <Panel position="right-center">
           <DefaultZoomControls />
         </Panel>
         <Panel position="left-top">
@@ -220,7 +221,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
               <IconAlertCircle /> {value.message}
             </div>
           ))}
-        </Panel> */}
+        </Panel>
         <StyleMap />
       </Map>
     </div>

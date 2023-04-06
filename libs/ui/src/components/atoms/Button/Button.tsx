@@ -76,7 +76,7 @@ export const Button = ({
       {isLoading ? (
         <>
           <div className="absolute inset-0 flex items-center justify-center">
-            <IconRefresh className="w-5 h-5 animate-spin-reverse" />
+            <IconRefresh className="w-5 h-5 animate-spin" />
           </div>
           <div className="opacity-10">{children}</div>
         </>

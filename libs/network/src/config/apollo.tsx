@@ -23,7 +23,7 @@ export const ApolloProvider = ({ children }: IApolloProviderProps) => {
   const user = useAppSelector(selectUser)
   //   Create an http link
   const httpLink = createHttpLink({
-    uri: 'http://localhost:3001/graphql',
+    uri: 'http://localhost:3000/graphql',
   })
 
   const authLink = setContext(async (_, { headers }) => {
