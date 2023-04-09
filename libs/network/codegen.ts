@@ -10,6 +10,7 @@ const config: CodegenConfig = {
       plugins: [
         'typescript',
         'typescript-operations',
+        'named-operations-object',
         'typescript-react-apollo',
       ],
       config: {

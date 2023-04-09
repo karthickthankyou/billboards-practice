@@ -11,6 +11,7 @@ import {
   TableLoading,
 } from '../AdvertiserPage/AdvertiserPage'
 import Badge from '../../atoms/Badge'
+import Link from 'next/link'
 
 export interface IOwnerPageProps {
   uid: string
@@ -19,6 +20,9 @@ export interface IOwnerPageProps {
 export const OwnerPage = ({ uid }: IOwnerPageProps) => {
   return (
     <Container className="space-y-2">
+      <div className="flex justify-end mt-4 text-sm">
+        <Link href="/billboards/new">New billboard</Link>
+      </div>
       <ShowApprovedBillboards uid={uid} />
       <ShowUnapprovedBillboards uid={uid} />
     </Container>

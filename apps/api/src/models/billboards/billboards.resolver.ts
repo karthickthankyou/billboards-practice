@@ -176,13 +176,8 @@ export class BillboardsResolver {
     })
   }
 
-  @AllowAuthenticated()
   @ResolveField(() => Number, { nullable: true })
-  async totalBookingDays(
-    @Parent() billboard: Billboard,
-    @GetUser() user: GetUserType,
-  ) {
-    checkRowLevelPermission(user, billboard.ownerId)
+  async totalBookingDays(@Parent() billboard: Billboard) {
     const result = await this.prisma.$queryRaw`
     SELECT SUM(EXTRACT(day FROM ("endDate"::timestamp - "startDate"::timestamp))) as total_booked_days
     FROM "Booking" JOIN "Campaign" ON "Booking"."campaignId" = "Campaign"."id"
@@ -192,10 +187,8 @@ export class BillboardsResolver {
     return result[0].total_booked_days || 0
   }
 
-  @AllowAuthenticated()
   @ResolveField(() => Boolean)
-  async booked(@Parent() billboard: Billboard, @GetUser() user: GetUserType) {
-    checkRowLevelPermission(user, billboard.ownerId)
+  async booked(@Parent() billboard: Billboard) {
     const currentDate = new Date()
 
     const booking = await this.prisma.booking.findMany({

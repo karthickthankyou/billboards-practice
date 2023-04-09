@@ -1,28 +1,16 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { IconX } from '@tabler/icons-react'
-import {
-  Dispatch,
-  Fragment,
-  ReactElement,
-  SetStateAction,
-  useState,
-} from 'react'
+import { Dispatch, Fragment, ReactNode, SetStateAction, useState } from 'react'
 
 interface IMyDialogProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  children: ReactElement | ReactElement[]
+  children: ReactNode
   title: string
   className?: string
 }
 
-export const Dialog2 = ({
-  open,
-  setOpen,
-  children,
-  title,
-  className,
-}: IMyDialogProps) => {
+export const Dialog2 = ({ open, setOpen, children, title }: IMyDialogProps) => {
   function closeModal() {
     setOpen(false)
   }

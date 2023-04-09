@@ -21,6 +21,7 @@ export interface IApolloProviderProps {
 
 export const ApolloProvider = ({ children }: IApolloProviderProps) => {
   const user = useAppSelector(selectUser)
+  console.log('User: ', user)
   //   Create an http link
   const httpLink = createHttpLink({
     uri: 'http://localhost:3000/graphql',
@@ -47,7 +48,7 @@ export const ApolloProvider = ({ children }: IApolloProviderProps) => {
 
   // Create an Apollo Client instance
   const apolloClient = new ApolloClient({
-    uri: 'http://localhost:3001/graphql',
+    uri: 'http://localhost:3000/graphql',
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
     connectToDevTools: true,
@@ -58,7 +59,7 @@ export const ApolloProvider = ({ children }: IApolloProviderProps) => {
 
 export async function createAuthenticatedClient() {
   const apolloClient = new ApolloClient({
-    uri: 'http://localhost:3001/graphql',
+    uri: 'http://localhost:3000/graphql',
     cache: new InMemoryCache(),
   })
 
@@ -84,7 +85,7 @@ export async function createAuthenticatedClient() {
   })
 
   const httpLink = createHttpLink({
-    uri: 'http://localhost:3001/graphql',
+    uri: 'http://localhost:3000/graphql',
   })
 
   return new ApolloClient({

@@ -1791,6 +1791,31 @@ export type CreateCampaignTimelineMutation = {
   createCampaignTimeline: { __typename?: 'CampaignTimeline'; id: number }
 }
 
+export const namedOperations = {
+  Query: {
+    GetBillboards: 'GetBillboards',
+    GetCampaigns: 'GetCampaigns',
+    SearchBillboards: 'SearchBillboards',
+    getOwner: 'getOwner',
+    getRoles: 'getRoles',
+    getFavorite: 'getFavorite',
+    getAgent: 'getAgent',
+    getAdvertiser: 'getAdvertiser',
+  },
+  Mutation: {
+    createBillboard: 'createBillboard',
+    CreateAgent: 'CreateAgent',
+    CreateAdvertiser: 'CreateAdvertiser',
+    Login: 'Login',
+    createOwner: 'createOwner',
+    createCampaign: 'createCampaign',
+    removeFavorite: 'removeFavorite',
+    createFavorite: 'createFavorite',
+    createBillboardTimeline: 'createBillboardTimeline',
+    createCampaignTimeline: 'createCampaignTimeline',
+  },
+}
+
 export const GetBillboardsDocument = /*#__PURE__*/ gql`
   query GetBillboards(
     $where: BillboardWhereInput

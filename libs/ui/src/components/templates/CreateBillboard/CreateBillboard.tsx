@@ -15,6 +15,7 @@ import { ProgressBar } from '../../atoms/ProgressBar'
 import { SearchPlaceBox } from '../../organisms/SearchPlaceBox'
 
 import Map, { Marker } from 'react-map-gl'
+import Link from 'next/link'
 
 import { RangeSlider } from '../../molecules/RangeSlider'
 
@@ -29,6 +30,7 @@ import { storage } from '@billboards-org/network/src/config/firebase'
 import { Panel } from '../../organisms/Map/Panel'
 import { DefaultZoomControls } from '../../organisms/Map/ZoomControls/ZoomControls'
 import { HtmlTextArea } from '../../atoms/HtmlTextArea'
+import { Dialog2 } from '../../atoms/Dialog2'
 
 export interface IOwnerPageProps {}
 
@@ -37,6 +39,7 @@ export const CreateBillboard = () => {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useCreateBillboardForm()
 
@@ -50,8 +53,12 @@ export const CreateBillboard = () => {
   const [mutateAsync, { loading, data: newlyCreatedBillboard }] =
     useCreateBillboardMutation()
 
+  const [showDialog, setshowDialog] = useState(false)
+
   useEffect(() => {
     if (newlyCreatedBillboard?.createBillboard) {
+      reset()
+      setshowDialog(true)
     }
   }, [newlyCreatedBillboard])
 
@@ -269,6 +276,10 @@ export const CreateBillboard = () => {
           </Map>
         </div>
       </Form>
+      <Dialog2 title="Congrats." setOpen={setshowDialog} open={showDialog}>
+        <div>Your billboard request is created.</div>
+        <Link href="/owner">Go to owner page.</Link>
+      </Dialog2>
     </Container>
   )
 }

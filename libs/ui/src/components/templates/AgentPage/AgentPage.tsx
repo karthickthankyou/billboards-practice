@@ -15,6 +15,8 @@ import {
   BillboardStatusType,
   CampaignStatusType,
   GetBillboardsDocument,
+  GetBillboardsQuery,
+  namedOperations,
   useCreateBillboardTimelineMutation,
   useCreateCampaignTimelineMutation,
   useGetBillboardsQuery,
@@ -90,21 +92,45 @@ const TableHeadBillboards = () => (
   </TableHead>
 )
 
+export const ApproveButton = ({ billboardId }: { billboardId: number }) => {
+  const uid = useAppSelector(selectUid)
+  const [createBillboardTimeline, { loading }] =
+    useCreateBillboardTimelineMutation({
+      awaitRefetchQueries: true,
+      refetchQueries: [namedOperations.Query.GetBillboards],
+    })
+
+  return (
+    <Button
+      isLoading={loading}
+      onClick={async () => {
+        await createBillboardTimeline({
+          variables: {
+            createBillboardTimelineInput: {
+              billboardId,
+              agentId: uid,
+              notes: 'Looks good ',
+              status: BillboardStatusType.Approved,
+            },
+          },
+        })
+      }}
+      variant="text"
+      size="none"
+    >
+      Approve
+    </Button>
+  )
+}
+
 export const ShowUnapprovedBillboards = () => {
-  const { data, refetch } = useGetBillboardsQuery({
+  const { data } = useGetBillboardsQuery({
     variables: {
       where: {
         status: { is: { status: { not: BillboardStatusType.Approved } } },
       },
     },
   })
-
-  const uid = useAppSelector(selectUid)
-
-  const [createBillboardTimeline, { loading }] =
-    useCreateBillboardTimelineMutation({
-      refetchQueries: [{ query: GetBillboardsDocument }],
-    })
 
   return (
     <>
@@ -127,26 +153,7 @@ export const ShowUnapprovedBillboards = () => {
                 <TableCell align="right">{row.angle}&deg;</TableCell>
                 <TableCell align="right">{row.address || ''}</TableCell>
                 <TableCell align="right">
-                  <Button
-                    isLoading={loading}
-                    onClick={async () => {
-                      await createBillboardTimeline({
-                        variables: {
-                          createBillboardTimelineInput: {
-                            billboardId: row.id,
-                            agentId: uid,
-                            notes: 'Looks good ',
-                            status: BillboardStatusType.Approved,
-                          },
-                        },
-                        refetchQueries: [{ query: GetBillboardsDocument }],
-                      })
-                    }}
-                    variant="text"
-                    size="none"
-                  >
-                    Approve
-                  </Button>
+                  <ApproveButton billboardId={row.id} />
                 </TableCell>
               </TableRow>
             ))}
@@ -164,6 +171,7 @@ export const ShowApprovedBillboards = () => {
         status: { is: { status: { equals: BillboardStatusType.Approved } } },
       },
     },
+    fetchPolicy: 'cache-and-network',
   })
 
   return (
@@ -290,6 +298,7 @@ export const ShowApprovedCampaigns = () => {
         status: { is: { status: { equals: CampaignStatusType.Approved } } },
       },
     },
+    notifyOnNetworkStatusChange: true,
   })
 
   return (
