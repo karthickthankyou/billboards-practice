@@ -1,0 +1,440 @@
+import {
+  Box,
+  GradientTexture,
+  OrbitControls,
+  OrthographicCamera,
+  PerspectiveCamera,
+  Plane,
+  useVideoTexture,
+} from '@react-three/drei'
+import { extend, PerspectiveCameraProps } from '@react-three/fiber'
+
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
+
+const createGradientTexture = (a: number, b: number, offset: number) => {
+  const canvas = document.createElement('canvas')
+  canvas.width = 2
+  canvas.height = 2
+
+  const ctx = canvas.getContext('2d')
+  const gradient = ctx?.createLinearGradient(0, 0, 0, 2)
+  gradient?.addColorStop(0, `hsl(0, 0%, ${b - offset}%)`)
+  gradient?.addColorStop(1, `hsl(0, 0%, ${a - offset}%)`)
+
+  //   ctx?.fillStyle = gradient
+  ctx?.fillRect(0, 0, 2, 2)
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.magFilter = THREE.LinearFilter
+  texture.minFilter = THREE.LinearMipMapLinearFilter
+
+  return texture
+}
+function setVideoTextureUVs(
+  geometry: { faceVertexUvs: THREE.Vector2[][][]; uvsNeedUpdate: boolean },
+  videoTexture: { image: { videoWidth: any; videoHeight: any } },
+) {
+  const width = videoTexture.image.videoWidth
+  const height = videoTexture.image.videoHeight
+
+  if (!width || !height) return
+
+  const aspectRatio = width / height
+  const scaleX = aspectRatio > 1 ? 1 : aspectRatio
+  const scaleY = aspectRatio > 1 ? 1 / aspectRatio : 1
+
+  geometry.faceVertexUvs[0] = [
+    [
+      new THREE.Vector2(0, scaleY),
+      new THREE.Vector2(scaleX, scaleY),
+      new THREE.Vector2(0, 0),
+    ],
+    [
+      new THREE.Vector2(scaleX, scaleY),
+      new THREE.Vector2(scaleX, 0),
+      new THREE.Vector2(0, 0),
+    ],
+  ]
+
+  geometry.uvsNeedUpdate = true
+}
+
+const MovingIntoTheCityCamera = ({ speed = 0.002 }) => {
+  const [x, setX] = useState(-20)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>()
+
+  useFrame(() => {
+    if (cameraRef?.current?.position) {
+      setX((prevX) => {
+        if (prevX >= 20) {
+          return -20
+        }
+        return prevX + speed
+      })
+
+      cameraRef.current.position.x = x
+      cameraRef.current.position.y = 5
+      cameraRef.current.position.z = 0
+      //   cameraRef.current.rotation.y += speed / 2
+      //   cameraRef.current.rotation.y = 45
+
+      //   cameraRef.current.lookAt(x, 2, 0) // Slightly look down
+    }
+  })
+
+  return (
+    <PerspectiveCamera
+      ref={cameraRef}
+      makeDefault
+      fov={40}
+      near={0.1}
+      far={1000}
+      rotation={[0, 30, 0]}
+      position={[-20, 0, 0]}
+    />
+  )
+}
+
+const MovingTopDownCamera = ({ speed = 0.002 }) => {
+  const [x, setX] = useState(-20)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>()
+
+  useFrame(() => {
+    if (cameraRef?.current?.position) {
+      setX((prevX) => {
+        if (prevX >= 20) {
+          return -20
+        }
+        return prevX + speed
+      })
+
+      cameraRef.current.position.x = x
+      cameraRef.current.position.y = 5
+      cameraRef.current.position.z = 0
+      //   cameraRef.current.rotation.y += speed / 2
+      cameraRef.current.rotation.x = 90
+
+      //   cameraRef.current.lookAt(x, 2, 0) // Slightly look down
+    }
+  })
+
+  return (
+    <PerspectiveCamera
+      ref={cameraRef}
+      makeDefault
+      fov={40}
+      near={0.1}
+      far={1000}
+      position={[-20, 0, 0]}
+    />
+  )
+}
+
+const MovingAroundCityCamera = ({ speed = 0.002 }) => {
+  const [x, setX] = useState(-20)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>()
+
+  useFrame(() => {
+    if (cameraRef?.current?.position) {
+      setX((prevX) => {
+        if (prevX >= 20) {
+          return -20
+        }
+        return prevX + speed
+      })
+
+      cameraRef.current.position.x = x
+      cameraRef.current.position.y = 5
+      cameraRef.current.position.z = -30
+      cameraRef.current.lookAt(x, 0, 0) // Slightly look down
+    }
+  })
+
+  return (
+    <PerspectiveCamera
+      ref={cameraRef}
+      makeDefault
+      fov={30}
+      near={0.1}
+      far={1000}
+      position={[-20, 4, -30]}
+    />
+  )
+}
+
+// const GradientCube2 = ({ a, b }: { a: number; b: number }) => {
+//   const frontTexture = useMemo(() => createGradientTexture(a, b, 0), [a, b])
+//   const leftTexture = useMemo(() => createGradientTexture(a, b, 10), [a, b])
+//   const rightTexture = useMemo(() => createGradientTexture(a, b, 20), [a, b])
+//   const backTexture = useMemo(() => createGradientTexture(a, b, 30), [a, b])
+//   const topTexture = useMemo(() => createGradientTexture(a, b, -10), [a, b])
+
+//   const materials = useMemo(
+//     () => [
+//       new THREE.MeshBasicMaterial({ map: leftTexture }),
+//       new THREE.MeshBasicMaterial({ map: rightTexture }),
+//       new THREE.MeshBasicMaterial({ color: `hsl(0, 0%, ${a}%)` }),
+//       new THREE.MeshBasicMaterial({ color: `hsl(0, 0%, ${b}%)` }),
+//       new THREE.MeshBasicMaterial({ map: frontTexture }),
+//       new THREE.MeshBasicMaterial({ map: backTexture }),
+//     ],
+//     [frontTexture, leftTexture, rightTexture, backTexture, a, b],
+//   )
+
+//   return (
+//     <Box args={[1, 1, 1]} material={materials}>
+//       <meshBasicMaterial map={topTexture} attachArray="material" />
+//     </Box>
+//   )
+// }
+
+function VideoMaterial({ url }: { url: string }) {
+  const texture = useVideoTexture(url, { crossOrigin: 'Anonymous' })
+  const geometryRef = useRef()
+
+  return (
+    <meshBasicMaterial
+      map={texture}
+      toneMapped={false}
+      onUpdate={() => {
+        if (
+          geometryRef.current &&
+          texture.image.videoWidth &&
+          texture.image.videoHeight
+        ) {
+          setVideoTextureUVs(geometryRef.current, texture)
+        }
+      }}
+    />
+  )
+}
+
+type Plane = {
+  rotation: [number, number, number]
+  position: [number, number, number]
+  colors: string[]
+  side: string
+}
+
+const GradientCube = ({
+  height = 1,
+  position = [0, 0, 0],
+}: {
+  height: number
+  position: [number, number, number]
+}) => {
+  const stops = [0, 1]
+  const [x, y, z] = position
+  const color = height * 10
+  const getColors = (offset: number) => [
+    `hsl(0, 0%, ${color - offset}%)`,
+    `hsl(0, 0%, 0%)`,
+  ]
+  const planes: Plane[] = [
+    {
+      rotation: [0, 0, 0],
+      position: [0, 0, 0.4],
+      colors: getColors(0),
+      side: 'front',
+    }, // Front
+    {
+      rotation: [0, -Math.PI / 2, 0],
+      position: [-0.4, 0, 0],
+      colors: getColors(10),
+      side: 'left',
+    }, // Left
+    {
+      rotation: [0, Math.PI / 2, 0],
+      position: [0.4, 0, 0],
+      colors: getColors(20),
+      side: 'right',
+    }, // Right
+    {
+      rotation: [0, Math.PI, 0],
+      position: [0, 0, -0.4],
+      colors: getColors(30),
+      side: 'back',
+    }, // Back
+    {
+      rotation: [-Math.PI / 2, 0, 0],
+      position: [0, 0.4, 0],
+      colors: [`hsl(0, 0%, ${color}%)`, `hsl(0, 0%, ${color}%)`],
+      side: 'top',
+    }, // Top
+  ]
+
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const textureRef = useRef<THREE.VideoTexture>()
+
+  useEffect(() => {
+    if (videoRef.current) {
+      textureRef.current = new THREE.VideoTexture(videoRef.current)
+      textureRef.current.wrapS = textureRef.current.wrapT = 1000 // set the wrap mode to repeat
+      textureRef.current.needsUpdate = true // update the texture when the video is played
+      videoRef.current.play()
+    }
+  }, [])
+
+  return (
+    <>
+      {' '}
+      <group position={[x, y + height / 2, z]} scale={[1, height, 1]}>
+        {planes.map(({ rotation, colors, position, side }, index) => (
+          <Plane
+            key={index}
+            args={[0.8, 0.8]}
+            rotation={rotation}
+            position={position}
+          >
+            {getRandomInt(1, 10) === 5 && side !== 'top' ? (
+              <VideoMaterial url={'ad2.mp4'} />
+            ) : (
+              <meshBasicMaterial>
+                <GradientTexture stops={stops} colors={colors} />
+              </meshBasicMaterial>
+            )}
+          </Plane>
+        ))}
+      </group>
+    </>
+  )
+}
+
+const randomNum = () => Math.floor(Math.random() * 10) + 1
+
+const positionExists = (
+  cityLayout: [number, number, number][],
+  position: [number, number, number],
+) => {
+  return cityLayout.some(
+    (existingPosition) =>
+      existingPosition[0] === position[0] &&
+      existingPosition[2] === position[2],
+  )
+}
+
+const getRandomInt = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+const generateCityLayout = ({
+  count = 20,
+}: {
+  count?: number
+}): [number, number, number][] => {
+  const cityLayout = []
+
+  while (cityLayout.length < count) {
+    const x = getRandomInt(-20, 20)
+    const z = getRandomInt(-20, 20)
+
+    if (z !== 0 && x !== 0 && !positionExists(cityLayout, [x, 0, z])) {
+      cityLayout.push([x, 0, z] as [number, number, number])
+    }
+  }
+
+  return cityLayout
+}
+
+const RotatingCamera = ({ speed = 0.001 }) => {
+  const [angle, setAngle] = useState(0)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>()
+
+  useFrame(() => {
+    if (cameraRef.current) {
+      setAngle((prevAngle) => (prevAngle + speed) % (2 * Math.PI))
+
+      const radius = 40
+
+      cameraRef.current.position.x = radius * Math.sin(angle)
+      cameraRef.current.position.z = radius * Math.cos(angle)
+      cameraRef.current.position.y = 40
+      cameraRef.current.lookAt(0, 0, 0)
+    }
+  })
+
+  return (
+    <PerspectiveCamera
+      ref={cameraRef}
+      makeDefault
+      fov={20}
+      near={0.1}
+      far={1000}
+      position={[40, 40, 40]}
+    />
+  )
+}
+
+const MovingCamera = ({ speed = 0.02 }: { speed?: number }) => {
+  const [x, setX] = useState(-20)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>()
+
+  useFrame(() => {
+    if (cameraRef.current) {
+      setX((prevX) => {
+        if (prevX >= 20) {
+          return -20
+        }
+        return prevX + speed
+      })
+      cameraRef.current.position.x = x
+
+      console.log(
+        ' cameraRef.current.position',
+        cameraRef.current.position,
+        cameraRef.current.rotation,
+      )
+    }
+  })
+
+  return (
+    <PerspectiveCamera
+      ref={cameraRef}
+      makeDefault
+      fov={40}
+      //   rotation={[0, 0, 0]} // Rotate the camera for an isometric angle
+      //   aspect={window.innerWidth / window.innerHeight}
+      near={0.1}
+      far={1000}
+      position={[-20, 20, 0]}
+    />
+  )
+}
+
+export const BillboardCity: React.FC = () => {
+  const cityLayout = generateCityLayout({ count: 120 })
+
+  return (
+    <Canvas style={{ height: '90vh' }}>
+      {/* <ambientLight intensity={0.5} /> */}
+      {/* <pointLight position={[10, 10, 10]} /> */}
+      <OrbitControls />
+      {/* <Box ref={boxRef} args={[1, 1, 1]}>
+        <meshStandardMaterial attach='material' />
+      </Box> */}
+      {/* <Box args={[1, 10, 1]} position={[1, 5, 1]} /> */}
+      {cityLayout.map((position, index) => (
+        <GradientCube
+          key={index}
+          height={getRandomInt(1, 10)}
+          position={position}
+        />
+      ))}
+      {/* <OrthographicCamera
+        makeDefault
+        position={[45, 45, 45]} // Position the camera
+        rotation={[0, 0, 45]} // Rotate the camera for an isometric angle
+        zoom={42} // Set the zoom level for the desired scale
+        near={0.1}
+        far={100}
+      /> */}
+      {/* <MovingCamera /> */}
+      {/* <RotatingCamera /> */}
+      {/* <MovingAroundCityCamera />
+      <MovingDownwardCamera/> */}
+      <MovingTopDownCamera />
+    </Canvas>
+  )
+}

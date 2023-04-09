@@ -1,4 +1,7 @@
-import { useCreateAgentMutation } from '@billboards-org/network/src/generated'
+import {
+  namedOperations,
+  useCreateAgentMutation,
+} from '@billboards-org/network/src/generated'
 import { Button } from '../../atoms/Button'
 import { Form } from '../../atoms/Form'
 import { HtmlInput } from '../../atoms/HtmlInput'
@@ -23,6 +26,8 @@ export const CreateAgent = ({ uid }: ICreateAgentProps) => {
             variables: {
               createAgentInput: { name, uid },
             },
+            awaitRefetchQueries: true,
+            refetchQueries: [namedOperations.Query.getAgent],
           })
         })}
       >

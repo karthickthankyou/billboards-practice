@@ -23,7 +23,7 @@ const JoinFamily = () => {
         color="primary"
         size="lg"
         className="mt-8"
-        onClick={() => router.push('createAccount')}
+        onClick={() => router.push('register')}
       >
         Join us
       </Button>

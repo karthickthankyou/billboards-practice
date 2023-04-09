@@ -10,6 +10,7 @@
     "tsc": "tsc"
   },
   "dependencies": {
+    "@billboards-org/3d": "*",
     "@billboards-org/ui": "*",
     "@types/node": "18.15.11",
     "@types/react": "18.0.33",

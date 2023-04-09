@@ -6,7 +6,6 @@ import {
   StringFilter,
 } from 'src/common/dtos/common.input'
 import { AgentRelationFilter } from 'src/models/agents/dto/where.args'
-import { CampaignTimelineListRelationFilter } from 'src/models/campaign-timelines/dto/where.args'
 import { CampaignRelationFilter } from 'src/models/campaigns/dto/where.args'
 
 @InputType()
