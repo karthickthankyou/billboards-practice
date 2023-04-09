@@ -21,8 +21,16 @@ export const getBillboards = gql`
       height
       width
       angle
+      name
       address
       createdAt
+      pricePerDay
+      status {
+        status
+      }
+      totalBookingDays
+      minBookingDays
+      booked
     }
   }
 `

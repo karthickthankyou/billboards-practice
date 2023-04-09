@@ -16,12 +16,7 @@ import { CreateBillboardStatusInput } from './dto/create-billboard-status.input'
 import { UpdateBillboardStatusInput } from './dto/update-billboard-status.input'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { Billboard } from '../billboards/entities/billboard.entity'
-import { GetUserType } from '@billboards-org/types'
-import {
-  AllowAuthenticated,
-  GetUser,
-} from 'src/common/decorators/auth/auth.decorator'
-import { checkRowLevelPermission } from 'src/common/guards'
+import { AllowAuthenticated } from 'src/common/decorators/auth/auth.decorator'
 import { Agent } from '../agents/entities/agent.entity'
 
 @Resolver(() => BillboardStatus)

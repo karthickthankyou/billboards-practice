@@ -25,7 +25,7 @@ export const Hero = ({}: IHeroProps) => {
               <h1 className="font-bold text-white text-7xl">Stand out.</h1>
             </div>
             <LinkButton
-              href="/search"
+              href="/billboards"
               className="inline-block px-4 py-2 mt-6 text-white bg-black"
             >
               Find ad spaces

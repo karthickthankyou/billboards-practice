@@ -5,18 +5,12 @@ import {
 } from '@billboards-org/network/src/generated'
 import { useAppSelector } from '@billboards-org/store'
 import { selectUid } from '@billboards-org/store/user'
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableHead,
-  TableRow,
-} from '@mui/material'
+import { Table, TableBody, TableHead, TableRow } from '@mui/material'
 import { IconArrowRight, IconBox, IconCheck } from '@tabler/icons-react'
 import { differenceInDays, format } from 'date-fns'
 import { LinkButton } from '../../atoms/LinkButton'
 import { Container } from '../../atoms/Container'
-import { Loader, LoaderPanel } from '../../molecules/Loader'
+import { LoaderPanel } from '../../molecules/Loader'
 import { ReactNode } from 'react'
 import { TableCell } from '../AgentPage/AgentPage'
 import Badge from '../../atoms/Badge'

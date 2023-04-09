@@ -17,6 +17,8 @@ export const createBillboardSchema = z.object({
   elevation: z.number(),
   angle: z.number(),
   lng: z.number(),
+  name: z.string(),
+  address: z.string(),
 })
 
 export type FormTypeCreateBillboard = z.infer<typeof createBillboardSchema>

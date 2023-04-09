@@ -137,7 +137,7 @@ export class BillboardsResolver {
   }
 
   @ResolveField(() => BillboardStatus)
-  billboardStatus(@Parent() billboard: Billboard) {
+  status(@Parent() billboard: Billboard) {
     return this.prisma.billboardStatus.findUnique({
       where: { billboardId: billboard.id },
     })
@@ -174,5 +174,44 @@ export class BillboardsResolver {
     return this.prisma.favorite.findMany({
       where: { billboardId: billboard.id },
     })
+  }
+
+  @AllowAuthenticated()
+  @ResolveField(() => Number, { nullable: true })
+  async totalBookingDays(
+    @Parent() billboard: Billboard,
+    @GetUser() user: GetUserType,
+  ) {
+    checkRowLevelPermission(user, billboard.ownerId)
+    const result = await this.prisma.$queryRaw`
+    SELECT SUM(EXTRACT(day FROM ("endDate"::timestamp - "startDate"::timestamp))) as total_booked_days
+    FROM "Booking" JOIN "Campaign" ON "Booking"."campaignId" = "Campaign"."id"
+    WHERE "Booking"."billboardId" = ${billboard.id};
+  `
+    console.log('result', result)
+    return result[0].total_booked_days || 0
+  }
+
+  @AllowAuthenticated()
+  @ResolveField(() => Boolean)
+  async booked(@Parent() billboard: Billboard, @GetUser() user: GetUserType) {
+    checkRowLevelPermission(user, billboard.ownerId)
+    const currentDate = new Date()
+
+    const booking = await this.prisma.booking.findMany({
+      where: {
+        billboardId: { equals: billboard.id },
+        campaign: {
+          startDate: {
+            lte: currentDate,
+          },
+          endDate: {
+            gte: currentDate,
+          },
+        },
+      },
+    })
+
+    return booking.length > 0 ? true : false
   }
 }

@@ -1,7 +1,7 @@
-import { ReactElement } from 'react'
+import { ReactNode } from 'react'
 
 export interface IBadgeProps {
-  children: ReactElement | string
+  children: ReactNode
   size?: 'sm' | 'md' | 'lg'
   variant?: 'primary' | 'gray' | 'red' | 'yellow' | 'green'
 }

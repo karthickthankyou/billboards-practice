@@ -18,12 +18,7 @@ import { BillboardStatus } from '@prisma/client'
 import { Agent } from '../agents/entities/agent.entity'
 import { Billboard } from '../billboards/entities/billboard.entity'
 import { PrismaService } from 'src/common/prisma/prisma.service'
-import {
-  AllowAuthenticated,
-  GetUser,
-} from 'src/common/decorators/auth/auth.decorator'
-import { GetUserType } from '@billboards-org/types'
-import { checkRowLevelPermission } from 'src/common/guards'
+import { AllowAuthenticated } from 'src/common/decorators/auth/auth.decorator'
 import { BadRequestException } from '@nestjs/common'
 
 @Resolver(() => BillboardTimeline)

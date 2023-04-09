@@ -126,8 +126,8 @@ export type Billboard = {
   __typename?: 'Billboard'
   address?: Maybe<Scalars['String']>
   angle?: Maybe<Scalars['Int']>
-  billboardStatus: BillboardStatus
   billboardTimeline: Array<BillboardTimeline>
+  booked: Scalars['Boolean']
   bookings: Array<Booking>
   createdAt: Scalars['DateTime']
   elevation?: Maybe<Scalars['Int']>
@@ -139,9 +139,12 @@ export type Billboard = {
   lat: Scalars['Float']
   lng: Scalars['Float']
   minBookingDays?: Maybe<Scalars['Int']>
+  name: Scalars['String']
   owner: Owner
   ownerId: Scalars['String']
   pricePerDay?: Maybe<Scalars['Int']>
+  status: BillboardStatus
+  totalBookingDays?: Maybe<Scalars['Int']>
   type: BillboardType
   updatedAt: Scalars['DateTime']
   width: Scalars['Int']
@@ -172,6 +175,7 @@ export type BillboardOrderByWithRelationInput = {
   lat?: InputMaybe<SortOrder>
   lng?: InputMaybe<SortOrder>
   minBookingDays?: InputMaybe<SortOrder>
+  name?: InputMaybe<SortOrder>
   owner?: InputMaybe<OwnerOrderByWithRelationInput>
   ownerId?: InputMaybe<SortOrder>
   pricePerDay?: InputMaybe<SortOrder>
@@ -214,6 +218,7 @@ export enum BillboardScalarFieldEnum {
   Lat = 'lat',
   Lng = 'lng',
   MinBookingDays = 'minBookingDays',
+  Name = 'name',
   OwnerId = 'ownerId',
   PricePerDay = 'pricePerDay',
   Type = 'type',
@@ -386,6 +391,7 @@ export type BillboardWhereInput = {
   lat?: InputMaybe<FloatFilter>
   lng?: InputMaybe<FloatFilter>
   minBookingDays?: InputMaybe<IntFilter>
+  name?: InputMaybe<StringFilter>
   owner?: InputMaybe<OwnerRelationFilter>
   ownerId?: InputMaybe<StringFilter>
   pricePerDay?: InputMaybe<FloatFilter>
@@ -700,6 +706,7 @@ export type CreateBillboardInput = {
   lat: Scalars['Float']
   lng: Scalars['Float']
   minBookingDays?: InputMaybe<Scalars['Int']>
+  name: Scalars['String']
   ownerId: Scalars['String']
   pricePerDay?: InputMaybe<Scalars['Int']>
   type: BillboardType
@@ -1421,6 +1428,7 @@ export type UpdateBillboardInput = {
   lat?: InputMaybe<Scalars['Float']>
   lng?: InputMaybe<Scalars['Float']>
   minBookingDays?: InputMaybe<Scalars['Int']>
+  name?: InputMaybe<Scalars['String']>
   ownerId?: InputMaybe<Scalars['String']>
   pricePerDay?: InputMaybe<Scalars['Int']>
   type?: InputMaybe<BillboardType>

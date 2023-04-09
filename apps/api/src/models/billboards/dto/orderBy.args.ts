@@ -13,6 +13,8 @@ export class BillboardOrderByWithRelationInput
   @Field(() => Prisma.SortOrder, { nullable: true })
   id: Prisma.SortOrder
   @Field(() => Prisma.SortOrder, { nullable: true })
+  name: Prisma.SortOrder
+  @Field(() => Prisma.SortOrder, { nullable: true })
   createdAt: Prisma.SortOrder
   @Field(() => Prisma.SortOrder, { nullable: true })
   updatedAt: Prisma.SortOrder

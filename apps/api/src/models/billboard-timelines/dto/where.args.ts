@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql'
-import { BillboardStatusType, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import {
   DateTimeFilter,
   IntFilter,

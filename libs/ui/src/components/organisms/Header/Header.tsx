@@ -15,13 +15,13 @@ import { Brand } from '../../atoms/Brand'
 
 import { Button } from '../../atoms/Button'
 import { Container } from '../../atoms/Container'
-import { useAppSelector } from '@billboards-org/store'
+import { useAppDispatch, useAppSelector } from '@billboards-org/store'
 import { signOut } from '@billboards-org/network/src/auth'
 import { Role, selectUser } from '@billboards-org/store/user'
 
 const MENUITEMS = [
   ['Owner', '/owner'],
-  ['Search', '/search'],
+  ['Search', '/billboards'],
   ['About', '/about'],
   ['How it works', '/how-it-works'],
   ['Contact', '/contact'],
@@ -51,6 +51,7 @@ const NavSidebarUser = ({
   setOpen: Dispatch<SetStateAction<boolean>>
 }) => {
   const user = useAppSelector(selectUser)
+  const dispatch = useAppDispatch()
 
   return (
     <Sidebar open={open} setOpen={setOpen}>
@@ -128,7 +129,7 @@ const NavSidebarUser = ({
 
             <Button
               variant="text"
-              onClick={() => signOut()}
+              onClick={async () => await signOut()}
               className="flex items-center gap-2"
             >
               Log out <IconDoorExit />

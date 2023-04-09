@@ -6,8 +6,9 @@ import { OwnerPage } from '@billboards-org/ui/src/components/templates/OwnerPage
 import { GetAccessPage } from '@billboards-org/ui/src/components/templates/GetAccessPage'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { CreateBillboard } from '@billboards-org/ui/src/components/templates/CreateBillboard'
 
-const Owner = () => {
+const CreateBillboardPage = () => {
   const user = useAppSelector(selectUser)
 
   const [getOwner, { data }] = useGetOwnerLazyQuery()
@@ -33,7 +34,7 @@ const Owner = () => {
     return <GetAccessPage />
   }
 
-  return <OwnerPage uid={user?.uid} />
+  return <CreateBillboard />
 }
 
-export default Owner
+export default CreateBillboardPage

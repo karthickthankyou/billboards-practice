@@ -37,16 +37,19 @@ type Billboard {
   angle: Int
   elevation: Int
   id: Int!
+  name: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   height: Int!
   width: Int!
   ownerId: String!
   owner: Owner!
-  billboardStatus: BillboardStatus!
+  status: BillboardStatus!
   bookings: [Booking!]!
   billboardTimeline: [BillboardTimeline!]!
   favorites: [Favorite!]!
+  totalBookingDays: Int
+  booked: Boolean!
 }
 
 enum BillboardType {
@@ -385,6 +388,7 @@ input BillboardWhereInput {
   pricePerDay: FloatFilter
   impressionsPerDay: IntFilter
   minBookingDays: IntFilter
+  name: StringFilter
   address: StringFilter
   images: StringListFilter
   type: EnumBillboardTypeFilter
@@ -601,6 +605,7 @@ input FavoriteOrderByRelationAggregateInput {
 
 input BillboardOrderByWithRelationInput {
   id: SortOrder
+  name: SortOrder
   createdAt: SortOrder
   updatedAt: SortOrder
   lat: SortOrder
@@ -734,6 +739,7 @@ enum BillboardScalarFieldEnum {
   id
   createdAt
   updatedAt
+  name
   lat
   lng
   height
@@ -1023,6 +1029,7 @@ input CreateBillboardInput {
   type: BillboardType!
   angle: Int
   elevation: Int
+  name: String!
   height: Int!
   width: Int!
   ownerId: String!
@@ -1039,6 +1046,7 @@ input UpdateBillboardInput {
   type: BillboardType
   angle: Int
   elevation: Int
+  name: String
   height: Int
   width: Int
   ownerId: String

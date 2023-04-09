@@ -8,6 +8,7 @@ registerEnumType(BillboardType, {
 @ObjectType()
 export class Billboard implements BillboardObjectType {
   id: number
+  name: string
   createdAt: Date
   updatedAt: Date
   @Field(() => Float)

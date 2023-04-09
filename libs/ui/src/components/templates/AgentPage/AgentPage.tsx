@@ -8,7 +8,6 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material'
-import { ReactNode, useState } from 'react'
 
 import { Button } from '../../atoms/Button'
 import { Container } from '../../atoms/Container'
@@ -16,9 +15,7 @@ import {
   BillboardStatusType,
   CampaignStatusType,
   GetBillboardsDocument,
-  GetBillboardsQuery,
   useCreateBillboardTimelineMutation,
-  useCreateCampaignMutation,
   useCreateCampaignTimelineMutation,
   useGetBillboardsQuery,
   useGetCampaignsQuery,
@@ -28,7 +25,7 @@ import { selectUid } from '@billboards-org/store/user'
 import { IconCheck } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { notification$ } from '@billboards-org/util/subjects'
-import { TableLoading } from '../AdvertiserPage/AdvertiserPage'
+import { Heading } from '../AdvertiserPage/AdvertiserPage'
 
 export interface IAgentPageProps {}
 
@@ -125,10 +122,9 @@ export const ShowUnapprovedBillboards = () => {
                   {row.id}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.height}
+                  {row.height} ft x {row.width} ft
                 </TableCell>
-                <TableCell align="right">{row.width}</TableCell>
-                <TableCell align="right">{row.angle}</TableCell>
+                <TableCell align="right">{row.angle}&deg;</TableCell>
                 <TableCell align="right">{row.address || ''}</TableCell>
                 <TableCell align="right">
                   <Button
@@ -143,6 +139,7 @@ export const ShowUnapprovedBillboards = () => {
                             status: BillboardStatusType.Approved,
                           },
                         },
+                        refetchQueries: [{ query: GetBillboardsDocument }],
                       })
                     }}
                     variant="text"
@@ -159,6 +156,7 @@ export const ShowUnapprovedBillboards = () => {
     </>
   )
 }
+
 export const ShowApprovedBillboards = () => {
   const { data } = useGetBillboardsQuery({
     variables: {
@@ -216,7 +214,7 @@ export const ShowUnapprovedCampaigns = () => {
 
   return (
     <div>
-      <div>UnApproved: {data?.campaigns.length}</div>
+      <Heading>Unapproved Campaigns</Heading>
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -284,6 +282,7 @@ export const ShowUnapprovedCampaigns = () => {
     </div>
   )
 }
+
 export const ShowApprovedCampaigns = () => {
   const { data } = useGetCampaignsQuery({
     variables: {
@@ -295,7 +294,7 @@ export const ShowApprovedCampaigns = () => {
 
   return (
     <div>
-      <div>Approved: {data?.campaigns.length}</div>
+      <Heading>Approved Campaigns</Heading>
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

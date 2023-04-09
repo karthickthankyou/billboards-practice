@@ -19,6 +19,7 @@ export class CreateBillboardInput extends PickType(
     'pricePerDay',
     'type',
     'width',
+    'name',
   ],
   InputType,
 ) {}

@@ -24,8 +24,9 @@ model Billboard {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    lat Float
-    lng Float
+    name String @default("")
+    lat  Float
+    lng  Float
 
     height Float
     width  Float

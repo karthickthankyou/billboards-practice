@@ -38,7 +38,7 @@ export const register = async ({
   return userCredential
 }
 
-export const signOut = () => firebaseSignOut(auth)
+export const signOut = async () => await firebaseSignOut(auth)
 
 export const resetPassword = (email: string) => {
   const redirectUrl =

@@ -26,7 +26,7 @@ export const userSlice = createSlice({
       ...action.payload,
       loaded: true,
     }),
-    resetUser: () => userInitialState,
+    resetUser: () => ({ loaded: true }),
   },
 })
 export const { setUser, resetUser } = userSlice.actions

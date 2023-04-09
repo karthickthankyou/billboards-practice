@@ -58,6 +58,8 @@ export class BillboardWhereInput
   @Field(() => IntFilter, { nullable: true })
   minBookingDays: IntFilter
   @Field(() => StringFilter, { nullable: true })
+  name: StringFilter
+  @Field(() => StringFilter, { nullable: true })
   address: StringFilter
   @Field(() => StringListFilter, { nullable: true })
   images: StringListFilter
