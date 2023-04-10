@@ -4,7 +4,6 @@ import { ApproveBillboardButton } from '../../templates/AgentPage/AgentPage'
 
 type BillboardCardProps = {
   billboard: GetBillboardsQuery['billboards'][0]
-  agentOnly?: boolean
 }
 
 export const TitleValue = ({
@@ -22,11 +21,7 @@ export const TitleValue = ({
   )
 }
 
-export const BillboardCard: React.FC<BillboardCardProps> = ({
-  billboard,
-  agentOnly,
-}) => {
-  console.log('billboard', billboard)
+export const BillboardCard: React.FC<BillboardCardProps> = ({ billboard }) => {
   return (
     <div className="w-full ">
       <div className="flex items-baseline gap-3 mb-2">
@@ -57,9 +52,6 @@ export const BillboardCard: React.FC<BillboardCardProps> = ({
         <TitleValue title="Min Booking Days">
           <p className="text-gray-600">{billboard.minBookingDays || 'N/A'}</p>
         </TitleValue>
-        {agentOnly ? (
-          <ApproveBillboardButton billboardId={billboard.id} />
-        ) : null}
       </div>
     </div>
   )

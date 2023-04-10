@@ -1,1 +1,1 @@
-export { ShowBillboards } from './ShowBillboards'
+export { RenderDataWithPagination } from './ShowBillboards'

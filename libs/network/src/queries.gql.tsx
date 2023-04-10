@@ -1,6 +1,25 @@
 import { gql } from 'graphql-request'
 
-export const getBillboards = gql`
+export const BillboardFields = gql`
+  fragment BillboardFields on Billboard {
+    id
+    height
+    width
+    angle
+    name
+    address
+    createdAt
+    pricePerDay
+    status {
+      status
+    }
+    totalBookingDays
+    minBookingDays
+    booked
+  }
+`
+
+export const GetBillboards = gql`
   query GetBillboards(
     $where: BillboardWhereInput
     $orderBy: [BillboardOrderByWithRelationInput!]
@@ -17,26 +36,39 @@ export const getBillboards = gql`
       skip: $skip
       distinct: $distinct
     ) {
-      id
-      height
-      width
-      angle
-      name
-      address
-      createdAt
-      pricePerDay
-      status {
-        status
-      }
-      totalBookingDays
-      minBookingDays
-      booked
+      ...BillboardFields
     }
     billboardAggregate(BillboardWhereInput: $where) {
       count
     }
   }
 `
+
+export const GetFavotireBillboards = gql`
+  query GetFavotireBillboards(
+    $where: BillboardWhereInput
+    $orderBy: [BillboardOrderByWithRelationInput!]
+    $cursor: WhereUniqueInputNumber
+    $take: Int
+    $skip: Int
+    $distinct: [BillboardScalarFieldEnum!]
+  ) {
+    billboards(
+      where: $where
+      orderBy: $orderBy
+      cursor: $cursor
+      take: $take
+      skip: $skip
+      distinct: $distinct
+    ) {
+      ...BillboardFields
+    }
+    billboardAggregate(BillboardWhereInput: $where) {
+      count
+    }
+  }
+`
+
 export const createBillboard = gql`
   mutation createBillboard($createBillboardInput: CreateBillboardInput!) {
     createBillboard(createBillboardInput: $createBillboardInput) {
@@ -225,6 +257,44 @@ export const getFavorite = gql`
     favorite(where: $where) {
       advertiserId
       billboardId
+    }
+  }
+`
+
+export const GetFavorites = gql`
+  query GetFavorites(
+    $where: FavoriteWhereInput
+    $orderBy: [FavoriteOrderByWithRelationInput!]
+    $cursor: FavoriteWhereUniqueInput
+    $take: Int
+    $skip: Int
+    $distinct: [FavoriteScalarFieldEnum!]
+  ) {
+    favorites(
+      where: $where
+      orderBy: $orderBy
+      cursor: $cursor
+      take: $take
+      skip: $skip
+      distinct: $distinct
+    ) {
+      advertiserId
+      billboardId
+      createdAt
+      billboard {
+        id
+        pricePerDay
+        minBookingDays
+        images
+        lat
+        lng
+        elevation
+        height
+        width
+        type
+        angle
+        impressionsPerDay
+      }
     }
   }
 `

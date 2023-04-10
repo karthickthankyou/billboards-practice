@@ -1,11 +1,6 @@
-import { TablePaginationProps } from '@mui/material/TablePagination/TablePagination'
-
-import dynamic from 'next/dynamic'
-const TablePagination = dynamic<TablePaginationProps>(() =>
-  import('@mui/material/TablePagination/TablePagination').then(
-    (module) => module.default,
-  ),
-)
+import TablePagination, {
+  TablePaginationProps,
+} from '@mui/material/TablePagination'
 
 export interface IPaginationProps {}
 

@@ -23,8 +23,7 @@ import {
 } from '@billboards-org/forms/src/filterCampaigns'
 import { FilterCampaigns } from '../../organisms/FilterCampaigns'
 import { FilterOwnerBillboards } from '../../organisms/FilterOwnerBillboards'
-import { ShowBillboards } from '../ShowBillboards'
-import { ShowCampaigns } from '../ShowCampaigns'
+import { RenderDataWithPagination } from '../ShowBillboards'
 import { useState } from 'react'
 import { Dialog2 } from '../../atoms/Dialog2'
 import { Form } from '../../atoms/Form'
@@ -34,6 +33,8 @@ import { useFormCreateBillboardTimeline } from '@billboards-org/forms/src/timeli
 import { useFormCreateCampaignTimeline } from '@billboards-org/forms/src/timelineCampaign'
 import HtmlSelect from '../../atoms/HtmlSelect'
 import { HtmlTextArea } from '../../atoms/HtmlTextArea'
+import { BillboardCard } from '../../organisms/BillboardsCard'
+import { CampaignCard } from '../../organisms/CampaignCard'
 
 export interface IAgentPageProps {}
 
@@ -240,15 +241,24 @@ export const ShowBillboardsAgent = () => {
   })
 
   return (
-    <ShowBillboards
-      agentOnly
-      data={data}
+    <RenderDataWithPagination
+      pagination={{
+        resultCount: data?.billboards.length || 0,
+        totalCount: data?.billboardAggregate.count || 0,
+        skip,
+        take,
+        setSkip: (skip: number) => setValue('skip', skip),
+        setTake: (take: number) => setValue('take', take),
+      }}
       loading={loading}
-      skip={skip || 0}
-      take={take || 12}
-      setSkip={(skip) => setValue('skip', skip)}
-      setTake={(take) => setValue('take', take)}
-    />
+    >
+      {data?.billboards.map((billboard) => (
+        <div>
+          <BillboardCard billboard={billboard} key={billboard.id} />
+          <ApproveBillboardButton billboardId={billboard.id} />
+        </div>
+      ))}
+    </RenderDataWithPagination>
   )
 }
 
@@ -267,14 +277,20 @@ export const ShowCampaignsAgent = () => {
   })
 
   return (
-    <ShowCampaigns
-      agentOnly
-      data={data}
+    <RenderDataWithPagination
+      pagination={{
+        resultCount: data?.campaigns.length || 0,
+        totalCount: data?.campaignAggregate.count || 0,
+        skip,
+        take,
+        setSkip: (skip: number) => setValue('skip', skip),
+        setTake: (take: number) => setValue('take', take),
+      }}
       loading={loading}
-      skip={skip || 0}
-      take={take || 12}
-      setSkip={(skip) => setValue('skip', skip)}
-      setTake={(take) => setValue('take', take)}
-    />
+    >
+      {data?.campaigns.map((campaign) => (
+        <CampaignCard campaign={campaign} key={campaign.id} />
+      ))}
+    </RenderDataWithPagination>
   )
 }

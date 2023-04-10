@@ -4,6 +4,7 @@ import { LoaderPanel } from '../../molecules/Loader'
 import { BillboardCard } from '../../organisms/BillboardsCard'
 import { NoCampaignResults } from '../AdvertiserPage/AdvertiserPage'
 import dynamic from 'next/dynamic'
+import { ReactNode } from 'react'
 
 const Pagination = dynamic(() =>
   import('../../molecules/Pagination').then((module) => module.Pagination),
@@ -11,49 +12,46 @@ const Pagination = dynamic(() =>
 
 export interface IShowBillboardsProps {
   loading: boolean
-  data: GetBillboardsQuery | undefined
-  skip: number
-  take: number
-  setSkip: (skip: number) => void
-  setTake: (take: number) => void
-  agentOnly?: boolean
+  pagination: {
+    skip?: number
+    take?: number
+    resultCount: number
+    totalCount: number
+    setSkip: (skip: number) => void
+    setTake: (take: number) => void
+  }
+  children?: ReactNode
 }
 
-export const ShowBillboards = ({
+export const RenderDataWithPagination = ({
   loading,
-  data,
-  skip,
-  take,
-  setSkip,
-  setTake,
-  agentOnly,
+  pagination: {
+    resultCount,
+    setSkip,
+    setTake,
+    skip = 0,
+    take = 12,
+    totalCount,
+  },
+  children,
 }: IShowBillboardsProps) => {
   return (
     <div>
       {loading && <LoaderPanel />}
-      {!loading && data && data.billboards.length === 0 && (
-        <NoCampaignResults />
-      )}
+      {!loading && resultCount === 0 && <NoCampaignResults />}
 
-      {!loading && data && data.billboards.length > 0 && (
+      {!loading && resultCount > 0 && (
         <div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {data.billboards.map((billboard) => (
-              <BillboardCard
-                agentOnly={agentOnly}
-                billboard={billboard}
-                key={billboard.id}
-              />
-            ))}
+            {children}
           </div>
           <Pagination
-            count={data?.billboardAggregate.count || 0}
+            count={totalCount || 0}
             page={(skip || 0) / (take || 12)}
             rowsPerPage={take || 0}
             showLastButton
             showFirstButton
             rowsPerPageOptions={[2, 4, 12, 24, 36, 48]}
-            // onPageChange={(v, c) => setValue('skip', c * (take || 12))}
             onPageChange={(v, c) => setSkip(c * (take || 12))}
             onRowsPerPageChange={(v) => {
               setTake(+v.target.value)

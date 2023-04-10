@@ -1,14 +1,14 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { ShowBillboards } from './ShowBillboards'
+import { RenderDataWithPagination } from './ShowBillboards'
 
 export default {
   title: 'src/components/templates/ShowBillboards',
-  component: ShowBillboards,
-} as ComponentMeta<typeof ShowBillboards>
+  component: RenderDataWithPagination,
+} as ComponentMeta<typeof RenderDataWithPagination>
 
-const Template: ComponentStory<typeof ShowBillboards> = (args) => (
-  <ShowBillboards {...args} />
+const Template: ComponentStory<typeof RenderDataWithPagination> = (args) => (
+  <RenderDataWithPagination {...args} />
 )
 
 export const Primary = Template.bind({})

@@ -8,7 +8,9 @@ import {
 } from '@billboards-org/forms/src/filterBillboards'
 
 import { useWatch, useFormContext } from 'react-hook-form'
-import { ShowBillboards } from '../ShowBillboards'
+import { RenderDataWithPagination } from '../ShowBillboards'
+import { BillboardCard } from '../../organisms/BillboardsCard'
+import { ApproveBillboardButton } from '../AgentPage/AgentPage'
 
 export interface IOwnerPageProps {
   uid: string
@@ -45,13 +47,20 @@ export const ShowBillboardsOwner = ({ uid }: { uid: string }) => {
   })
 
   return (
-    <ShowBillboards
-      data={data}
+    <RenderDataWithPagination
+      pagination={{
+        resultCount: data?.billboards.length || 0,
+        totalCount: data?.billboardAggregate.count || 0,
+        skip,
+        take,
+        setSkip: (skip) => setValue('skip', skip),
+        setTake: (take) => setValue('take', take),
+      }}
       loading={loading}
-      skip={skip || 0}
-      take={take || 12}
-      setSkip={(skip) => setValue('skip', skip)}
-      setTake={(take) => setValue('take', take)}
-    />
+    >
+      {data?.billboards.map((billboard) => (
+        <BillboardCard billboard={billboard} key={billboard.id} />
+      ))}
+    </RenderDataWithPagination>
   )
 }
