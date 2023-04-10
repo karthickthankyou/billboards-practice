@@ -1,8 +1,10 @@
 import { GetBillboardsQuery } from '@billboards-org/network/src/generated'
 import React, { ReactNode } from 'react'
+import { ApproveBillboardButton } from '../../templates/AgentPage/AgentPage'
 
 type BillboardCardProps = {
   billboard: GetBillboardsQuery['billboards'][0]
+  agentOnly?: boolean
 }
 
 export const TitleValue = ({
@@ -20,7 +22,10 @@ export const TitleValue = ({
   )
 }
 
-export const BillboardCard: React.FC<BillboardCardProps> = ({ billboard }) => {
+export const BillboardCard: React.FC<BillboardCardProps> = ({
+  billboard,
+  agentOnly,
+}) => {
   console.log('billboard', billboard)
   return (
     <div className="w-full ">
@@ -52,6 +57,9 @@ export const BillboardCard: React.FC<BillboardCardProps> = ({ billboard }) => {
         <TitleValue title="Min Booking Days">
           <p className="text-gray-600">{billboard.minBookingDays || 'N/A'}</p>
         </TitleValue>
+        {agentOnly ? (
+          <ApproveBillboardButton billboardId={billboard.id} />
+        ) : null}
       </div>
     </div>
   )

@@ -1,8 +1,10 @@
 import { GetCampaignsQuery } from '@billboards-org/network/src/generated'
 import React, { ReactNode } from 'react'
+import { ApproveCampaignButton } from '../../templates/AgentPage/AgentPage'
 
 type CampaignCardProps = {
   campaign: GetCampaignsQuery['campaigns'][0]
+  agentOnly?: boolean
 }
 
 export const TitleValue = ({
@@ -20,7 +22,10 @@ export const TitleValue = ({
   )
 }
 
-export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
+export const CampaignCard: React.FC<CampaignCardProps> = ({
+  campaign,
+  agentOnly = false,
+}) => {
   const totalBookings = campaign.bookings.length
   const totalCost = campaign.bookings.reduce(
     (sum, booking) => sum + (booking.pricePerDay || 0),
@@ -50,6 +55,7 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
         </TitleValue>
         <TitleValue title="Total Bookings">{totalBookings}</TitleValue>
         <TitleValue title="Total Cost">{totalCost}</TitleValue>
+        {agentOnly ? <ApproveCampaignButton campaignId={campaign.id} /> : null}
       </div>
     </div>
   )

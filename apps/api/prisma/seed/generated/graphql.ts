@@ -279,8 +279,7 @@ export enum BillboardStatusScalarFieldEnum {
 }
 
 export enum BillboardStatusType {
-  Approved = 'APPROVED',
-  InstallationInprogress = 'INSTALLATION_INPROGRESS',
+  Inprogress = 'INPROGRESS',
   Live = 'LIVE',
   New = 'NEW',
   OnHold = 'ON_HOLD',
@@ -575,8 +574,7 @@ export enum CampaignStatusScalarFieldEnum {
 }
 
 export enum CampaignStatusType {
-  Approved = 'APPROVED',
-  InstallationInprogress = 'INSTALLATION_INPROGRESS',
+  Inprogress = 'INPROGRESS',
   Live = 'LIVE',
   New = 'NEW',
   OnHold = 'ON_HOLD',

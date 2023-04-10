@@ -1,8 +1,11 @@
-/* eslint-disable react/jsx-props-no-spreading */
+import { TablePaginationProps } from '@mui/material/TablePagination/TablePagination'
 
-import TablePagination, {
-  TablePaginationProps,
-} from '@mui/material/TablePagination/TablePagination'
+import dynamic from 'next/dynamic'
+const TablePagination = dynamic<TablePaginationProps>(() =>
+  import('@mui/material/TablePagination/TablePagination').then(
+    (module) => module.default,
+  ),
+)
 
 export interface IPaginationProps {}
 
@@ -15,7 +18,6 @@ export const Pagination = ({
   ...props
 }: TablePaginationProps) => (
   <TablePagination
-    component="div"
     count={count}
     page={page}
     onPageChange={onPageChange}

@@ -77,12 +77,12 @@ export class BillboardsResolver {
         lat: { lte: nw_lat, gte: se_lat },
         lng: { gte: nw_lng, lte: se_lng },
         minBookingDays: { lte: days },
-        status: { status: 'APPROVED' },
+        status: { status: 'LIVE' },
         bookings: {
           none: {
             campaign: {
               is: {
-                status: { status: 'APPROVED' },
+                status: { status: 'LIVE' },
                 OR: [
                   {
                     startDate: { lt: new Date(endDate) },

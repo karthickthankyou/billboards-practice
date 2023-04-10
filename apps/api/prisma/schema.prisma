@@ -180,11 +180,10 @@ enum BillboardStatusType {
     NEW
     VERIFIED
 
-    APPROVED
     ON_HOLD
     REJECTED
 
-    INSTALLATION_INPROGRESS
+    INPROGRESS
 
     LIVE
 }
@@ -193,11 +192,10 @@ enum CampaignStatusType {
     NEW
     VERIFIED
 
-    APPROVED
     ON_HOLD
     REJECTED
 
-    INSTALLATION_INPROGRESS
+    INPROGRESS
 
     LIVE
 }

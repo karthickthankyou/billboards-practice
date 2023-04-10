@@ -16,8 +16,7 @@ export const filterBillboardsFormSchema = z.object({
 })
 
 export const AllBillboardStatus = [
-  BillboardStatusType.Approved,
-  BillboardStatusType.InstallationInprogress,
+  BillboardStatusType.Inprogress,
   BillboardStatusType.Live,
   BillboardStatusType.New,
   BillboardStatusType.OnHold,

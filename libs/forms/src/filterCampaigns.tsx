@@ -11,8 +11,7 @@ export const filterCampaignsFormSchema = z.object({
 })
 
 export const AllCampaignStatus = [
-  CampaignStatusType.Approved,
-  CampaignStatusType.InstallationInprogress,
+  CampaignStatusType.Inprogress,
   CampaignStatusType.Live,
   CampaignStatusType.New,
   CampaignStatusType.OnHold,

@@ -44,7 +44,7 @@ const MyDialog = ({ open, setOpen, children, className }: IMyDialogProps) => (
           leaveTo="opacity-0 scale-95"
         >
           <div
-            className={`${className} inline-block w-full p-6 overflow-scroll text-left transition-all transform bg-white shadow-xl `}
+            className={`${className} inline-block w-full p-6 overflow-scroll text-left transition-all rounded-sm transform bg-white shadow-xl `}
           >
             <button
               type="button"
