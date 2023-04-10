@@ -144,25 +144,24 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
             }}
           />
 
-          <span className="px-2 pt-2 text-sm text-gray-500 border-2 border-gray-200 stroke-2 focus:ring-4 stroke-gray-200 fill-gray-500">
-            <input
-              type="date"
-              placeholder="Start time"
-              {...register('dateRange.startDate')}
-            />
-          </span>
-
-          <span className="px-2 pt-2 text-sm text-gray-500 border-2 border-gray-200 stroke-2 focus:ring-4 stroke-gray-200 fill-gray-500">
-            <input
-              type="date"
-              placeholder="End time"
-              {...register('dateRange.endDate')}
-            />
-          </span>
-          <Switch
-            value={switchMode}
-            onChange={(e) => setSwitchMode(e.target.checked)}
+          <HtmlInput
+            type="date"
+            placeholder="End time"
+            {...register('dateRange.startDate')}
           />
+          <HtmlInput
+            type="date"
+            placeholder="End time"
+            {...register('dateRange.endDate')}
+          />
+          <div>
+            <span>Show angle</span>
+            <Switch
+              value={switchMode}
+              disableRipple
+              onChange={(e) => setSwitchMode(e.target.checked)}
+            />
+          </div>
         </Panel>
         <Panel position="right-top">
           <div className="flex gap-2">
