@@ -8,9 +8,11 @@ import { FilterHeading } from '../../molecules/FilterHeading'
 
 import { Sidebar } from '../Sidebar'
 import {
+  BillboardTypeText,
   SearchBillboardFormType,
   searchBillboardsDefaultValues,
 } from '@billboards-org/forms'
+import { BillboardType } from '@billboards-org/network/src/generated'
 
 export interface IFilterSidebarProps {}
 
@@ -44,7 +46,6 @@ const FilterSidebar = ({
                   <RangeSlider
                     min={defaultValues?.pricePerHour?.[0]}
                     max={defaultValues?.pricePerHour?.[1]}
-                    // max={200}
                     value={value}
                     onChange={onChange}
                     valueLabelFormat={(sliderValue) =>
@@ -75,7 +76,7 @@ const FilterSidebar = ({
                     valueLabelFormat={(sliderValue) =>
                       `${sliderValue.toLocaleString()} ft`
                     }
-                    step={2}
+                    step={10}
                   />
                 </>
               )
@@ -100,32 +101,7 @@ const FilterSidebar = ({
                     valueLabelFormat={(sliderValue) =>
                       `${sliderValue.toLocaleString()} ft`
                     }
-                    step={2}
-                  />
-                </>
-              )
-            }}
-          />
-          <Controller
-            name="minBookingDays"
-            control={control}
-            render={({
-              field: { value, onChange },
-              fieldState: { isDirty },
-              formState: { defaultValues },
-            }) => {
-              return (
-                <>
-                  <FilterHeading dirty={isDirty} title="Mininum booking days" />
-                  <RangeSlider
-                    min={defaultValues?.minBookingDays?.[0]}
-                    max={defaultValues?.minBookingDays?.[1]}
-                    value={value}
-                    onChange={onChange}
-                    valueLabelFormat={(sliderValue) =>
-                      `${sliderValue.toLocaleString()} d`
-                    }
-                    step={25}
+                    step={10}
                   />
                 </>
               )
@@ -174,24 +150,26 @@ const FilterSidebar = ({
                     onChange={(event, value) => {
                       onChange(value.sort())
                     }}
-                    classes={{ root: 'block flex flex-col' }}
-                    aria-label="text formatting"
+                    classes={{ root: 'block flex rounded-sm' }}
                   >
                     {defaultValues?.type?.map((value) => {
                       if (!value) return null
+
                       return (
                         <ToggleButton
                           disableRipple
                           disableTouchRipple
                           disableFocusRipple
                           classes={{
-                            root: 'rounded-none ',
-                            selected: ' font-bold',
+                            root: 'border-2 ',
+                            selected:
+                              'font-bold  bg-white shadow-lg  border-black',
+                            standard: 'bg-gray-200',
                           }}
                           key={value}
                           value={value}
                         >
-                          {value}
+                          {BillboardTypeText[value]}
                         </ToggleButton>
                       )
                     })}

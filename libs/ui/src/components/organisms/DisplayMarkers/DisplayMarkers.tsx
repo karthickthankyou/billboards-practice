@@ -5,9 +5,7 @@ import { Button } from '../../atoms/Button'
 
 import { IconBillboard } from '../../../assets/billboard'
 import { IconHeart, IconLoader, IconX } from '@tabler/icons-react'
-import HScroll from '../../molecules/HScroll'
 import { AnimatePresence, motion } from 'framer-motion'
-import Link from 'next/link'
 import Tooltip from '../../atoms/Tooltip'
 
 import { useAppDispatch, useAppSelector } from '@billboards-org/store'
@@ -21,13 +19,12 @@ import { useKeypress } from '@billboards-org/hooks'
 import {
   BillboardType,
   SearchBillboardsQuery,
-  SearchBillboardsQueryVariables,
   useCreateFavoriteMutation,
-  useSearchBillboardsQuery,
   useGetFavoriteQuery,
   useRemoveFavoriteMutation,
   GetFavoriteDocument,
 } from '@billboards-org/network/src/generated'
+import React from 'react'
 
 const displayText = {
   [BillboardType.Classic]: 'Classic',
@@ -37,18 +34,16 @@ const displayText = {
   [BillboardType.Vinyl]: 'Vinyl',
 }
 
-export const DisplayMarkers = ({
-  variables,
-  switchMode,
-}: {
-  variables: SearchBillboardsQueryVariables
-  switchMode: boolean
-}) => {
-  const { data, loading } = useSearchBillboardsQuery({ variables })
-
-  return (
+export const DisplayMarkers = React.memo(
+  ({
+    searchBillboards,
+    switchMode,
+  }: {
+    searchBillboards: SearchBillboardsQuery['searchBillboards']
+    switchMode: boolean
+  }) => (
     <div>
-      {data?.searchBillboards.map((marker) => (
+      {searchBillboards.map((marker) => (
         <MarkerWithPopup
           key={marker.id}
           marker={marker}
@@ -56,8 +51,8 @@ export const DisplayMarkers = ({
         />
       ))}
     </div>
-  )
-}
+  ),
+)
 
 export const FavoriteButton = ({
   billboardId,
@@ -240,7 +235,7 @@ export const PopupContent = ({
         className="grid grid-cols-1 grid-rows-1 "
       >
         <div className="col-start-1 row-start-1 ">{children}</div>
-        <div className="flex justify-end col-start-1 row-start-1 p-2 items-top">
+        <div className="flex justify-end w-48 col-start-1 row-start-1 p-2 items-top">
           <button
             type="button"
             className="absolute top-0 right-0 p-0.5 rounded-bl bg-black/30 hover:bg-black/40"
@@ -284,6 +279,7 @@ export const ButtonStatus = ({
     return (
       <Button
         variant="text"
+        fullWidth
         onClick={() => {
           dispatch(removeBillboardFromCampaign(billboard.id))
         }}

@@ -1,13 +1,14 @@
-import Map, { LngLatBounds, useMap } from 'react-map-gl'
+import { useMap, Map } from 'react-map-gl'
 
 import { SearchPlaceBox } from '../../organisms/SearchPlaceBox'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '../../atoms/Button'
 import {
   IconAlertCircle,
   IconCurrentLocation,
   IconFilter,
+  IconRefresh,
 } from '@tabler/icons-react'
 
 import { FilterSidebar } from '../../organisms/FilterSidebar'
@@ -40,11 +41,23 @@ import { selectUser } from '@billboards-org/store/user'
 import {
   BookingWithInCampaign,
   useCreateCampaignMutation,
+  useSearchBillboardsLazyQuery,
 } from '@billboards-org/network/src/generated'
 import { Panel } from '../../organisms/Map/Panel'
 import { DefaultZoomControls } from '../../organisms/Map/ZoomControls/ZoomControls'
+import { useDebouncedValue } from '@billboards-org/hooks/src/async'
 
 export interface ISearchPageTemplateProps {}
+
+export const Fetching = ({ fetching }: { fetching: boolean }) => {
+  return fetching ? (
+    <div className="p-1 text-white border border-black rounded-full shadow-xl bg-black/80">
+      <IconRefresh className="w-8 h-8 animate-spin-reverse" />
+    </div>
+  ) : null
+}
+
+type LatLng = { lng: number; lat: number }
 
 export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
   const [allowed, setAllowed] = useState(false)
@@ -83,51 +96,66 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
     zoom: 3.5,
   })
 
-  const [bounds, setBounds] = useState<LngLatBounds>()
+  const debouncedViewState = useDebouncedValue(viewState, 300)
+
   const [switchMode, setSwitchMode] = useState(false)
 
   const dispatch = useAppDispatch()
 
   const { variables } = useConvertSearchFormToVariables()
 
+  const [fetchData, { data, loading }] = useSearchBillboardsLazyQuery({
+    variables,
+  })
+
+  useEffect(() => {
+    if (variables.dateFilter && variables.locationFilter) fetchData()
+  }, [variables])
+
+  const mapRef = useRef(null)
+
+  useEffect(() => {
+    if (mapRef.current) {
+      // @ts-ignore
+      const { _sw, _ne } = mapRef.current.getBounds()
+      setValue('locationFilter', {
+        nw_lat: _ne.lat,
+        nw_lng: _sw.lng,
+        se_lat: _sw.lat,
+        se_lng: _ne.lng,
+      })
+    }
+  }, [debouncedViewState])
+
   return (
     <div>
       <Map
+        ref={mapRef}
         {...viewState}
         projection={'globe'}
-        doubleClickZoom={false}
-        onMove={(evt) => setViewState(evt.viewState)}
-        onLoad={(evt) => {
-          // @ts-ignore
-          const { _sw, _ne } = evt.target.getBounds()
-          setBounds(evt.target.getBounds())
-          console.log(_sw, _ne, evt.target.getBounds())
-          setValue('locationFilter', {
-            nw_lat: _ne.lat,
-            nw_lng: _sw.lng,
-            se_lat: _sw.lat,
-            se_lng: _ne.lng,
-          })
-        }}
-        onMoveEnd={(evt) => {
-          // @ts-ignore
-          const { _sw, _ne } = evt.target.getBounds()
-          setBounds(evt.target.getBounds())
-          console.log(_sw, _ne, evt.target.getBounds())
-          setValue('locationFilter', {
-            nw_lat: _ne.lat,
-            nw_lng: _sw.lng,
-            se_lat: _sw.lat,
-            se_lng: _ne.lng,
-          })
-        }}
         mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken="pk.eyJ1IjoiaWFta2FydGhpY2siLCJhIjoiY2t4b3AwNjZ0MGtkczJub2VqMDZ6OWNrYSJ9.-FMKkHQHvHUeDEvxz2RJWQ"
         style={{ height: '92vh' }}
         pitch={viewState.zoom > 6 ? 45 : 0}
         scrollZoom={false}
+        onMove={(evt) => {
+          setViewState(evt.viewState)
+        }}
+        // onLoad={(evt) => {
+        //   // @ts-ignore
+        //   const { _sw, _ne } = evt.target.getBounds()
+        //   setLocationFilter({ ne: _ne, sw: _sw })
+        // }}
+        // onMoveEnd={(evt) => {
+        //   // @ts-ignore
+        //   const { _sw, _ne } = evt.target.getBounds()
+        //   //   setLocationFilter({ ne: _ne, sw: _sw })
+        // }}
       >
-        <DisplayMarkers variables={variables} switchMode={switchMode} />
+        <DisplayMarkers
+          searchBillboards={data?.searchBillboards || []}
+          switchMode={switchMode}
+        />
         <Panel position="right-center">
           <DefaultZoomControls />
         </Panel>
@@ -143,10 +171,10 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
               })
             }}
           />
-
+          {/* , { valueAsDate: true } */}
           <HtmlInput
             type="date"
-            placeholder="End time"
+            placeholder="Start time"
             {...register('dateRange.startDate')}
           />
           <HtmlInput
@@ -179,6 +207,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
             ) : null}
             <Button
               variant="text"
+              size="none"
               className="hover:bg-gray-200"
               onClick={() => {
                 if (!allowed) {
@@ -192,6 +221,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
             </Button>
             <Button
               variant="text"
+              size="none"
               onClick={() => setOpenFilter(true)}
               className=" hover:bg-gray-200"
             >
@@ -212,6 +242,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
           </div>
         </Panel>
         <Panel position="center-bottom">
+          <Fetching fetching={loading} />
           {Object.entries(errors).map(([title, value]) => (
             <div
               key={title}
@@ -261,7 +292,6 @@ export const CreateCampaignContent = ({
   return (
     <Form
       onSubmit={handleSubmit(async (data) => {
-        console.log('Data form: ', data)
         const bookings: Array<BookingWithInCampaign> = billboards.map(
           (billboard) => ({
             billboard: { connect: { id: billboard.id } },
@@ -317,6 +347,7 @@ export const CreateCampaignContent = ({
               <div key={billboard.id}>{billboard.pricePerDay}</div>
               <Button
                 size="none"
+                fullWidth
                 variant="text"
                 onClick={() =>
                   dispatch(removeBillboardFromCampaign(billboard.id))

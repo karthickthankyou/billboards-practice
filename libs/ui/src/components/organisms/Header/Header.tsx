@@ -229,7 +229,7 @@ export const Header = () => {
                 <button
                   onClick={() => setOpenUser((state) => !state)}
                   type="button"
-                  className="p-1 border rounded-full"
+                  className="p-1 rounded-full"
                 >
                   <IconUser className="w-5 h-5" />
                 </button>

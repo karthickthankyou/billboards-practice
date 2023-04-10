@@ -70,13 +70,13 @@ export const Button = ({
       // eslint-disable-next-line react/button-has-type
       type={type}
       disabled={disabled || isLoading}
-      className={` relative font-medium ${sizeCls} ${fwCls} ${variantCls} ${disCls}  ${className} `}
+      className={`rounded-sm relative font-medium ${sizeCls} ${fwCls} ${variantCls} ${disCls}  ${className} `}
       {...props}
     >
       {isLoading ? (
         <>
           <div className="absolute inset-0 flex items-center justify-center">
-            <IconRefresh className="w-5 h-5 animate-spin" />
+            <IconRefresh className="w-5 h-5 animate-spin-reverse" />
           </div>
           <div className="opacity-10">{children}</div>
         </>

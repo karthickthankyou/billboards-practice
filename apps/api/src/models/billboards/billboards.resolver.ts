@@ -98,7 +98,6 @@ export class BillboardsResolver {
       },
     })
 
-    console.log('billboards: ', billboards)
     return billboards
   }
 

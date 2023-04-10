@@ -16,7 +16,7 @@ const Autocomplete = <
     <MuiAutocomplete
       autoSelect
       classes={{
-        root: 'border',
+        root: 'border rounded-sm',
         noOptions: 'bg-white/50 backdrop-filter backdrop-blur',
         loading: 'bg-white/50 backdrop-filter backdrop-blur',
         listbox: 'p-0 bg-white/50 backdrop-filter backdrop-blur max-h-64',

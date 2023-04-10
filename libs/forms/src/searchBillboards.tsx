@@ -87,7 +87,6 @@ export const searchBillboardsFormSchema = z.object({
 
   pricePerHour: minMaxTuple.optional(),
   impressionsPerDay: minMaxTuple.optional(),
-  minBookingDays: minMaxTuple.optional(),
   height: minMaxTuple.optional(),
   width: minMaxTuple.optional(),
 
@@ -105,13 +104,32 @@ export const AllBillboardTypes = [
   BillboardType.Vinyl,
 ]
 
+export const BillboardTypeText = {
+  [BillboardType.Classic]: 'Classic',
+  [BillboardType.Led]: 'LED',
+  [BillboardType.Neon]: 'Neon',
+  [BillboardType.ThreeDimensional]: '3D',
+  [BillboardType.Vinyl]: 'Vinyl',
+}
+
+const getDates = () => {
+  const today = new Date()
+  const tomorrow = new Date(today)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+
+  const oneMonthLater = new Date(tomorrow)
+  oneMonthLater.setMonth(oneMonthLater.getMonth() + 1)
+
+  return {
+    startDate: tomorrow.toISOString().substring(0, 10),
+    endDate: oneMonthLater.toISOString().substring(0, 10),
+  }
+}
+
 export const searchBillboardsDefaultValues = {
-  startTime: null,
-  endTime: null,
   pricePerHour: [0, 200] as [number, number],
-  width: [0, 20] as [number, number],
-  height: [0, 30] as [number, number],
-  minBookingDays: [0, 365] as [number, number],
+  width: [0, 200] as [number, number],
+  height: [0, 200] as [number, number],
   impressionsPerDay: [0, 100000] as [number, number],
   type: AllBillboardTypes.sort(),
 }
@@ -121,9 +139,13 @@ export const FormProviderSearchBillboards = ({
 }: {
   children: ReactNode
 }) => {
+  const { endDate, startDate } = getDates()
   const methods = useForm<SearchBillboardFormType>({
     resolver: zodResolver(searchBillboardsFormSchema),
-    defaultValues: searchBillboardsDefaultValues,
+    defaultValues: {
+      dateRange: { startDate, endDate },
+      ...searchBillboardsDefaultValues,
+    },
   })
 
   return <FormProvider {...methods}>{children}</FormProvider>

@@ -24,7 +24,6 @@ const searchFormAdapter = (
       | 'height'
       | 'pricePerHour'
       | 'impressionsPerDay'
-      | 'minBookingDays'
     >
   >,
 ): SearchBillboardsQueryVariables | null => {
@@ -60,8 +59,6 @@ const searchFormAdapter = (
 
   const width = dirtyFields.width && intFilter(formData.width)
   const height = dirtyFields.height && intFilter(formData.height)
-  const minBookingDays =
-    dirtyFields.minBookingDays && intFilter(formData.minBookingDays)
   const impressionsPerDay =
     dirtyFields.impressionsPerDay && intFilter(formData.impressionsPerDay)
   const pricePerHour =
@@ -72,7 +69,6 @@ const searchFormAdapter = (
   const take = (dirtyFields.take && formData.take) || 20
 
   const where: SearchBillboardsQueryVariables['where'] = {
-    ...(minBookingDays && { minBookingDays }),
     ...(impressionsPerDay && { impressionsPerDay }),
     ...(width && { width }),
     ...(height && { height }),
