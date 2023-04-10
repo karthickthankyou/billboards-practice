@@ -17,7 +17,7 @@ export const Hero = ({}: IHeroProps) => {
       </div>
       <div className="col-span-1 col-start-1 row-span-1 row-start-1">
         <Container className="flex items-center h-full">
-          <div className="backdrop-blur-0 ">
+          <div>
             <div className="relative">
               <div className="absolute font-bold translate-x-1 translate-y-1 text-black/10 -z-10 text-7xl">
                 Stand out.

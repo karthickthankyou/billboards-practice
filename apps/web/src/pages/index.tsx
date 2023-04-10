@@ -20,7 +20,7 @@ export default function Home() {
       </Head>
       <main>
         <BillboardCity>
-          <div className="container mx-auto space-y-2 text-left">
+          <div className="container mx-auto text-left">
             <h1 className="font-black text-8xl">Stand out.</h1>
             <p className="max-w-xs">
               Elevate your brand with strategic billboard advertising in prime
@@ -28,7 +28,7 @@ export default function Home() {
             </p>
             <button
               onClick={() => router.push('/billboards')}
-              className="px-3 py-1 text-black bg-white rounded-0"
+              className="px-3 py-1 mt-4 text-black bg-white rounded-0"
             >
               Find ad spaces
             </button>
@@ -36,14 +36,14 @@ export default function Home() {
         </BillboardCity>
         <div className="h-24 bg-black" />
         <BillboardCity camera={<MovingAroundCityCamera />} height="h-[76vh]">
-          <div className="container z-10 mx-auto space-y-2 text-left">
+          <div className="container z-10 mx-auto text-left">
             <h1 className="font-black text-8xl">Install our billboards!</h1>
             <p className="max-w-xs">
               Discover how our billboards can turn your property into a
               consistent income source. Join us today!
             </p>
             <button
-              className="px-3 py-1 text-black bg-white rounded-0"
+              className="px-3 py-1 mt-4 text-black bg-white rounded-0"
               onClick={() => router.push('/owner')}
             >
               List your space

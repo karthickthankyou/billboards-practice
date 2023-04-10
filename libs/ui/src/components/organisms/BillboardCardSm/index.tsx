@@ -1,0 +1,1 @@
+export { BillboardCardSm } from './BillboardCardSm'

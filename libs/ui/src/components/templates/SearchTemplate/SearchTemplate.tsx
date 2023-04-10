@@ -1,4 +1,5 @@
 import { useMap, Map } from 'react-map-gl'
+import Link from 'next/link'
 
 import { SearchPlaceBox } from '../../organisms/SearchPlaceBox'
 import { useEffect, useRef, useState } from 'react'
@@ -46,6 +47,8 @@ import {
 import { Panel } from '../../organisms/Map/Panel'
 import { DefaultZoomControls } from '../../organisms/Map/ZoomControls/ZoomControls'
 import { useDebouncedValue } from '@billboards-org/hooks/src/async'
+import { dividerClasses } from '@mui/material'
+import { BillboardCardSm } from '../../organisms/BillboardCardSm/BillboardCardSm'
 
 export interface ISearchPageTemplateProps {}
 
@@ -126,6 +129,9 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
       })
     }
   }, [debouncedViewState])
+
+  const [showCampaignSuccessDialog, setshowCampaignSuccessDialog] =
+    useState(false)
 
   return (
     <div>
@@ -236,8 +242,32 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
               title={'Create campaign'}
             >
               <CreateCampaignContent
-                onCompletion={() => setOpenCreateCampaign(false)}
+                onCompletion={() => {
+                  setOpenCreateCampaign(false)
+                  setshowCampaignSuccessDialog(true)
+                }}
               />
+            </Dialog2>
+            <Dialog2
+              title="Congratulations!"
+              setOpen={setshowCampaignSuccessDialog}
+              open={showCampaignSuccessDialog}
+            >
+              <div className="space-y-2">
+                <div className="font-bold">
+                  Your campaign has been successfully created! 🎉
+                </div>
+                <div className="text-sm">
+                  Once approved, you'll be on your way to a high-impact
+                  advertising campaign.
+                </div>
+                <Link
+                  href="/advertiser"
+                  className="inline-block text-sm underline underline-offset-4"
+                >
+                  Go to owner page.
+                </Link>
+              </div>
             </Dialog2>
           </div>
         </Panel>
@@ -287,8 +317,9 @@ export const CreateCampaignContent = ({
     formState: { errors },
   } = useFormContext<SearchBillboardFormType>()
 
-  const [mutateAsync, { loading }] = useCreateCampaignMutation()
+  const [mutateAsync, { loading, data }] = useCreateCampaignMutation()
   const user = useAppSelector(selectUser)
+
   return (
     <Form
       onSubmit={handleSubmit(async (data) => {
@@ -334,35 +365,33 @@ export const CreateCampaignContent = ({
         <HtmlInput placeholder="Enter the name" {...register('campaignName')} />
       </HtmlLabel>
       <FormError error={errors.dateRange?.message} />
-      <HScroll>
-        <HScroll.Body className="gap-2">
-          {billboards.map((billboard) => (
-            <HScroll.Child className="relative w-32 mb-2" key={billboard.id}>
-              <img
-                className="object-cover w-full h-32"
-                src={billboard.images?.[0] || ''}
-                alt=""
-              />
-              <div key={billboard.id}>{billboard.minBookingDays}</div>
-              <div key={billboard.id}>{billboard.pricePerDay}</div>
-              <Button
-                size="none"
-                fullWidth
-                variant="text"
-                onClick={() =>
-                  dispatch(removeBillboardFromCampaign(billboard.id))
-                }
-              >
-                Remove
-              </Button>
-            </HScroll.Child>
-          ))}
-        </HScroll.Body>
-        <div className="flex justify-end gap-2 py-2">
-          <HScroll.Arrow />
-          <HScroll.Arrow right />
-        </div>
-      </HScroll>
+      {billboards.length > 0 ? (
+        <HScroll>
+          <HScroll.Body className="gap-2">
+            {billboards.map((billboard) => (
+              <HScroll.Child className="relative w-48 mb-2" key={billboard.id}>
+                <BillboardCardSm billboard={billboard} />
+                <Button
+                  className="pl-2"
+                  size="none"
+                  variant="text"
+                  onClick={() =>
+                    dispatch(removeBillboardFromCampaign(billboard.id))
+                  }
+                >
+                  Remove
+                </Button>
+              </HScroll.Child>
+            ))}
+          </HScroll.Body>
+          <div className="flex justify-end gap-2 py-2">
+            <HScroll.Arrow />
+            <HScroll.Arrow right />
+          </div>
+        </HScroll>
+      ) : (
+        <div className="py-3 text-red">Add billboards to create campaign.</div>
+      )}
       <div className="grid grid-cols-2 gap-2">
         <HtmlLabel
           title="Start date"
@@ -374,13 +403,28 @@ export const CreateCampaignContent = ({
           <HtmlInput type="date" {...register('dateRange.endDate')} />
         </HtmlLabel>
       </div>
-      <div>Selected billboards: {billboards.length}</div>
-      <div>
-        Total: Rs.{' '}
-        {billboards.reduce((acc, bill) => acc + (bill?.pricePerDay || 0), 0)}{' '}
-        /day
+
+      <div className="mt-4 text-lg">
+        <span className="font-bold">{billboards.length}</span> billboard(s)
+        selected, costing Rs.{' '}
+        <span className="font-bold">
+          {billboards.reduce((acc, bill) => acc + (bill?.pricePerDay || 0), 0)}
+        </span>
+        /day with{' '}
+        <span className="font-bold">
+          {billboards.reduce(
+            (acc, bill) => acc + (bill?.impressionsPerDay || 0),
+            0,
+          )}{' '}
+        </span>
+        daily impressions.
       </div>
-      <Button isLoading={loading} type="submit">
+      <div>Ready to launch your impactful campaign?</div>
+      <Button
+        disabled={billboards.length === 0}
+        isLoading={loading}
+        type="submit"
+      >
         Create campaign
       </Button>
     </Form>

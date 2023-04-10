@@ -21,7 +21,11 @@ export const Dialog2 = ({ open, setOpen, children, title }: IMyDialogProps) => {
 
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Dialog
+        as="div"
+        className="relative z-10 rounded-sm"
+        onClose={closeModal}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
