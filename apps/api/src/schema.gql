@@ -186,6 +186,10 @@ type BillboardPublic {
   width: Int!
 }
 
+type AggregateCountOutput {
+  count: Int!
+}
+
 type LoginOutput {
   kind: String!
   localId: String!
@@ -227,6 +231,7 @@ type Query {
   advertiser(where: AdvertiserWhereUniqueInput): Advertiser
   billboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
   searchBillboards(dateFilter: DateFilterInput, locationFilter: LocationFilterInput!, where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [BillboardPublic!]!
+  billboardAggregate(BillboardWhereInput: BillboardWhereInput): AggregateCountOutput!
   billboard(where: BillboardWhereUniqueInput): Billboard!
   billboardStatuses(where: BillboardStatusWhereInput, orderBy: [BillboardStatusOrderByWithRelationInput!], cursor: BillboardStatusWhereUniqueInput, take: Int, skip: Int, distinct: [BillboardStatusScalarFieldEnum!]): [BillboardStatus!]!
   billboardStatus(where: BillboardStatusWhereUniqueInput): BillboardStatus!
@@ -234,6 +239,7 @@ type Query {
   billboardTimeline(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
   billboardTimelineInstance(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
   campaigns(where: CampaignWhereInput, orderBy: [CampaignOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignScalarFieldEnum!]): [Campaign!]!
+  campaignAggregate(CampaignWhereInput: CampaignWhereInput): AggregateCountOutput!
   campaign(where: CampaignWhereUniqueInput): Campaign!
   bookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
   booking(where: BookingWhereUniqueInput): Booking!

@@ -122,6 +122,11 @@ export type AgentWhereUniqueInput = {
   uid?: InputMaybe<Scalars['String']>
 }
 
+export type AggregateCountOutput = {
+  __typename?: 'AggregateCountOutput'
+  count: Scalars['Int']
+}
+
 export type Billboard = {
   __typename?: 'Billboard'
   address?: Maybe<Scalars['String']>
@@ -1148,6 +1153,7 @@ export type Query = {
   agents: Array<Agent>
   allBillboardTimelines: Array<BillboardTimeline>
   billboard: Billboard
+  billboardAggregate: AggregateCountOutput
   billboardStatus: BillboardStatus
   billboardStatuses: Array<BillboardStatus>
   billboardTimeline: Array<BillboardTimeline>
@@ -1156,6 +1162,7 @@ export type Query = {
   booking: Booking
   bookings: Array<Booking>
   campaign: Campaign
+  campaignAggregate: AggregateCountOutput
   campaignStatus: CampaignStatus
   campaignStatuses: Array<CampaignStatus>
   campaignTimeline: CampaignTimeline
@@ -1205,6 +1212,10 @@ export type QueryAllBillboardTimelinesArgs = {
 
 export type QueryBillboardArgs = {
   where?: InputMaybe<BillboardWhereUniqueInput>
+}
+
+export type QueryBillboardAggregateArgs = {
+  BillboardWhereInput?: InputMaybe<BillboardWhereInput>
 }
 
 export type QueryBillboardStatusArgs = {
@@ -1257,6 +1268,10 @@ export type QueryBookingsArgs = {
 
 export type QueryCampaignArgs = {
   where?: InputMaybe<CampaignWhereUniqueInput>
+}
+
+export type QueryCampaignAggregateArgs = {
+  CampaignWhereInput?: InputMaybe<CampaignWhereInput>
 }
 
 export type QueryCampaignStatusArgs = {

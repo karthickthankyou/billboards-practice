@@ -32,6 +32,9 @@ export const getBillboards = gql`
       minBookingDays
       booked
     }
+    billboardAggregate(BillboardWhereInput: $where) {
+      count
+    }
   }
 `
 export const createBillboard = gql`
@@ -73,6 +76,9 @@ export const getCampaigns = gql`
         billboardId
         pricePerDay
       }
+    }
+    campaignAggregate(CampaignWhereInput: $where) {
+      count
     }
   }
 `

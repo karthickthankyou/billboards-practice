@@ -25,6 +25,8 @@ import { GetUserType } from '@billboards-org/types'
 import { checkRowLevelPermission } from 'src/common/guards'
 import { BillboardPublic } from './dto/billboard-public.output'
 import { DateFilterInput, LocationFilterInput } from './dto/filters.input'
+import { AggregateCountOutput } from './dto/count.output'
+import { BillboardWhereInput } from './dto/where.args'
 
 @Resolver(() => Billboard)
 export class BillboardsResolver {
@@ -99,6 +101,18 @@ export class BillboardsResolver {
     })
 
     return billboards
+  }
+
+  @Query(() => AggregateCountOutput, { name: 'billboardAggregate' })
+  async billboardAggregate(
+    @Args('BillboardWhereInput', { nullable: true }) where: BillboardWhereInput,
+  ) {
+    const productCount = await this.prisma.billboard.aggregate({
+      _count: { _all: true },
+      where,
+    })
+
+    return { count: productCount._count._all }
   }
 
   @Query(() => Billboard, { name: 'billboard' })

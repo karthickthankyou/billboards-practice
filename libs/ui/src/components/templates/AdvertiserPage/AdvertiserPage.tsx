@@ -1,19 +1,18 @@
-import {
-  CampaignStatusType,
-  GetCampaignsQuery,
-  useGetCampaignsQuery,
-} from '@billboards-org/network/src/generated'
+import { useGetCampaignsQuery } from '@billboards-org/network/src/generated'
 import { useAppSelector } from '@billboards-org/store'
 import { selectUid } from '@billboards-org/store/user'
-import { Table, TableBody, TableHead, TableRow } from '@mui/material'
-import { IconArrowRight, IconBox, IconCheck } from '@tabler/icons-react'
-import { differenceInDays, format } from 'date-fns'
+import { IconBox } from '@tabler/icons-react'
 import { LinkButton } from '../../atoms/LinkButton'
 import { Container } from '../../atoms/Container'
-import { LoaderPanel } from '../../molecules/Loader'
 import { ReactNode } from 'react'
-import { TableCell } from '../AgentPage/AgentPage'
-import Badge from '../../atoms/Badge'
+import { CampaignCard } from '../../organisms/CampaignCard'
+import { useWatch, useFormContext } from 'react-hook-form'
+import {
+  FilterCampaignFormType,
+  FormProviderFilterCampaigns,
+} from '@billboards-org/forms/src/filterCampaigns'
+import { Pagination } from '../../molecules/Pagination'
+import { FilterCampaigns } from '../../organisms/FilterCampaigns'
 
 export interface IAdvertiserPageProps {}
 
@@ -25,80 +24,11 @@ export const AdvertiserPage = ({}: IAdvertiserPageProps) => {
   }
   return (
     <Container className="flex flex-col gap-12">
-      <ShowApprovedCampaigns uid={uid} />
-      <ShowUnapprovedCampaigns uid={uid} />
+      <FormProviderFilterCampaigns>
+        <FilterCampaigns />
+        <ShowCampaigns uid={uid} />
+      </FormProviderFilterCampaigns>
     </Container>
-  )
-}
-
-export const CampaignsTableHead = () => (
-  <TableHead>
-    <TableRow>
-      <TableCell>Id</TableCell>
-      <TableCell align="right">Name</TableCell>
-      <TableCell align="right">Date range</TableCell>
-      <TableCell align="right">Bookings</TableCell>
-      <TableCell align="right">Price / Day</TableCell>
-      <TableCell align="right">Status</TableCell>
-    </TableRow>
-  </TableHead>
-)
-
-export const TableLoading = () => {
-  return (
-    <TableRow>
-      <LoaderPanel />
-    </TableRow>
-  )
-}
-
-export const CampaignsTableBody = ({
-  data,
-  loading,
-}: {
-  data: GetCampaignsQuery | undefined
-  loading: boolean
-}) => {
-  return (
-    <TableBody>
-      {loading ? <TableLoading /> : null}
-      {data?.campaigns.map((row) => (
-        <TableRow
-          key={row.id}
-          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-        >
-          <TableCell component="th" scope="row">
-            {row.id}
-          </TableCell>
-          <TableCell align="right">{row.name}</TableCell>
-          <TableCell align="right" component="th" scope="row">
-            <span className="flex items-center justify-end gap-2">
-              {format(new Date(row.startDate), 'PP')}{' '}
-              <IconArrowRight className="w-4 h-4" />
-              {format(new Date(row.endDate), 'PP')}
-            </span>
-            <span className="text-xs">
-              {differenceInDays(new Date(row.endDate), new Date(row.startDate))}{' '}
-              days
-            </span>
-          </TableCell>
-
-          <TableCell align="right">{row.bookings.length}</TableCell>
-          <TableCell align="right">
-            {row.bookings.reduce(
-              (total, booking) => (total += booking.pricePerDay || 0),
-              0,
-            )}
-          </TableCell>
-          <TableCell align="right">
-            {' '}
-            <Badge variant="green" size="sm">
-              {row.status.status}
-            </Badge>
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
   )
 }
 
@@ -115,52 +45,45 @@ export const Heading = ({ children }: { children: ReactNode }) => (
   <div className="text-lg font-semibold">{children}</div>
 )
 
-export const ShowApprovedCampaigns = ({ uid }: { uid: string }) => {
+export const ShowCampaigns = ({ uid }: { uid: string }) => {
+  const { setValue } = useFormContext<FilterCampaignFormType>()
+  const { status, skip, take } = useWatch<FilterCampaignFormType>()
+
   const { data, loading } = useGetCampaignsQuery({
     variables: {
+      skip,
+      take,
       where: {
         advertiserId: { equals: uid },
-        status: { is: { status: { equals: CampaignStatusType.Approved } } },
+        status: { is: { status: { in: status } } },
       },
     },
   })
 
   return (
     <div>
-      <Heading>Approved Campaigns</Heading>{' '}
       {data?.campaigns.length === 0 ? (
         <NoCampaignResults />
       ) : (
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <CampaignsTableHead />
-          <CampaignsTableBody data={data} loading={loading} />
-        </Table>
-      )}
-    </div>
-  )
-}
-
-export const ShowUnapprovedCampaigns = ({ uid }: { uid: string }) => {
-  const { data, loading } = useGetCampaignsQuery({
-    variables: {
-      where: {
-        advertiserId: { equals: uid },
-        status: { is: { status: { not: CampaignStatusType.Approved } } },
-      },
-    },
-  })
-
-  return (
-    <div>
-      <Heading>UnApproved Campaigns</Heading>
-
-      {data?.campaigns.length === 0 ? (
-        <NoCampaignResults />
-      ) : (
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <CampaignsTableHead />
-          <CampaignsTableBody data={data} loading={loading} />
-        </Table>
+        <div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {data?.campaigns.map((campaign) => (
+              <CampaignCard campaign={campaign} key={campaign.id} />
+            ))}
+          </div>
+          <Pagination
+            count={data?.campaignAggregate.count || 0}
+            page={(skip || 0) / (take || 12)}
+            rowsPerPage={take || 0}
+            showLastButton
+            showFirstButton
+            rowsPerPageOptions={[2, 4, 12, 24, 36, 48]}
+            onPageChange={(v, c) => setValue('skip', c * (take || 12))}
+            onRowsPerPageChange={(v) => {
+              setValue('take', +v.target.value)
+            }}
+          />
+        </div>
       )}
     </div>
   )

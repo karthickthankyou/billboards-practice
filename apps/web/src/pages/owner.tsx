@@ -33,7 +33,7 @@ const Owner = () => {
     return <GetAccessPage />
   }
 
-  return <OwnerPage uid={user?.uid} />
+  return <OwnerPage uid={user.uid} />
 }
 
 export default Owner

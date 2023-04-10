@@ -23,6 +23,8 @@ import {
 import { checkRowLevelPermission } from 'src/common/guards'
 import { GetUserType } from '@billboards-org/types'
 import { CampaignStatusType } from '@prisma/client'
+import { AggregateCountOutput } from '../billboards/dto/count.output'
+import { CampaignWhereInput } from './dto/where.args'
 
 @Resolver(() => Campaign)
 export class CampaignsResolver {
@@ -62,6 +64,18 @@ export class CampaignsResolver {
   @Query(() => [Campaign], { name: 'campaigns' })
   findAll(@Args() args: FindManyCampaignArgs) {
     return this.campaignsService.findAll(args)
+  }
+
+  @Query(() => AggregateCountOutput, { name: 'campaignAggregate' })
+  async campaignAggregate(
+    @Args('CampaignWhereInput', { nullable: true }) where: CampaignWhereInput,
+  ) {
+    const campaignCount = await this.prisma.campaign.aggregate({
+      _count: { _all: true },
+      where,
+    })
+
+    return { count: campaignCount._count._all }
   }
 
   @AllowAuthenticated()
