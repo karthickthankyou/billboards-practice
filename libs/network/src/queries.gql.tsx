@@ -144,6 +144,7 @@ export const searchBillboards = gql`
       height
       width
       type
+      angle
       impressionsPerDay
     }
   }

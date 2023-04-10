@@ -218,7 +218,7 @@ type RefreshTokenOutput {
 
 type Query {
   favorites(where: FavoriteWhereInput, orderBy: [FavoriteOrderByWithRelationInput!], cursor: FavoriteWhereUniqueInput, take: Int, skip: Int, distinct: [FavoriteScalarFieldEnum!]): [Favorite!]!
-  favorite(where: FavoriteWhereUniqueInput): Favorite!
+  favorite(where: FavoriteWhereUniqueInput): Favorite
   owners(where: OwnerWhereInput, orderBy: [OwnerOrderByWithRelationInput!], cursor: OwnerWhereUniqueInput, take: Int, skip: Int, distinct: [OwnerScalarFieldEnum!]): [Owner!]!
   owner(where: OwnerWhereUniqueInput): Owner
   agents(where: AgentWhereInput, orderBy: [AgentOrderByWithRelationInput!], cursor: AgentWhereUniqueInput, take: Int, skip: Int, distinct: [AgentScalarFieldEnum!]): [Agent!]!

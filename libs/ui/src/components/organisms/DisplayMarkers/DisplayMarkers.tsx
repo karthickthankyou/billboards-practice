@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { Marker, Popup } from 'react-map-gl'
 
 import { Button } from '../../atoms/Button'
@@ -7,7 +7,7 @@ import { IconBillboard } from '../../../assets/billboard'
 import { IconHeart, IconLoader, IconX } from '@tabler/icons-react'
 import HScroll from '../../molecules/HScroll'
 import { AnimatePresence, motion } from 'framer-motion'
-
+import Link from 'next/link'
 import Tooltip from '../../atoms/Tooltip'
 
 import { useAppDispatch, useAppSelector } from '@billboards-org/store'
@@ -26,7 +26,7 @@ import {
   useSearchBillboardsQuery,
   useGetFavoriteQuery,
   useRemoveFavoriteMutation,
-  useGetFavoriteLazyQuery,
+  GetFavoriteDocument,
 } from '@billboards-org/network/src/generated'
 
 const displayText = {
@@ -49,41 +49,104 @@ export const DisplayMarkers = ({
   return (
     <div>
       {data?.searchBillboards.map((marker) => (
-        <MarkerWithPopup key={marker.id} marker={marker} />
+        <MarkerWithPopup
+          key={marker.id}
+          marker={marker}
+          switchMode={switchMode}
+        />
       ))}
     </div>
   )
 }
 
+export const FavoriteButton = ({
+  billboardId,
+  advertiserId,
+}: {
+  billboardId: number
+  advertiserId: string
+}) => {
+  const variables = useMemo(() => {
+    return {
+      where: {
+        advertiserId_billboardId: {
+          billboardId,
+          advertiserId,
+        },
+      },
+    }
+  }, [billboardId, advertiserId])
+
+  const [mutateCreateFavoriteAsync, { loading: addingFavorite }] =
+    useCreateFavoriteMutation({
+      refetchQueries: [{ query: GetFavoriteDocument, variables }],
+      awaitRefetchQueries: true,
+    })
+  const [mutateRemoveFavoriteAsync, { loading: removingFavorite }] =
+    useRemoveFavoriteMutation({
+      refetchQueries: [{ query: GetFavoriteDocument, variables }],
+      awaitRefetchQueries: true,
+    })
+  const { data: favoriteBillboard } = useGetFavoriteQuery({ variables })
+
+  return (
+    <Tooltip
+      placement="top"
+      arrow
+      title={!favoriteBillboard?.favorite ? 'Wishlist' : 'Unwishlist'}
+    >
+      <Button
+        variant="text"
+        size="none"
+        onClick={async () => {
+          if (!favoriteBillboard?.favorite) {
+            const { data, errors } = await mutateCreateFavoriteAsync({
+              variables: {
+                createFavoriteInput: {
+                  billboardId,
+                  advertiserId,
+                },
+              },
+            })
+            if (errors) {
+              notification$.next({ message: 'Please try again.' })
+            }
+          } else {
+            await mutateRemoveFavoriteAsync({
+              variables: {
+                where: {
+                  advertiserId_billboardId: {
+                    billboardId,
+                    advertiserId,
+                  },
+                },
+              },
+            })
+          }
+        }}
+      >
+        {addingFavorite || removingFavorite ? (
+          <IconLoader className="animate-spin" />
+        ) : favoriteBillboard?.favorite ? (
+          <IconHeart className="text-red-600 fill-red-500 " />
+        ) : (
+          <IconHeart />
+        )}
+      </Button>
+    </Tooltip>
+  )
+}
+
 export const MarkerWithPopup = ({
   marker,
+  switchMode,
 }: {
   marker: SearchBillboardsQuery['searchBillboards'][number]
+  switchMode: boolean
 }) => {
   const [showPopup, setShowPopup] = useState(false)
   useKeypress(['Escape'], () => setShowPopup(false))
   const user = useAppSelector(selectUser)
-  const [mutateCreateFavoriteAsync, { loading: addingFavorite }] =
-    useCreateFavoriteMutation()
-  const [mutateRemoveFavoriteAsync, { loading: removingFavorite }] =
-    useRemoveFavoriteMutation()
-  const [refetchFavorite, { data: favoriteBillboard }] =
-    useGetFavoriteLazyQuery()
-
-  useEffect(() => {
-    if (user.uid && marker.id) {
-      refetchFavorite({
-        variables: {
-          where: {
-            advertiserId_billboardId: {
-              billboardId: +marker.id,
-              advertiserId: user.uid,
-            },
-          },
-        },
-      })
-    }
-  }, [user.uid, marker.id, refetchFavorite])
 
   return (
     <div key={marker.id}>
@@ -98,27 +161,7 @@ export const MarkerWithPopup = ({
           closeButton={false}
         >
           <PopupContent onClose={() => setShowPopup(false)}>
-            <HScroll className="relative">
-              <div className="absolute flex items-center justify-between w-full h-full ">
-                <HScroll.Arrow
-                  distance={200}
-                  className="z-10 "
-                  arrowClassName="shadow-md bg-white/80 text-black"
-                />
-                <HScroll.Arrow
-                  right
-                  distance={200}
-                  className="z-10 "
-                  arrowClassName="shadow-md  bg-white/80 text-black"
-                />
-              </div>
-              <HScroll.Body>
-                {marker.images?.map((img) => (
-                  <img key={img} src={img} />
-                ))}
-              </HScroll.Body>
-            </HScroll>
-            <div className="p-2 space-y-1">
+            <div className="p-2 space-y-2">
               <div className="grid grid-cols-2 gap-1">
                 <TitleValue title="Elevation">
                   {marker.elevation || '-'} ft
@@ -136,56 +179,16 @@ export const MarkerWithPopup = ({
               <TitleValue title="Price per day">
                 Rs. {marker.pricePerDay}
               </TitleValue>
-              <Tooltip
-                placement="top"
-                arrow
-                title={!favoriteBillboard?.favorite ? 'Wishlist' : 'Unwishlist'}
-              >
-                <Button
-                  variant="text"
-                  onClick={async () => {
-                    if (!user.uid) {
-                      notification$.next({ message: 'You are not logged in.' })
-                      return
-                    }
-                    if (!favoriteBillboard?.favorite) {
-                      const { data, errors } = await mutateCreateFavoriteAsync({
-                        variables: {
-                          createFavoriteInput: {
-                            billboardId: marker.id,
-                            advertiserId: user.uid,
-                          },
-                        },
-                      })
-                      if (errors) {
-                        notification$.next({ message: 'Please try again.' })
-                      }
-                    } else {
-                      await mutateRemoveFavoriteAsync({
-                        variables: {
-                          where: {
-                            advertiserId_billboardId: {
-                              billboardId: +marker.id,
-                              advertiserId: user.uid,
-                            },
-                          },
-                        },
-                      })
-                    }
-                    await refetchFavorite()
-                  }}
-                >
-                  {addingFavorite || removingFavorite ? (
-                    <IconLoader className="animate-spin" />
-                  ) : favoriteBillboard?.favorite ? (
-                    <IconHeart className="text-red-600 fill-red-500 " />
-                  ) : (
-                    <IconHeart />
-                  )}
-                </Button>
-              </Tooltip>
+              <div className="flex gap-2 mt-2">
+                {user.uid ? (
+                  <FavoriteButton
+                    advertiserId={user.uid}
+                    billboardId={marker.id}
+                  />
+                ) : null}
+                <ButtonStatus billboard={marker} />
+              </div>
             </div>
-            <ButtonStatus billboard={marker} />
           </PopupContent>
         </Popup>
       ) : null}
@@ -194,8 +197,7 @@ export const MarkerWithPopup = ({
         anchor="bottom"
         latitude={marker.lat}
         longitude={marker.lng}
-        // rotation={switchMode ? marker.angle || 0 : 0}
-
+        rotation={switchMode ? marker.angle || 0 : 0}
         onClick={() => {
           console.log('Cklicked', marker.id)
           setShowPopup((state) => !state)
@@ -203,7 +205,7 @@ export const MarkerWithPopup = ({
       >
         {/* {console.log('marker id', marker.id)} */}
         <div className="cursor-pointer">
-          <IconBillboard type={'front'} />
+          <IconBillboard type={switchMode ? 'top' : 'front'} />
         </div>
         {/* <motion.div
           key={marker.id}
@@ -281,13 +283,12 @@ export const ButtonStatus = ({
   if (billboardsInCampaign.filter((bill) => bill.id === billboard.id).length) {
     return (
       <Button
-        className="w-full"
         variant="text"
         onClick={() => {
           dispatch(removeBillboardFromCampaign(billboard.id))
         }}
       >
-        Remove from campaign
+        Remove
       </Button>
     )
   }

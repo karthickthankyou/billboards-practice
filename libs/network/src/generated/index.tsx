@@ -1162,7 +1162,7 @@ export type Query = {
   campaignTimeline: CampaignTimeline
   campaignTimelines: Array<CampaignTimeline>
   campaigns: Array<Campaign>
-  favorite: Favorite
+  favorite?: Maybe<Favorite>
   favorites: Array<Favorite>
   owner?: Maybe<Owner>
   owners: Array<Owner>
@@ -1649,6 +1649,7 @@ export type SearchBillboardsQuery = {
     height: number
     width: number
     type: BillboardType
+    angle?: number | null
     impressionsPerDay?: number | null
   }>
 }
@@ -1736,11 +1737,11 @@ export type GetFavoriteQueryVariables = Exact<{
 
 export type GetFavoriteQuery = {
   __typename?: 'Query'
-  favorite: {
+  favorite?: {
     __typename?: 'Favorite'
     advertiserId: string
     billboardId: number
-  }
+  } | null
 }
 
 export type GetAgentQueryVariables = Exact<{
@@ -2236,6 +2237,7 @@ export const SearchBillboardsDocument = /*#__PURE__*/ gql`
       height
       width
       type
+      angle
       impressionsPerDay
     }
   }

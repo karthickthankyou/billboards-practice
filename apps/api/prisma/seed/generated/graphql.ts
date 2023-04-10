@@ -1161,7 +1161,7 @@ export type Query = {
   campaignTimeline: CampaignTimeline
   campaignTimelines: Array<CampaignTimeline>
   campaigns: Array<Campaign>
-  favorite: Favorite
+  favorite?: Maybe<Favorite>
   favorites: Array<Favorite>
   owner?: Maybe<Owner>
   owners: Array<Owner>

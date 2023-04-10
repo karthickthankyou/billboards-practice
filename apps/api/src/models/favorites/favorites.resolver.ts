@@ -46,6 +46,12 @@ export class FavoritesResolver {
         data: { uid: args.advertiserId, name: '' },
       })
     }
+    const favorite = await this.favoritesService.findOne({
+      where: { advertiserId_billboardId: args },
+    })
+    if (favorite) {
+      return favorite
+    }
     return this.favoritesService.create(args)
   }
 
@@ -56,7 +62,7 @@ export class FavoritesResolver {
   }
 
   @AllowAuthenticated()
-  @Query(() => Favorite, { name: 'favorite' })
+  @Query(() => Favorite, { name: 'favorite', nullable: true })
   findOne(@Args() args: FindUniqueFavoriteArgs) {
     return this.favoritesService.findOne(args)
   }

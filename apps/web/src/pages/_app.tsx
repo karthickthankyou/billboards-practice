@@ -1,4 +1,5 @@
 import '@billboards-web/styles/globals.css'
+import '@billboards-web/styles/map.css'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import type { AppProps } from 'next/app'
