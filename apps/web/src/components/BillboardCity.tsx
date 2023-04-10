@@ -12,6 +12,7 @@ import React, { ReactNode, Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Button } from '@billboards-org/ui/src/components/atoms/Button'
+import { getRandomValues } from 'crypto'
 
 const createGradientTexture = (a: number, b: number, offset: number) => {
   const canvas = document.createElement('canvas')
@@ -31,6 +32,7 @@ const createGradientTexture = (a: number, b: number, offset: number) => {
 
   return texture
 }
+
 function setVideoTextureUVs(
   geometry: { faceVertexUvs: THREE.Vector2[][][]; uvsNeedUpdate: boolean },
   videoTexture: { image: { videoWidth: any; videoHeight: any } },
@@ -177,6 +179,15 @@ function VideoMaterial({ url }: { url: string }) {
   )
 }
 
+const vidsArray = [
+  'ad1.mp4',
+  'ad2.mp4',
+  'ad3.mp4',
+  'ad4.mp4',
+  'ad5.mp4',
+  'ad6.mp4',
+]
+
 type Plane = {
   rotation: [number, number, number]
   position: [number, number, number]
@@ -255,7 +266,7 @@ const GradientCube = ({
             position={position}
           >
             {getRandomInt(1, 10) === 5 && side !== 'top' ? (
-              <VideoMaterial url={'ad2.mp4'} />
+              <VideoMaterial url={vidsArray[getRandomInt(0, 5)]} />
             ) : (
               <meshBasicMaterial>
                 <GradientTexture stops={stops} colors={colors} />
@@ -380,13 +391,13 @@ export const BillboardCity = ({
 
   //
   return (
-    <div className="relative ">
+    <div className="relative z-0">
       <Canvas className={`${height} bg-black`}>
         <OrbitControls />
         {cityLayout.map((position, index) => (
           <GradientCube
             key={index}
-            height={getRandomInt(1, 10)}
+            height={getRandomInt(2, 8)}
             position={position}
           />
         ))}

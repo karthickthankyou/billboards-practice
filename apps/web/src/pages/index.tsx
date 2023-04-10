@@ -34,22 +34,23 @@ export default function Home() {
             </button>
           </div>
         </BillboardCity>
-        <div className="h-12" />
+        <div className="h-24 bg-black" />
         <BillboardCity camera={<MovingAroundCityCamera />} height="h-[76vh]">
-          <div className="container mx-auto space-y-2 text-left">
+          <div className="container z-10 mx-auto space-y-2 text-left">
             <h1 className="font-black text-8xl">Install our billboards!</h1>
             <p className="max-w-xs">
               Discover how our billboards can turn your property into a
               consistent income source. Join us today!
             </p>
             <button
-              onClick={() => router.push('/owner')}
               className="px-3 py-1 text-black bg-white rounded-0"
+              onClick={() => router.push('/owner')}
             >
               List your space
             </button>
           </div>
-        </BillboardCity>
+        </BillboardCity>{' '}
+        <div className="h-24 bg-black" />
       </main>
     </>
   )

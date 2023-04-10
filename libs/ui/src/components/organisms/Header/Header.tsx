@@ -37,7 +37,7 @@ export const NavLink = ({ label, href }: { label: string; href: string }) => (
   <Link
     key={label}
     href={href}
-    className="text-sm text-gray-600 hover:text-black hover:underline underline-offset-4"
+    className="text-sm hover:text-black hover:underline underline-offset-4"
   >
     {label}
   </Link>
@@ -198,8 +198,8 @@ export const Header = () => {
   const user = useAppSelector(selectUser)
 
   return (
-    <header>
-      <nav className="fixed top-0 w-full shadow-md shadow-gray-300/10 bg-white/20 backdrop-blur-md">
+    <header className="z-40">
+      <nav className="fixed top-0 w-full shadow-md shadow-gray-300/10 bg-white/50 backdrop-blur-md">
         <Container className="relative z-50 flex items-center justify-between h-16 py-2">
           <NavSidebar open={open} setOpen={setOpen} />
           <NavSidebarUser open={openUser} setOpen={setOpenUser} />
