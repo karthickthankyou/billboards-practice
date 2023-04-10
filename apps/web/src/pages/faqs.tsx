@@ -51,7 +51,7 @@ const FAQS = () => {
   // create a component
   return (
     <Container>
-      <h1 className="mt-8 text-3xl font-light text-black"> FAQS </h1>
+      <h1 className="text-2xl font-semibold">FAQs</h1>
       <div className="max-w-lg space-y-2">
         {faqs.map((faq) => (
           <div key={faq.title}>

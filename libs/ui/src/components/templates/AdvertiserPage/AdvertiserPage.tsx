@@ -72,11 +72,11 @@ export const CampaignsTableBody = ({
           </TableCell>
           <TableCell align="right">{row.name}</TableCell>
           <TableCell align="right" component="th" scope="row">
-            <div className="flex items-center justify-end gap-2">
+            <span className="flex items-center justify-end gap-2">
               {format(new Date(row.startDate), 'PP')}{' '}
               <IconArrowRight className="w-4 h-4" />
               {format(new Date(row.endDate), 'PP')}
-            </div>
+            </span>
             <span className="text-xs">
               {differenceInDays(new Date(row.endDate), new Date(row.startDate))}{' '}
               days

@@ -39,7 +39,7 @@ const Contact = () => {
   return (
     <Container className="grid gap-8 py-12 text-lg leading-loose lg:grid-cols-3">
       <div className="flex flex-col max-w-md col-span-1 gap-4">
-        <h1 className="text-xl font-black">Get in touch</h1>
+        <h1 className="text-2xl font-semibold"> Get in touch </h1>
         <p>
           If you have any questions or concerns about our services, we&apos;d be
           delighted to hear from you. You can reach us by phone{' '}

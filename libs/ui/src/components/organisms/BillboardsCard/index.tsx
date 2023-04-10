@@ -1,0 +1,1 @@
+export { BillboardCard } from './BillboardsCard'

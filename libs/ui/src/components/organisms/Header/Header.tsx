@@ -20,8 +20,13 @@ import { signOut } from '@billboards-org/network/src/auth'
 import { Role, selectUser } from '@billboards-org/store/user'
 
 const MENUITEMS = [
-  ['Owner', '/owner'],
   ['Search', '/billboards'],
+  ['Owner', '/owner'],
+  ['Agent', '/agent'],
+  ['Advertiser', '/advertiser'],
+]
+const SUBMENUITEMS = [
+  ...MENUITEMS,
   ['About', '/about'],
   ['How it works', '/how-it-works'],
   ['Contact', '/contact'],
@@ -75,32 +80,14 @@ const NavSidebarUser = ({
       </Sidebar.Header>
       <Sidebar.Body>
         <div className="flex flex-col items-start w-full pt-12">
-          {ROLELINKS.filter((roleLink) =>
-            user.roles?.includes(roleLink.role as Role),
-          ).map((item) => (
-            <Link
-              href={item.href}
-              className="py-1.5 group hover:underline underline-offset-4 font-bold text-xl capitalize flex justify-between w-full items-center"
-              key={item.name}
-            >
-              {item.name}
-              <IconChevronRight className="block w-6 h-6 p-1 bg-white rounded-full group-hover:animate-slide-right" />
-            </Link>
-          ))}
           <div className="py-1 bg-gray-100 h-0.5" />
-          {[
-            { name: 'My account', href: '/profile' },
-            { name: 'Contact', href: '/contact' },
-            { name: 'Owner', href: '/owner' },
-            { name: 'Agent', href: '/agent' },
-            { name: 'Advertiser', href: '/advertiser' },
-          ].map((item) => (
+          {SUBMENUITEMS.map(([name, href]) => (
             <Link
-              key={item.name}
-              href={item.href}
+              key={name}
+              href={href}
               className="py-1.5 font-medium hover:underline text-gray-600 capitalize"
             >
-              {item.name}
+              {name}
             </Link>
           ))}
         </div>

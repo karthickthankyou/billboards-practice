@@ -110,7 +110,7 @@ export const ApproveButton = ({ billboardId }: { billboardId: number }) => {
               billboardId,
               agentId: uid,
               notes: 'Looks good ',
-              status: BillboardStatusType.Approved,
+              status: BillboardStatusType.Live,
             },
           },
         })

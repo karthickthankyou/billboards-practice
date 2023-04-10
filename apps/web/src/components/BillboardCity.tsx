@@ -13,6 +13,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Button } from '@billboards-org/ui/src/components/atoms/Button'
 import { getRandomValues } from 'crypto'
+import { Loader } from '@billboards-org/ui/src/components/molecules/Loader'
 
 const createGradientTexture = (a: number, b: number, offset: number) => {
   const canvas = document.createElement('canvas')
@@ -256,7 +257,6 @@ const GradientCube = ({
 
   return (
     <>
-      {' '}
       <group position={[x, y + height / 2, z]} scale={[1, height, 1]}>
         {planes.map(({ rotation, colors, position, side }, index) => (
           <Plane
@@ -316,7 +316,7 @@ const generateCityLayout = ({
 }
 
 const RotatingCamera = ({ speed = 0.0005 }) => {
-  const [angle, setAngle] = useState(0)
+  const [angle, setAngle] = useState(30)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>()
 
   useFrame(() => {
@@ -409,7 +409,7 @@ export const BillboardCity = ({
         {/* <MovingAroundCityCamera />
          */}
         <RotatingCamera />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Loader />}>
           {/* <RotatingCamera /> */}
           {camera}
         </Suspense>

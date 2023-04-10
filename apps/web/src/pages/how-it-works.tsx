@@ -7,7 +7,7 @@ const How = () => {
   return (
     <Container className="flex text-lg leading-loose">
       <div className="max-w-md gap-4">
-        <h1 className="mb-6 text-xl font-medium text-black"> How it works? </h1>
+        <h1 className="text-2xl font-semibold">How it works?</h1>
         <ul className="space-y-4">
           <li>Owners request to place their billboards on our site</li>
           <li>
