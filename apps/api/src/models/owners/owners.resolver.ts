@@ -50,6 +50,12 @@ export class OwnersResolver {
   }
 
   @AllowAuthenticated()
+  @Query(() => Owner, { name: 'ownerMe', nullable: true })
+  ownerMe(@Args() args: FindUniqueOwnerArgs, @GetUser() user: GetUserType) {
+    return this.ownersService.findOne({ where: { uid: user.uid } })
+  }
+
+  @AllowAuthenticated()
   @Mutation(() => Owner)
   updateOwner(
     @Args('updateOwnerInput') args: UpdateOwnerInput,
@@ -66,7 +72,7 @@ export class OwnersResolver {
     return this.ownersService.remove(args)
   }
 
-  @ResolveField(() => [Billboard])
+  @ResolveField(() => [Billboard], { nullable: true })
   billboards(@Parent() owner: Owner) {
     return this.prisma.billboard.findMany({
       where: { ownerId: owner.uid },

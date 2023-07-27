@@ -1,23 +1,26 @@
 import { Container } from '../../atoms/Container'
-import { format } from 'date-fns'
 import { Form } from '../../atoms/Form'
 import { HtmlLabel } from '../../atoms/HtmlLabel'
 import { HtmlInput } from '../../atoms/HtmlInput'
-
-import { useCreateBillboardForm } from '@billboards-org/forms/src/createBillboard'
+import { Map } from '@billboards-org/ui/src/components/organisms/Map'
+import {
+  FormTypeCreateBillboard,
+  initialViewState,
+  useCreateBillboardForm,
+} from '@billboards-org/forms/src/createBillboard'
 import HtmlSelect from '../../atoms/HtmlSelect'
 import { Button } from '../../atoms/Button'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-
+import { useFormContext, useWatch, Controller } from 'react-hook-form'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { ProgressBar } from '../../atoms/ProgressBar'
-
+import {
+  CenterOfMap,
+  DefaultZoomControls,
+} from '../../organisms/Map/ZoomControls/ZoomControls'
 import { SearchPlaceBox } from '../../organisms/SearchPlaceBox'
 
-import Map, { Marker } from 'react-map-gl'
 import Link from 'next/link'
-
-import { RangeSlider } from '../../molecules/RangeSlider'
 
 import {
   BillboardType,
@@ -28,9 +31,14 @@ import { selectUser } from '@billboards-org/store/user'
 import { notification$ } from '@billboards-org/util/subjects'
 import { storage } from '@billboards-org/network/src/config/firebase'
 import { Panel } from '../../organisms/Map/Panel'
-import { DefaultZoomControls } from '../../organisms/Map/ZoomControls/ZoomControls'
+
 import { HtmlTextArea } from '../../atoms/HtmlTextArea'
-import { Dialog2 } from '../../atoms/Dialog2'
+import { Dialog } from '../../atoms/Dialog'
+import { Marker } from '../../organisms/Map/MapMarker'
+import { IconBillboard } from '../../../assets/billboard'
+import { useMap } from 'react-map-gl'
+import { RangeSlider } from '../../molecules/RangeSlider'
+import { useImageUpload } from '@billboards-org/forms/src/hooks'
 
 export interface IOwnerPageProps {}
 
@@ -40,15 +48,9 @@ export const CreateBillboard = () => {
     handleSubmit,
     setValue,
     reset,
+    control,
     formState: { errors },
-  } = useCreateBillboardForm()
-
-  const [percent, setPercent] = useState(0)
-  const [images, setImages] = useState<string[]>([])
-  const [markerPosition, setMarkerPosition] = useState({
-    longitude: -100,
-    latitude: 40,
-  })
+  } = useFormContext<FormTypeCreateBillboard>()
 
   const [mutateAsync, { loading, data: newlyCreatedBillboard }] =
     useCreateBillboardMutation()
@@ -62,54 +64,7 @@ export const CreateBillboard = () => {
     }
   }, [newlyCreatedBillboard])
 
-  const [markerRotation, setMarkerRotation] = useState(0)
-
-  const [viewState, setViewState] = useState({
-    longitude: -100,
-    latitude: 40,
-    zoom: 3.5,
-  })
-
-  useEffect(() => {
-    setValue('images', images)
-  }, [images, setValue])
-
-  useEffect(() => {
-    setValue('lat', markerPosition.latitude)
-    setValue('lng', markerPosition.longitude)
-  }, [markerPosition, setValue])
-
-  const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files?.length) {
-      //   setError('images')
-      alert('Please upload an image first!')
-      return
-    }
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      const storageRef = ref(storage, `/files/${file.name}`) // progress can be paused and resumed. It also exposes progress updates. // Receives the storage reference and the file to upload.
-      const uploadTask = uploadBytesResumable(storageRef, file)
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const percent = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-          ) // update progress
-          setPercent(percent)
-        },
-        (err) => console.log(err),
-        () => {
-          // download url
-          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            setImages((state) => [...state, url])
-            console.log(url)
-          })
-        },
-      )
-    }
-  }
+  const [{ percent, uploading }, uploadImages] = useImageUpload()
 
   const user = useAppSelector(selectUser)
 
@@ -121,82 +76,103 @@ export const CreateBillboard = () => {
             notification$.next({ message: 'You are not logged in.' })
             return
           }
+          const uploadedImages = await uploadImages(data.images)
           const { images, ...rest } = data
           await mutateAsync({
             variables: {
               createBillboardInput: {
                 ...rest,
-                images,
+                images: uploadedImages,
                 ownerId: user.uid,
               },
             },
           })
         })}
       >
-        <div className="flex gap-2">
-          <div className="flex flex-col gap-2">
+        <div className="grid gap-2 md:grid-cols-2">
+          <div className="flex flex-col h-full gap-2 min-h-[60rem]">
             <HtmlLabel title="Name" error={errors.name?.message}>
-              <HtmlInput type="string" {...register('name')} />
+              <HtmlInput
+                placeholder="Enter the name of the billboard"
+                type="string"
+                {...register('name')}
+              />
             </HtmlLabel>
             <HtmlLabel title="Address" error={errors.address?.message}>
               <HtmlTextArea type="string" {...register('address')} />
             </HtmlLabel>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <HtmlLabel title="Width" error={errors.width?.message}>
                 <HtmlInput
+                  placeholder="Width in meters"
                   type="number"
                   {...register('width', { valueAsNumber: true })}
                 />
               </HtmlLabel>
               <HtmlLabel title="Height" error={errors.height?.message}>
                 <HtmlInput
+                  placeholder="Height in meters"
                   type="number"
                   {...register('height', { valueAsNumber: true })}
                 />
               </HtmlLabel>
+              <HtmlLabel title="Elevation" error={errors.elevation?.message}>
+                <HtmlInput
+                  placeholder="Elevation from floor in meters"
+                  type="number"
+                  {...register('elevation', { valueAsNumber: true })}
+                  defaultValue={0}
+                />
+              </HtmlLabel>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <HtmlLabel
+                title="Impressions Per Day"
+                error={errors.impressionsPerDay?.message}
+              >
+                <HtmlInput
+                  placeholder="Impressions count"
+                  type="number"
+                  {...register('impressionsPerDay', { valueAsNumber: true })}
+                />
+              </HtmlLabel>
+              <HtmlLabel
+                title="Minimum booking days"
+                error={errors.minBookingDays?.message}
+              >
+                <HtmlInput
+                  placeholder="Minimum booking days"
+                  type="number"
+                  {...register('minBookingDays')}
+                  defaultValue={0}
+                />
+              </HtmlLabel>
+              <HtmlLabel
+                title="Price per day"
+                error={errors.pricePerDay?.message}
+              >
+                <HtmlInput
+                  placeholder="Price in rupees per day"
+                  type="number"
+                  {...register('pricePerDay', { valueAsNumber: true })}
+                />
+              </HtmlLabel>
             </div>
             <HtmlLabel
-              title="Impressions Per Day"
-              error={errors.impressionsPerDay?.message}
+              title="Images"
+              error={errors.images?.message?.toString()}
             >
-              <HtmlInput
-                type="number"
-                {...register('impressionsPerDay', { valueAsNumber: true })}
-              />
-            </HtmlLabel>
-            <HtmlLabel
-              title="Minimum booking days"
-              error={errors.minBookingDays?.message}
-            >
-              <HtmlInput
-                type="number"
-                {...register('minBookingDays')}
-                defaultValue={0}
-              />
-            </HtmlLabel>
-            <HtmlLabel title="Elevation" error={errors.elevation?.message}>
-              <HtmlInput
-                type="number"
-                {...register('elevation', { valueAsNumber: true })}
-                defaultValue={0}
-              />
-            </HtmlLabel>
-            <HtmlLabel
-              title="Price per day"
-              error={errors.pricePerDay?.message}
-            >
-              <HtmlInput
-                type="number"
-                {...register('pricePerDay', { valueAsNumber: true })}
-              />
-            </HtmlLabel>
-            <HtmlLabel title="Images">
-              <HtmlInput
-                multiple
-                type="file"
-                placeholder="Upload images"
-                accept="image/*"
-                onChange={handleUpload}
+              <Controller
+                control={control}
+                name={`images`}
+                render={({ field }) => (
+                  <HtmlInput
+                    type="file"
+                    accept="image/*"
+                    multiple={true}
+                    onChange={(e) => field.onChange(e?.target?.files)}
+                  />
+                )}
               />
               {percent > 0 ? (
                 <ProgressBar variant="determinate" value={percent} />
@@ -212,74 +188,109 @@ export const CreateBillboard = () => {
               </HtmlSelect>
             </HtmlLabel>
             <div className="mt-auto">
-              <Button isLoading={loading} className="w-full" type="submit">
+              <Button isLoading={loading} className="w-full " type="submit">
                 Create billboard
               </Button>
             </div>
           </div>
           <Map
-            {...viewState}
-            onMove={(evt) => setViewState(evt.viewState)}
-            mapStyle="mapbox://styles/mapbox/light-v11"
-            mapboxAccessToken="pk.eyJ1IjoiaWFta2FydGhpY2siLCJhIjoiY2t4b3AwNjZ0MGtkczJub2VqMDZ6OWNrYSJ9.-FMKkHQHvHUeDEvxz2RJWQ"
-            style={{ height: '80vh' }}
+            initialViewState={initialViewState}
+            heightClasses="h-full min-h-[24rem]"
           >
-            {/* <NavigationControl /> */}
-            <Marker
-              pitchAlignment="auto"
-              longitude={markerPosition.longitude}
-              latitude={markerPosition.latitude}
-              draggable
-              rotation={markerRotation}
-              onDragEnd={({ lngLat }) => {
-                setMarkerPosition({
-                  latitude: lngLat.lat,
-                  longitude: lngLat.lng,
-                })
-              }}
-            >
-              {/* <Icon360View className="w-5 h-5" /> */}
-              <div className="flex flex-col items-center justify-center w-6 h-6 rounded-full cursor-pointer bg-black/10">
-                <div className="w-5 h-0.5 bg-black" />
-                <div className="w-2 h-0.5 bg-black" />
-              </div>
-            </Marker>
+            <MapMarker />
+
             <Panel position="left-top">
-              <SearchPlaceBox
-                setLocationInfo={(locationInfo) => {
-                  const { latLng } = locationInfo
-                  setViewState({
-                    latitude: latLng[0],
-                    longitude: latLng[1],
-                    zoom: 12,
-                  })
-                  setMarkerPosition({
-                    latitude: latLng[0],
-                    longitude: latLng[1],
-                  })
+              <SearchBox
+                onChange={({ lat, lng }) => {
+                  setValue('lat', lat, { shouldValidate: true })
+                  setValue('lng', lng, { shouldValidate: true })
                 }}
               />
-              <DefaultZoomControls />
-              <RangeSlider
-                step={5}
-                aria-label="Angle"
-                value={markerRotation}
-                min={0}
-                max={360}
-                valueLabelFormat={(val) => `${val}°`}
-                onChange={(e, newValue) => {
-                  setMarkerRotation(newValue as number)
-                  setValue('angle', newValue as number)
-                }}
+            </Panel>
+            <Panel position="right-center">
+              <DefaultZoomControls>
+                <CenterOfMap
+                  onClick={(latLng) => {
+                    const lat = parseFloat(latLng.lat.toFixed(6))
+                    const lng = parseFloat(latLng.lng.toFixed(6))
+                    console.log('set lat,lng', lat, lng)
+                    setValue('lat', lat, { shouldValidate: true })
+                    setValue('lng', lng, { shouldValidate: true })
+                  }}
+                />
+              </DefaultZoomControls>
+            </Panel>
+            <Panel className="w-full max-w-xs" position="center-bottom">
+              <Controller
+                control={control}
+                name={`angle`}
+                render={({ field }) => (
+                  <RangeSlider
+                    step={10}
+                    aria-label="Angle"
+                    value={field.value}
+                    min={0}
+                    max={360}
+                    valueLabelFormat={(val) => `${val}°`}
+                    onChange={(e, newValue) => {
+                      setValue('angle', newValue as number)
+                    }}
+                  />
+                )}
               />
             </Panel>
           </Map>
         </div>
       </Form>
-      <Dialog2 title="Congrats." setOpen={setshowDialog} open={showDialog}>
+      <Dialog title="Congrats." setOpen={setshowDialog} open={showDialog}>
         <div>Your billboard request is created.</div>
-        <Link href="/owner">Go to owner page.</Link>
-      </Dialog2>
+        <Link href="/">Go to owner dashboard.</Link>
+      </Dialog>
     </Container>
+  )
+}
+
+export const SearchBox = ({
+  onChange,
+}: {
+  onChange: ({ lat, lng }: { lat: number; lng: number }) => void
+}) => {
+  const { current: map } = useMap()
+  return (
+    <SearchPlaceBox
+      setLocationInfo={(locationInfo) => {
+        const lat = locationInfo.latLng[0]
+        const lng = locationInfo.latLng[1]
+        onChange({ lat, lng })
+
+        map?.flyTo({
+          center: { lat, lng },
+          essential: true,
+        })
+      }}
+    />
+  )
+}
+
+export const MapMarker = () => {
+  const { setValue } = useFormContext<FormTypeCreateBillboard>()
+  const { lat, lng, angle } = useWatch<FormTypeCreateBillboard>()
+  console.log('lat, lng', lat, lng)
+
+  return (
+    <Marker
+      pitchAlignment="auto"
+      longitude={lng || 0}
+      latitude={lat || 0}
+      draggable
+      rotation={angle}
+      onDragEnd={({ lngLat }) => {
+        const { lat, lng } = lngLat
+        setValue('lat', lat || 0)
+        setValue('lng', lng || 0)
+      }}
+    >
+      <IconBillboard type="top" />
+    </Marker>
   )
 }

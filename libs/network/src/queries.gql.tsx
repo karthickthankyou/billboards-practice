@@ -13,14 +13,82 @@ export const BillboardFields = gql`
     status {
       status
     }
+    images
     totalBookingDays
     minBookingDays
     booked
+    lat
+    lng
   }
 `
 
-export const GetBillboards = gql`
-  query GetBillboards(
+export const BillboardFieldsMinimal = gql`
+  fragment BillboardFieldsMinimal on Billboard {
+    id
+    name
+    address
+    createdAt
+    pricePerDay
+    status {
+      status
+    }
+    totalBookingDays
+    campaignsCount
+  }
+`
+
+export const billboards = gql`
+  query billboards(
+    $where: BillboardWhereInput
+    $orderBy: [BillboardOrderByWithRelationInput!]
+    $cursor: WhereUniqueInputNumber
+    $take: Int
+    $skip: Int
+    $distinct: [BillboardScalarFieldEnum!]
+  ) {
+    billboards(
+      where: $where
+      orderBy: $orderBy
+      cursor: $cursor
+      take: $take
+      skip: $skip
+      distinct: $distinct
+    ) {
+      ...BillboardFields
+    }
+    billboardAggregate(BillboardWhereInput: $where) {
+      count
+    }
+  }
+`
+
+export const myBillboards = gql`
+  query myBillboards(
+    $where: BillboardWhereInput
+    $orderBy: [BillboardOrderByWithRelationInput!]
+    $cursor: WhereUniqueInputNumber
+    $take: Int
+    $skip: Int
+    $distinct: [BillboardScalarFieldEnum!]
+  ) {
+    myBillboards(
+      where: $where
+      orderBy: $orderBy
+      cursor: $cursor
+      take: $take
+      skip: $skip
+      distinct: $distinct
+    ) {
+      ...BillboardFieldsMinimal
+    }
+    billboardAggregate(BillboardWhereInput: $where) {
+      count
+    }
+  }
+`
+
+export const earnings = gql`
+  query earnings(
     $where: BillboardWhereInput
     $orderBy: [BillboardOrderByWithRelationInput!]
     $cursor: WhereUniqueInputNumber
@@ -77,8 +145,8 @@ export const createBillboard = gql`
   }
 `
 
-export const getCampaigns = gql`
-  query GetCampaigns(
+export const campaigns = gql`
+  query campaigns(
     $distinct: [CampaignScalarFieldEnum!]
     $skip: Int
     $take: Int
@@ -213,6 +281,20 @@ export const getOwner = gql`
   }
 `
 
+export const ownerMe = gql`
+  query ownerMe {
+    ownerMe {
+      updatedAt
+      uid
+      name
+      createdAt
+      billboards {
+        id
+      }
+    }
+  }
+`
+
 export const getRoles = gql`
   query getRoles($uid: String) {
     agent: agent(where: { uid: $uid }) {
@@ -261,47 +343,69 @@ export const getFavorite = gql`
   }
 `
 
-export const GetFavorites = gql`
-  query GetFavorites(
-    $where: FavoriteWhereInput
-    $orderBy: [FavoriteOrderByWithRelationInput!]
-    $cursor: FavoriteWhereUniqueInput
-    $take: Int
-    $skip: Int
-    $distinct: [FavoriteScalarFieldEnum!]
-  ) {
-    favorites(
-      where: $where
-      orderBy: $orderBy
-      cursor: $cursor
-      take: $take
-      skip: $skip
-      distinct: $distinct
-    ) {
-      advertiserId
-      billboardId
-      createdAt
-      billboard {
-        id
-        pricePerDay
-        minBookingDays
-        images
-        lat
-        lng
-        elevation
-        height
-        width
-        type
-        angle
-        impressionsPerDay
-      }
-    }
-  }
-`
+// export const GetFavorites = gql`
+//   query GetFavorites(
+//     $where: FavoriteWhereInput
+//     $orderBy: [FavoriteOrderByWithRelationInput!]
+//     $cursor: FavoriteWhereUniqueInput
+//     $take: Int
+//     $skip: Int
+//     $distinct: [FavoriteScalarFieldEnum!]
+//   ) {
+//     favorites(
+//       where: $where
+//       orderBy: $orderBy
+//       cursor: $cursor
+//       take: $take
+//       skip: $skip
+//       distinct: $distinct
+//     ) {
+//       advertiserId
+//       billboardId
+//       createdAt
+//       billboard {
+//         id
+//         pricePerDay
+//         minBookingDays
+//         images
+//         lat
+//         lng
+//         elevation
+//         height
+//         width
+//         type
+//         angle
+//         impressionsPerDay
+//       }
+//     }
+//   }
+// `
 
 export const getAgent = gql`
   query getAgent($where: AgentWhereUniqueInput) {
     agent(where: $where) {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const agent = gql`
+  query agent($where: AgentWhereUniqueInput) {
+    agent(where: $where) {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const agentMe = gql`
+  query agentMe {
+    agentMe {
       name
       uid
       createdAt
@@ -340,6 +444,49 @@ export const createCampaignTimeline = gql`
       createCampaignTimelineInput: $createCampaignTimelineInput
     ) {
       id
+    }
+  }
+`
+
+export const favorites = gql`
+  query favorites(
+    $skip: Int
+    $take: Int
+    $where: FavoriteWhereInput
+    $orderBy: [FavoriteOrderByWithRelationInput!]
+  ) {
+    favorites(skip: $skip, take: $take, where: $where, orderBy: $orderBy) {
+      billboard {
+        ...BillboardFields
+      }
+    }
+    favoritesCount(FavoriteWhereInput: $where) {
+      count
+    }
+  }
+`
+export const myBookings = gql`
+  query myBookings(
+    $skip: Int
+    $take: Int
+    $orderBy: [BookingOrderByWithRelationInput!]
+    $where: BookingWhereInput
+  ) {
+    myBookings(skip: $skip, take: $take, orderBy: $orderBy, where: $where) {
+      id
+      createdAt
+      billboard {
+        name
+      }
+      campaign {
+        name
+        startDate
+        endDate
+      }
+      pricePerDay
+    }
+    bookingsCount(BookingWhereInput: $where) {
+      count
     }
   }
 `

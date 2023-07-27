@@ -144,7 +144,7 @@ export const MarkerWithPopup = ({
   const user = useAppSelector(selectUser)
 
   return (
-    <div key={marker.id}>
+    <div>
       {showPopup ? (
         <Popup
           latitude={marker.lat}

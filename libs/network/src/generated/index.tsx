@@ -25,9 +25,9 @@ export type Scalars = {
 
 export type Advertiser = {
   __typename?: 'Advertiser'
-  campaigns: Array<Campaign>
+  campaigns?: Maybe<Array<Campaign>>
   createdAt: Scalars['DateTime']
-  favorites: Array<Favorite>
+  favorites?: Maybe<Array<Favorite>>
   name: Scalars['String']
   uid: Scalars['String']
   updatedAt: Scalars['DateTime']
@@ -72,10 +72,10 @@ export type AdvertiserWhereUniqueInput = {
 
 export type Agent = {
   __typename?: 'Agent'
-  billboardTimeline: Array<BillboardTimeline>
-  billboardsStatuses: Array<BillboardStatus>
-  campaignTimeline: Array<CampaignTimeline>
-  campaignsStatuses: Array<CampaignStatus>
+  billboardTimeline?: Maybe<Array<BillboardTimeline>>
+  billboardsStatuses?: Maybe<Array<BillboardStatus>>
+  campaignTimeline?: Maybe<Array<CampaignTimeline>>
+  campaignsStatuses?: Maybe<Array<CampaignStatus>>
   createdAt: Scalars['DateTime']
   name: Scalars['String']
   uid: Scalars['String']
@@ -132,13 +132,14 @@ export type Billboard = {
   __typename?: 'Billboard'
   address?: Maybe<Scalars['String']>
   angle?: Maybe<Scalars['Int']>
-  billboardTimeline: Array<BillboardTimeline>
-  booked: Scalars['Boolean']
-  bookings: Array<Booking>
+  billboardTimeline?: Maybe<Array<BillboardTimeline>>
+  booked?: Maybe<Scalars['Boolean']>
+  bookings?: Maybe<Array<Booking>>
+  campaignsCount?: Maybe<Scalars['Int']>
   createdAt: Scalars['DateTime']
   elevation?: Maybe<Scalars['Int']>
-  favorites: Array<Favorite>
-  height: Scalars['Int']
+  favorites?: Maybe<Array<Favorite>>
+  height: Scalars['Float']
   id: Scalars['Int']
   images?: Maybe<Array<Scalars['String']>>
   impressionsPerDay?: Maybe<Scalars['Int']>
@@ -146,14 +147,14 @@ export type Billboard = {
   lng: Scalars['Float']
   minBookingDays?: Maybe<Scalars['Int']>
   name: Scalars['String']
-  owner: Owner
+  owner?: Maybe<Owner>
   ownerId: Scalars['String']
-  pricePerDay?: Maybe<Scalars['Int']>
-  status: BillboardStatus
+  pricePerDay?: Maybe<Scalars['Float']>
+  status?: Maybe<BillboardStatus>
   totalBookingDays?: Maybe<Scalars['Int']>
   type: BillboardType
   updatedAt: Scalars['DateTime']
-  width: Scalars['Int']
+  width: Scalars['Float']
 }
 
 export type BillboardListRelationFilter = {
@@ -195,16 +196,16 @@ export type BillboardPublic = {
   __typename?: 'BillboardPublic'
   angle?: Maybe<Scalars['Int']>
   elevation?: Maybe<Scalars['Int']>
-  height: Scalars['Int']
+  height: Scalars['Float']
   id: Scalars['Int']
   images?: Maybe<Array<Scalars['String']>>
   impressionsPerDay?: Maybe<Scalars['Int']>
   lat: Scalars['Float']
   lng: Scalars['Float']
   minBookingDays?: Maybe<Scalars['Int']>
-  pricePerDay?: Maybe<Scalars['Int']>
+  pricePerDay?: Maybe<Scalars['Float']>
   type: BillboardType
-  width: Scalars['Int']
+  width: Scalars['Float']
 }
 
 export type BillboardRelationFilter = {
@@ -236,7 +237,7 @@ export type BillboardStatus = {
   __typename?: 'BillboardStatus'
   agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  billboard: Billboard
+  billboard?: Maybe<Billboard>
   billboardId: Scalars['Int']
   createdAt: Scalars['DateTime']
   notes?: Maybe<Scalars['String']>
@@ -308,9 +309,9 @@ export type BillboardStatusWhereUniqueInput = {
 
 export type BillboardTimeline = {
   __typename?: 'BillboardTimeline'
-  agent: Agent
+  agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  billboard: Billboard
+  billboard?: Maybe<Billboard>
   billboardId: Scalars['Int']
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
@@ -412,13 +413,13 @@ export type BillboardWhereUniqueInput = {
 
 export type Booking = {
   __typename?: 'Booking'
-  billboard: Billboard
+  billboard?: Maybe<Billboard>
   billboardId: Scalars['Int']
-  campaign: Campaign
+  campaign?: Maybe<Campaign>
   campaignId: Scalars['Int']
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
-  pricePerDay?: Maybe<Scalars['Int']>
+  pricePerDay?: Maybe<Scalars['Float']>
   updatedAt: Scalars['DateTime']
 }
 
@@ -477,16 +478,16 @@ export type BookingWithInCampaign = {
 
 export type Campaign = {
   __typename?: 'Campaign'
-  advertiser: Advertiser
+  advertiser?: Maybe<Advertiser>
   advertiserId: Scalars['String']
-  bookings: Array<Booking>
-  campaignTimeline: Array<CampaignTimeline>
+  bookings?: Maybe<Array<Booking>>
+  campaignTimeline?: Maybe<Array<CampaignTimeline>>
   createdAt: Scalars['DateTime']
   endDate: Scalars['DateTime']
   id: Scalars['Int']
   name: Scalars['String']
   startDate: Scalars['DateTime']
-  status: CampaignStatus
+  status?: Maybe<CampaignStatus>
   updatedAt: Scalars['DateTime']
 }
 
@@ -531,11 +532,11 @@ export enum CampaignScalarFieldEnum {
 
 export type CampaignStatus = {
   __typename?: 'CampaignStatus'
-  agent: Agent
+  agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  campaign: Campaign
+  campaign?: Maybe<Campaign>
   campaignId: Scalars['Int']
-  campaignTimeline: Array<CampaignTimeline>
+  campaignTimeline?: Maybe<Array<CampaignTimeline>>
   createdAt: Scalars['DateTime']
   status: CampaignStatusType
   updatedAt: Scalars['DateTime']
@@ -602,11 +603,11 @@ export type CampaignStatusWhereUniqueInput = {
 
 export type CampaignTimeline = {
   __typename?: 'CampaignTimeline'
-  agent: Agent
+  agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  campaign: Campaign
+  campaign?: Maybe<Campaign>
   campaignId: Scalars['Int']
-  campaignStatus: CampaignStatus
+  campaignStatus?: Maybe<CampaignStatus>
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
   notes?: Maybe<Scalars['String']>
@@ -704,7 +705,7 @@ export type CreateBillboardInput = {
   address?: InputMaybe<Scalars['String']>
   angle?: InputMaybe<Scalars['Int']>
   elevation?: InputMaybe<Scalars['Int']>
-  height: Scalars['Int']
+  height: Scalars['Float']
   images?: InputMaybe<Array<Scalars['String']>>
   impressionsPerDay?: InputMaybe<Scalars['Int']>
   lat: Scalars['Float']
@@ -712,9 +713,9 @@ export type CreateBillboardInput = {
   minBookingDays?: InputMaybe<Scalars['Int']>
   name: Scalars['String']
   ownerId: Scalars['String']
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
   type: BillboardType
-  width: Scalars['Int']
+  width: Scalars['Float']
 }
 
 export type CreateBillboardStatusInput = {
@@ -734,7 +735,7 @@ export type CreateBillboardTimelineInput = {
 export type CreateBookingInput = {
   billboardId: Scalars['Int']
   campaignId: Scalars['Int']
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
 }
 
 export type CreateCampaignInput = {
@@ -1102,7 +1103,7 @@ export type MutationUpdateOwnerArgs = {
 
 export type Owner = {
   __typename?: 'Owner'
-  billboards: Array<Billboard>
+  billboards?: Maybe<Array<Billboard>>
   createdAt: Scalars['DateTime']
   name: Scalars['String']
   uid: Scalars['String']
@@ -1149,6 +1150,7 @@ export type Query = {
   advertiser?: Maybe<Advertiser>
   advertisers: Array<Advertiser>
   agent?: Maybe<Agent>
+  agentMe?: Maybe<Agent>
   agents: Array<Agent>
   allBillboardTimelines: Array<BillboardTimeline>
   billboard: Billboard
@@ -1160,6 +1162,7 @@ export type Query = {
   billboards: Array<Billboard>
   booking: Booking
   bookings: Array<Booking>
+  bookingsCount: AggregateCountOutput
   campaign: Campaign
   campaignAggregate: AggregateCountOutput
   campaignStatus: CampaignStatus
@@ -1169,7 +1172,11 @@ export type Query = {
   campaigns: Array<Campaign>
   favorite?: Maybe<Favorite>
   favorites: Array<Favorite>
+  favoritesCount: AggregateCountOutput
+  myBillboards: Array<Billboard>
+  myBookings: Array<Booking>
   owner?: Maybe<Owner>
+  ownerMe?: Maybe<Owner>
   owners: Array<Owner>
   searchBillboards: Array<BillboardPublic>
 }
@@ -1188,6 +1195,10 @@ export type QueryAdvertisersArgs = {
 }
 
 export type QueryAgentArgs = {
+  where?: InputMaybe<AgentWhereUniqueInput>
+}
+
+export type QueryAgentMeArgs = {
   where?: InputMaybe<AgentWhereUniqueInput>
 }
 
@@ -1265,6 +1276,10 @@ export type QueryBookingsArgs = {
   where?: InputMaybe<BookingWhereInput>
 }
 
+export type QueryBookingsCountArgs = {
+  BookingWhereInput?: InputMaybe<BookingWhereInput>
+}
+
 export type QueryCampaignArgs = {
   where?: InputMaybe<CampaignWhereUniqueInput>
 }
@@ -1321,7 +1336,33 @@ export type QueryFavoritesArgs = {
   where?: InputMaybe<FavoriteWhereInput>
 }
 
+export type QueryFavoritesCountArgs = {
+  FavoriteWhereInput?: InputMaybe<FavoriteWhereInput>
+}
+
+export type QueryMyBillboardsArgs = {
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  distinct?: InputMaybe<Array<BillboardScalarFieldEnum>>
+  orderBy?: InputMaybe<Array<BillboardOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<BillboardWhereInput>
+}
+
+export type QueryMyBookingsArgs = {
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  distinct?: InputMaybe<Array<BookingScalarFieldEnum>>
+  orderBy?: InputMaybe<Array<BookingOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<BookingWhereInput>
+}
+
 export type QueryOwnerArgs = {
+  where?: InputMaybe<OwnerWhereUniqueInput>
+}
+
+export type QueryOwnerMeArgs = {
   where?: InputMaybe<OwnerWhereUniqueInput>
 }
 
@@ -1435,7 +1476,7 @@ export type UpdateBillboardInput = {
   address?: InputMaybe<Scalars['String']>
   angle?: InputMaybe<Scalars['Int']>
   elevation?: InputMaybe<Scalars['Int']>
-  height?: InputMaybe<Scalars['Int']>
+  height?: InputMaybe<Scalars['Float']>
   id: Scalars['Int']
   images?: InputMaybe<Array<Scalars['String']>>
   impressionsPerDay?: InputMaybe<Scalars['Int']>
@@ -1444,9 +1485,9 @@ export type UpdateBillboardInput = {
   minBookingDays?: InputMaybe<Scalars['Int']>
   name?: InputMaybe<Scalars['String']>
   ownerId?: InputMaybe<Scalars['String']>
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
   type?: InputMaybe<BillboardType>
-  width?: InputMaybe<Scalars['Int']>
+  width?: InputMaybe<Scalars['Float']>
 }
 
 export type UpdateBillboardStatusInput = {
@@ -1468,7 +1509,7 @@ export type UpdateBookingInput = {
   billboardId?: InputMaybe<Scalars['Int']>
   campaignId?: InputMaybe<Scalars['Int']>
   id: Scalars['Int']
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
 }
 
 export type UpdateCampaignInput = {
@@ -1518,16 +1559,34 @@ export type BillboardFieldsFragment = {
   address?: string | null
   createdAt: any
   pricePerDay?: number | null
+  images?: Array<string> | null
   totalBookingDays?: number | null
   minBookingDays?: number | null
-  booked: boolean
-  status: {
+  booked?: boolean | null
+  lat: number
+  lng: number
+  status?: {
     __typename?: 'BillboardStatus'
     status?: BillboardStatusType | null
-  }
+  } | null
 }
 
-export type GetBillboardsQueryVariables = Exact<{
+export type BillboardFieldsMinimalFragment = {
+  __typename?: 'Billboard'
+  id: number
+  name: string
+  address?: string | null
+  createdAt: any
+  pricePerDay?: number | null
+  totalBookingDays?: number | null
+  campaignsCount?: number | null
+  status?: {
+    __typename?: 'BillboardStatus'
+    status?: BillboardStatusType | null
+  } | null
+}
+
+export type BillboardsQueryVariables = Exact<{
   where?: InputMaybe<BillboardWhereInput>
   orderBy?: InputMaybe<
     Array<BillboardOrderByWithRelationInput> | BillboardOrderByWithRelationInput
@@ -1540,7 +1599,7 @@ export type GetBillboardsQueryVariables = Exact<{
   >
 }>
 
-export type GetBillboardsQuery = {
+export type BillboardsQuery = {
   __typename?: 'Query'
   billboards: Array<{
     __typename?: 'Billboard'
@@ -1552,13 +1611,87 @@ export type GetBillboardsQuery = {
     address?: string | null
     createdAt: any
     pricePerDay?: number | null
+    images?: Array<string> | null
     totalBookingDays?: number | null
     minBookingDays?: number | null
-    booked: boolean
-    status: {
+    booked?: boolean | null
+    lat: number
+    lng: number
+    status?: {
       __typename?: 'BillboardStatus'
       status?: BillboardStatusType | null
-    }
+    } | null
+  }>
+  billboardAggregate: { __typename?: 'AggregateCountOutput'; count: number }
+}
+
+export type MyBillboardsQueryVariables = Exact<{
+  where?: InputMaybe<BillboardWhereInput>
+  orderBy?: InputMaybe<
+    Array<BillboardOrderByWithRelationInput> | BillboardOrderByWithRelationInput
+  >
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+  distinct?: InputMaybe<
+    Array<BillboardScalarFieldEnum> | BillboardScalarFieldEnum
+  >
+}>
+
+export type MyBillboardsQuery = {
+  __typename?: 'Query'
+  myBillboards: Array<{
+    __typename?: 'Billboard'
+    id: number
+    name: string
+    address?: string | null
+    createdAt: any
+    pricePerDay?: number | null
+    totalBookingDays?: number | null
+    campaignsCount?: number | null
+    status?: {
+      __typename?: 'BillboardStatus'
+      status?: BillboardStatusType | null
+    } | null
+  }>
+  billboardAggregate: { __typename?: 'AggregateCountOutput'; count: number }
+}
+
+export type EarningsQueryVariables = Exact<{
+  where?: InputMaybe<BillboardWhereInput>
+  orderBy?: InputMaybe<
+    Array<BillboardOrderByWithRelationInput> | BillboardOrderByWithRelationInput
+  >
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+  distinct?: InputMaybe<
+    Array<BillboardScalarFieldEnum> | BillboardScalarFieldEnum
+  >
+}>
+
+export type EarningsQuery = {
+  __typename?: 'Query'
+  billboards: Array<{
+    __typename?: 'Billboard'
+    id: number
+    height: number
+    width: number
+    angle?: number | null
+    name: string
+    address?: string | null
+    createdAt: any
+    pricePerDay?: number | null
+    images?: Array<string> | null
+    totalBookingDays?: number | null
+    minBookingDays?: number | null
+    booked?: boolean | null
+    lat: number
+    lng: number
+    status?: {
+      __typename?: 'BillboardStatus'
+      status?: BillboardStatusType | null
+    } | null
   }>
   billboardAggregate: { __typename?: 'AggregateCountOutput'; count: number }
 }
@@ -1588,13 +1721,16 @@ export type GetFavotireBillboardsQuery = {
     address?: string | null
     createdAt: any
     pricePerDay?: number | null
+    images?: Array<string> | null
     totalBookingDays?: number | null
     minBookingDays?: number | null
-    booked: boolean
-    status: {
+    booked?: boolean | null
+    lat: number
+    lng: number
+    status?: {
       __typename?: 'BillboardStatus'
       status?: BillboardStatusType | null
-    }
+    } | null
   }>
   billboardAggregate: { __typename?: 'AggregateCountOutput'; count: number }
 }
@@ -1608,7 +1744,7 @@ export type CreateBillboardMutation = {
   createBillboard: { __typename?: 'Billboard'; id: number }
 }
 
-export type GetCampaignsQueryVariables = Exact<{
+export type CampaignsQueryVariables = Exact<{
   distinct?: InputMaybe<
     Array<CampaignScalarFieldEnum> | CampaignScalarFieldEnum
   >
@@ -1621,7 +1757,7 @@ export type GetCampaignsQueryVariables = Exact<{
   where?: InputMaybe<CampaignWhereInput>
 }>
 
-export type GetCampaignsQuery = {
+export type CampaignsQuery = {
   __typename?: 'Query'
   campaigns: Array<{
     __typename?: 'Campaign'
@@ -1632,12 +1768,15 @@ export type GetCampaignsQuery = {
     createdAt: any
     advertiserId: string
     updatedAt: any
-    status: { __typename?: 'CampaignStatus'; status: CampaignStatusType }
-    bookings: Array<{
+    status?: {
+      __typename?: 'CampaignStatus'
+      status: CampaignStatusType
+    } | null
+    bookings?: Array<{
       __typename?: 'Booking'
       billboardId: number
       pricePerDay?: number | null
-    }>
+    }> | null
   }>
   campaignAggregate: { __typename?: 'AggregateCountOutput'; count: number }
 }
@@ -1751,7 +1890,21 @@ export type GetOwnerQuery = {
     uid: string
     name: string
     createdAt: any
-    billboards: Array<{ __typename?: 'Billboard'; id: number }>
+    billboards?: Array<{ __typename?: 'Billboard'; id: number }> | null
+  } | null
+}
+
+export type OwnerMeQueryVariables = Exact<{ [key: string]: never }>
+
+export type OwnerMeQuery = {
+  __typename?: 'Query'
+  ownerMe?: {
+    __typename?: 'Owner'
+    updatedAt: any
+    uid: string
+    name: string
+    createdAt: any
+    billboards?: Array<{ __typename?: 'Billboard'; id: number }> | null
   } | null
 }
 
@@ -1814,44 +1967,6 @@ export type GetFavoriteQuery = {
   } | null
 }
 
-export type GetFavoritesQueryVariables = Exact<{
-  where?: InputMaybe<FavoriteWhereInput>
-  orderBy?: InputMaybe<
-    Array<FavoriteOrderByWithRelationInput> | FavoriteOrderByWithRelationInput
-  >
-  cursor?: InputMaybe<FavoriteWhereUniqueInput>
-  take?: InputMaybe<Scalars['Int']>
-  skip?: InputMaybe<Scalars['Int']>
-  distinct?: InputMaybe<
-    Array<FavoriteScalarFieldEnum> | FavoriteScalarFieldEnum
-  >
-}>
-
-export type GetFavoritesQuery = {
-  __typename?: 'Query'
-  favorites: Array<{
-    __typename?: 'Favorite'
-    advertiserId: string
-    billboardId: number
-    createdAt: any
-    billboard: {
-      __typename?: 'Billboard'
-      id: number
-      pricePerDay?: number | null
-      minBookingDays?: number | null
-      images?: Array<string> | null
-      lat: number
-      lng: number
-      elevation?: number | null
-      height: number
-      width: number
-      type: BillboardType
-      angle?: number | null
-      impressionsPerDay?: number | null
-    }
-  }>
-}
-
 export type GetAgentQueryVariables = Exact<{
   where?: InputMaybe<AgentWhereUniqueInput>
 }>
@@ -1859,6 +1974,34 @@ export type GetAgentQueryVariables = Exact<{
 export type GetAgentQuery = {
   __typename?: 'Query'
   agent?: {
+    __typename?: 'Agent'
+    name: string
+    uid: string
+    createdAt: any
+    updatedAt: any
+  } | null
+}
+
+export type AgentQueryVariables = Exact<{
+  where?: InputMaybe<AgentWhereUniqueInput>
+}>
+
+export type AgentQuery = {
+  __typename?: 'Query'
+  agent?: {
+    __typename?: 'Agent'
+    name: string
+    uid: string
+    createdAt: any
+    updatedAt: any
+  } | null
+}
+
+export type AgentMeQueryVariables = Exact<{ [key: string]: never }>
+
+export type AgentMeQuery = {
+  __typename?: 'Query'
+  agentMe?: {
     __typename?: 'Agent'
     name: string
     uid: string
@@ -1900,18 +2043,89 @@ export type CreateCampaignTimelineMutation = {
   createCampaignTimeline: { __typename?: 'CampaignTimeline'; id: number }
 }
 
+export type FavoritesQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<FavoriteWhereInput>
+  orderBy?: InputMaybe<
+    Array<FavoriteOrderByWithRelationInput> | FavoriteOrderByWithRelationInput
+  >
+}>
+
+export type FavoritesQuery = {
+  __typename?: 'Query'
+  favorites: Array<{
+    __typename?: 'Favorite'
+    billboard: {
+      __typename?: 'Billboard'
+      id: number
+      height: number
+      width: number
+      angle?: number | null
+      name: string
+      address?: string | null
+      createdAt: any
+      pricePerDay?: number | null
+      images?: Array<string> | null
+      totalBookingDays?: number | null
+      minBookingDays?: number | null
+      booked?: boolean | null
+      lat: number
+      lng: number
+      status?: {
+        __typename?: 'BillboardStatus'
+        status?: BillboardStatusType | null
+      } | null
+    }
+  }>
+  favoritesCount: { __typename?: 'AggregateCountOutput'; count: number }
+}
+
+export type MyBookingsQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<
+    Array<BookingOrderByWithRelationInput> | BookingOrderByWithRelationInput
+  >
+  where?: InputMaybe<BookingWhereInput>
+}>
+
+export type MyBookingsQuery = {
+  __typename?: 'Query'
+  myBookings: Array<{
+    __typename?: 'Booking'
+    id: number
+    createdAt: any
+    pricePerDay?: number | null
+    billboard?: { __typename?: 'Billboard'; name: string } | null
+    campaign?: {
+      __typename?: 'Campaign'
+      name: string
+      startDate: any
+      endDate: any
+    } | null
+  }>
+  bookingsCount: { __typename?: 'AggregateCountOutput'; count: number }
+}
+
 export const namedOperations = {
   Query: {
-    GetBillboards: 'GetBillboards',
+    billboards: 'billboards',
+    myBillboards: 'myBillboards',
+    earnings: 'earnings',
     GetFavotireBillboards: 'GetFavotireBillboards',
-    GetCampaigns: 'GetCampaigns',
+    campaigns: 'campaigns',
     SearchBillboards: 'SearchBillboards',
     getOwner: 'getOwner',
+    ownerMe: 'ownerMe',
     getRoles: 'getRoles',
     getFavorite: 'getFavorite',
-    GetFavorites: 'GetFavorites',
     getAgent: 'getAgent',
+    agent: 'agent',
+    agentMe: 'agentMe',
     getAdvertiser: 'getAdvertiser',
+    favorites: 'favorites',
+    myBookings: 'myBookings',
   },
   Mutation: {
     createBillboard: 'createBillboard',
@@ -1927,6 +2141,7 @@ export const namedOperations = {
   },
   Fragment: {
     BillboardFields: 'BillboardFields',
+    BillboardFieldsMinimal: 'BillboardFieldsMinimal',
   },
 }
 export const BillboardFieldsFragmentDoc = /*#__PURE__*/ gql`
@@ -1942,13 +2157,30 @@ export const BillboardFieldsFragmentDoc = /*#__PURE__*/ gql`
     status {
       status
     }
+    images
     totalBookingDays
     minBookingDays
     booked
+    lat
+    lng
   }
 `
-export const GetBillboardsDocument = /*#__PURE__*/ gql`
-  query GetBillboards(
+export const BillboardFieldsMinimalFragmentDoc = /*#__PURE__*/ gql`
+  fragment BillboardFieldsMinimal on Billboard {
+    id
+    name
+    address
+    createdAt
+    pricePerDay
+    status {
+      status
+    }
+    totalBookingDays
+    campaignsCount
+  }
+`
+export const BillboardsDocument = /*#__PURE__*/ gql`
+  query billboards(
     $where: BillboardWhereInput
     $orderBy: [BillboardOrderByWithRelationInput!]
     $cursor: WhereUniqueInputNumber
@@ -1974,16 +2206,16 @@ export const GetBillboardsDocument = /*#__PURE__*/ gql`
 `
 
 /**
- * __useGetBillboardsQuery__
+ * __useBillboardsQuery__
  *
- * To run a query within a React component, call `useGetBillboardsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBillboardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useBillboardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBillboardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetBillboardsQuery({
+ * const { data, loading, error } = useBillboardsQuery({
  *   variables: {
  *      where: // value for 'where'
  *      orderBy: // value for 'orderBy'
@@ -1994,39 +2226,194 @@ export const GetBillboardsDocument = /*#__PURE__*/ gql`
  *   },
  * });
  */
-export function useGetBillboardsQuery(
+export function useBillboardsQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    GetBillboardsQuery,
-    GetBillboardsQueryVariables
+    BillboardsQuery,
+    BillboardsQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetBillboardsQuery, GetBillboardsQueryVariables>(
-    GetBillboardsDocument,
+  return Apollo.useQuery<BillboardsQuery, BillboardsQueryVariables>(
+    BillboardsDocument,
     options,
   )
 }
-export function useGetBillboardsLazyQuery(
+export function useBillboardsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetBillboardsQuery,
-    GetBillboardsQueryVariables
+    BillboardsQuery,
+    BillboardsQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetBillboardsQuery, GetBillboardsQueryVariables>(
-    GetBillboardsDocument,
+  return Apollo.useLazyQuery<BillboardsQuery, BillboardsQueryVariables>(
+    BillboardsDocument,
     options,
   )
 }
-export type GetBillboardsQueryHookResult = ReturnType<
-  typeof useGetBillboardsQuery
+export type BillboardsQueryHookResult = ReturnType<typeof useBillboardsQuery>
+export type BillboardsLazyQueryHookResult = ReturnType<
+  typeof useBillboardsLazyQuery
 >
-export type GetBillboardsLazyQueryHookResult = ReturnType<
-  typeof useGetBillboardsLazyQuery
+export type BillboardsQueryResult = Apollo.QueryResult<
+  BillboardsQuery,
+  BillboardsQueryVariables
 >
-export type GetBillboardsQueryResult = Apollo.QueryResult<
-  GetBillboardsQuery,
-  GetBillboardsQueryVariables
+export const MyBillboardsDocument = /*#__PURE__*/ gql`
+  query myBillboards(
+    $where: BillboardWhereInput
+    $orderBy: [BillboardOrderByWithRelationInput!]
+    $cursor: WhereUniqueInputNumber
+    $take: Int
+    $skip: Int
+    $distinct: [BillboardScalarFieldEnum!]
+  ) {
+    myBillboards(
+      where: $where
+      orderBy: $orderBy
+      cursor: $cursor
+      take: $take
+      skip: $skip
+      distinct: $distinct
+    ) {
+      ...BillboardFieldsMinimal
+    }
+    billboardAggregate(BillboardWhereInput: $where) {
+      count
+    }
+  }
+  ${BillboardFieldsMinimalFragmentDoc}
+`
+
+/**
+ * __useMyBillboardsQuery__
+ *
+ * To run a query within a React component, call `useMyBillboardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyBillboardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyBillboardsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useMyBillboardsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    MyBillboardsQuery,
+    MyBillboardsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<MyBillboardsQuery, MyBillboardsQueryVariables>(
+    MyBillboardsDocument,
+    options,
+  )
+}
+export function useMyBillboardsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MyBillboardsQuery,
+    MyBillboardsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<MyBillboardsQuery, MyBillboardsQueryVariables>(
+    MyBillboardsDocument,
+    options,
+  )
+}
+export type MyBillboardsQueryHookResult = ReturnType<
+  typeof useMyBillboardsQuery
+>
+export type MyBillboardsLazyQueryHookResult = ReturnType<
+  typeof useMyBillboardsLazyQuery
+>
+export type MyBillboardsQueryResult = Apollo.QueryResult<
+  MyBillboardsQuery,
+  MyBillboardsQueryVariables
+>
+export const EarningsDocument = /*#__PURE__*/ gql`
+  query earnings(
+    $where: BillboardWhereInput
+    $orderBy: [BillboardOrderByWithRelationInput!]
+    $cursor: WhereUniqueInputNumber
+    $take: Int
+    $skip: Int
+    $distinct: [BillboardScalarFieldEnum!]
+  ) {
+    billboards(
+      where: $where
+      orderBy: $orderBy
+      cursor: $cursor
+      take: $take
+      skip: $skip
+      distinct: $distinct
+    ) {
+      ...BillboardFields
+    }
+    billboardAggregate(BillboardWhereInput: $where) {
+      count
+    }
+  }
+  ${BillboardFieldsFragmentDoc}
+`
+
+/**
+ * __useEarningsQuery__
+ *
+ * To run a query within a React component, call `useEarningsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEarningsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEarningsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useEarningsQuery(
+  baseOptions?: Apollo.QueryHookOptions<EarningsQuery, EarningsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<EarningsQuery, EarningsQueryVariables>(
+    EarningsDocument,
+    options,
+  )
+}
+export function useEarningsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    EarningsQuery,
+    EarningsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<EarningsQuery, EarningsQueryVariables>(
+    EarningsDocument,
+    options,
+  )
+}
+export type EarningsQueryHookResult = ReturnType<typeof useEarningsQuery>
+export type EarningsLazyQueryHookResult = ReturnType<
+  typeof useEarningsLazyQuery
+>
+export type EarningsQueryResult = Apollo.QueryResult<
+  EarningsQuery,
+  EarningsQueryVariables
 >
 export const GetFavotireBillboardsDocument = /*#__PURE__*/ gql`
   query GetFavotireBillboards(
@@ -2159,8 +2546,8 @@ export type CreateBillboardMutationOptions = Apollo.BaseMutationOptions<
   CreateBillboardMutation,
   CreateBillboardMutationVariables
 >
-export const GetCampaignsDocument = /*#__PURE__*/ gql`
-  query GetCampaigns(
+export const CampaignsDocument = /*#__PURE__*/ gql`
+  query campaigns(
     $distinct: [CampaignScalarFieldEnum!]
     $skip: Int
     $take: Int
@@ -2198,16 +2585,16 @@ export const GetCampaignsDocument = /*#__PURE__*/ gql`
 `
 
 /**
- * __useGetCampaignsQuery__
+ * __useCampaignsQuery__
  *
- * To run a query within a React component, call `useGetCampaignsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCampaignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCampaignsQuery({
+ * const { data, loading, error } = useCampaignsQuery({
  *   variables: {
  *      distinct: // value for 'distinct'
  *      skip: // value for 'skip'
@@ -2218,39 +2605,37 @@ export const GetCampaignsDocument = /*#__PURE__*/ gql`
  *   },
  * });
  */
-export function useGetCampaignsQuery(
+export function useCampaignsQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    GetCampaignsQuery,
-    GetCampaignsQueryVariables
+    CampaignsQuery,
+    CampaignsQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetCampaignsQuery, GetCampaignsQueryVariables>(
-    GetCampaignsDocument,
+  return Apollo.useQuery<CampaignsQuery, CampaignsQueryVariables>(
+    CampaignsDocument,
     options,
   )
 }
-export function useGetCampaignsLazyQuery(
+export function useCampaignsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCampaignsQuery,
-    GetCampaignsQueryVariables
+    CampaignsQuery,
+    CampaignsQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetCampaignsQuery, GetCampaignsQueryVariables>(
-    GetCampaignsDocument,
+  return Apollo.useLazyQuery<CampaignsQuery, CampaignsQueryVariables>(
+    CampaignsDocument,
     options,
   )
 }
-export type GetCampaignsQueryHookResult = ReturnType<
-  typeof useGetCampaignsQuery
+export type CampaignsQueryHookResult = ReturnType<typeof useCampaignsQuery>
+export type CampaignsLazyQueryHookResult = ReturnType<
+  typeof useCampaignsLazyQuery
 >
-export type GetCampaignsLazyQueryHookResult = ReturnType<
-  typeof useGetCampaignsLazyQuery
->
-export type GetCampaignsQueryResult = Apollo.QueryResult<
-  GetCampaignsQuery,
-  GetCampaignsQueryVariables
+export type CampaignsQueryResult = Apollo.QueryResult<
+  CampaignsQuery,
+  CampaignsQueryVariables
 >
 export const CreateAgentDocument = /*#__PURE__*/ gql`
   mutation CreateAgent($createAgentInput: CreateAgentInput!) {
@@ -2617,6 +3002,62 @@ export type GetOwnerQueryResult = Apollo.QueryResult<
   GetOwnerQuery,
   GetOwnerQueryVariables
 >
+export const OwnerMeDocument = /*#__PURE__*/ gql`
+  query ownerMe {
+    ownerMe {
+      updatedAt
+      uid
+      name
+      createdAt
+      billboards {
+        id
+      }
+    }
+  }
+`
+
+/**
+ * __useOwnerMeQuery__
+ *
+ * To run a query within a React component, call `useOwnerMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOwnerMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOwnerMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOwnerMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<OwnerMeQuery, OwnerMeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<OwnerMeQuery, OwnerMeQueryVariables>(
+    OwnerMeDocument,
+    options,
+  )
+}
+export function useOwnerMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    OwnerMeQuery,
+    OwnerMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<OwnerMeQuery, OwnerMeQueryVariables>(
+    OwnerMeDocument,
+    options,
+  )
+}
+export type OwnerMeQueryHookResult = ReturnType<typeof useOwnerMeQuery>
+export type OwnerMeLazyQueryHookResult = ReturnType<typeof useOwnerMeLazyQuery>
+export type OwnerMeQueryResult = Apollo.QueryResult<
+  OwnerMeQuery,
+  OwnerMeQueryVariables
+>
 export const GetRolesDocument = /*#__PURE__*/ gql`
   query getRoles($uid: String) {
     agent: agent(where: { uid: $uid }) {
@@ -2885,99 +3326,6 @@ export type GetFavoriteQueryResult = Apollo.QueryResult<
   GetFavoriteQuery,
   GetFavoriteQueryVariables
 >
-export const GetFavoritesDocument = /*#__PURE__*/ gql`
-  query GetFavorites(
-    $where: FavoriteWhereInput
-    $orderBy: [FavoriteOrderByWithRelationInput!]
-    $cursor: FavoriteWhereUniqueInput
-    $take: Int
-    $skip: Int
-    $distinct: [FavoriteScalarFieldEnum!]
-  ) {
-    favorites(
-      where: $where
-      orderBy: $orderBy
-      cursor: $cursor
-      take: $take
-      skip: $skip
-      distinct: $distinct
-    ) {
-      advertiserId
-      billboardId
-      createdAt
-      billboard {
-        id
-        pricePerDay
-        minBookingDays
-        images
-        lat
-        lng
-        elevation
-        height
-        width
-        type
-        angle
-        impressionsPerDay
-      }
-    }
-  }
-`
-
-/**
- * __useGetFavoritesQuery__
- *
- * To run a query within a React component, call `useGetFavoritesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetFavoritesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetFavoritesQuery({
- *   variables: {
- *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      distinct: // value for 'distinct'
- *   },
- * });
- */
-export function useGetFavoritesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetFavoritesQuery,
-    GetFavoritesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetFavoritesQuery, GetFavoritesQueryVariables>(
-    GetFavoritesDocument,
-    options,
-  )
-}
-export function useGetFavoritesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetFavoritesQuery,
-    GetFavoritesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetFavoritesQuery, GetFavoritesQueryVariables>(
-    GetFavoritesDocument,
-    options,
-  )
-}
-export type GetFavoritesQueryHookResult = ReturnType<
-  typeof useGetFavoritesQuery
->
-export type GetFavoritesLazyQueryHookResult = ReturnType<
-  typeof useGetFavoritesLazyQuery
->
-export type GetFavoritesQueryResult = Apollo.QueryResult<
-  GetFavoritesQuery,
-  GetFavoritesQueryVariables
->
 export const GetAgentDocument = /*#__PURE__*/ gql`
   query getAgent($where: AgentWhereUniqueInput) {
     agent(where: $where) {
@@ -3033,6 +3381,110 @@ export type GetAgentLazyQueryHookResult = ReturnType<
 export type GetAgentQueryResult = Apollo.QueryResult<
   GetAgentQuery,
   GetAgentQueryVariables
+>
+export const AgentDocument = /*#__PURE__*/ gql`
+  query agent($where: AgentWhereUniqueInput) {
+    agent(where: $where) {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useAgentQuery__
+ *
+ * To run a query within a React component, call `useAgentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAgentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAgentQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useAgentQuery(
+  baseOptions?: Apollo.QueryHookOptions<AgentQuery, AgentQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<AgentQuery, AgentQueryVariables>(
+    AgentDocument,
+    options,
+  )
+}
+export function useAgentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AgentQuery, AgentQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<AgentQuery, AgentQueryVariables>(
+    AgentDocument,
+    options,
+  )
+}
+export type AgentQueryHookResult = ReturnType<typeof useAgentQuery>
+export type AgentLazyQueryHookResult = ReturnType<typeof useAgentLazyQuery>
+export type AgentQueryResult = Apollo.QueryResult<
+  AgentQuery,
+  AgentQueryVariables
+>
+export const AgentMeDocument = /*#__PURE__*/ gql`
+  query agentMe {
+    agentMe {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useAgentMeQuery__
+ *
+ * To run a query within a React component, call `useAgentMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAgentMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAgentMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAgentMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<AgentMeQuery, AgentMeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<AgentMeQuery, AgentMeQueryVariables>(
+    AgentMeDocument,
+    options,
+  )
+}
+export function useAgentMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AgentMeQuery,
+    AgentMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<AgentMeQuery, AgentMeQueryVariables>(
+    AgentMeDocument,
+    options,
+  )
+}
+export type AgentMeQueryHookResult = ReturnType<typeof useAgentMeQuery>
+export type AgentMeLazyQueryHookResult = ReturnType<typeof useAgentMeLazyQuery>
+export type AgentMeQueryResult = Apollo.QueryResult<
+  AgentMeQuery,
+  AgentMeQueryVariables
 >
 export const GetAdvertiserDocument = /*#__PURE__*/ gql`
   query getAdvertiser($where: AdvertiserWhereUniqueInput) {
@@ -3202,4 +3654,151 @@ export type CreateCampaignTimelineMutationResult =
 export type CreateCampaignTimelineMutationOptions = Apollo.BaseMutationOptions<
   CreateCampaignTimelineMutation,
   CreateCampaignTimelineMutationVariables
+>
+export const FavoritesDocument = /*#__PURE__*/ gql`
+  query favorites(
+    $skip: Int
+    $take: Int
+    $where: FavoriteWhereInput
+    $orderBy: [FavoriteOrderByWithRelationInput!]
+  ) {
+    favorites(skip: $skip, take: $take, where: $where, orderBy: $orderBy) {
+      billboard {
+        ...BillboardFields
+      }
+    }
+    favoritesCount(FavoriteWhereInput: $where) {
+      count
+    }
+  }
+  ${BillboardFieldsFragmentDoc}
+`
+
+/**
+ * __useFavoritesQuery__
+ *
+ * To run a query within a React component, call `useFavoritesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFavoritesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFavoritesQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useFavoritesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    FavoritesQuery,
+    FavoritesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<FavoritesQuery, FavoritesQueryVariables>(
+    FavoritesDocument,
+    options,
+  )
+}
+export function useFavoritesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FavoritesQuery,
+    FavoritesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<FavoritesQuery, FavoritesQueryVariables>(
+    FavoritesDocument,
+    options,
+  )
+}
+export type FavoritesQueryHookResult = ReturnType<typeof useFavoritesQuery>
+export type FavoritesLazyQueryHookResult = ReturnType<
+  typeof useFavoritesLazyQuery
+>
+export type FavoritesQueryResult = Apollo.QueryResult<
+  FavoritesQuery,
+  FavoritesQueryVariables
+>
+export const MyBookingsDocument = /*#__PURE__*/ gql`
+  query myBookings(
+    $skip: Int
+    $take: Int
+    $orderBy: [BookingOrderByWithRelationInput!]
+    $where: BookingWhereInput
+  ) {
+    myBookings(skip: $skip, take: $take, orderBy: $orderBy, where: $where) {
+      id
+      createdAt
+      billboard {
+        name
+      }
+      campaign {
+        name
+        startDate
+        endDate
+      }
+      pricePerDay
+    }
+    bookingsCount(BookingWhereInput: $where) {
+      count
+    }
+  }
+`
+
+/**
+ * __useMyBookingsQuery__
+ *
+ * To run a query within a React component, call `useMyBookingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyBookingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyBookingsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useMyBookingsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    MyBookingsQuery,
+    MyBookingsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<MyBookingsQuery, MyBookingsQueryVariables>(
+    MyBookingsDocument,
+    options,
+  )
+}
+export function useMyBookingsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MyBookingsQuery,
+    MyBookingsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<MyBookingsQuery, MyBookingsQueryVariables>(
+    MyBookingsDocument,
+    options,
+  )
+}
+export type MyBookingsQueryHookResult = ReturnType<typeof useMyBookingsQuery>
+export type MyBookingsLazyQueryHookResult = ReturnType<
+  typeof useMyBookingsLazyQuery
+>
+export type MyBookingsQueryResult = Apollo.QueryResult<
+  MyBookingsQuery,
+  MyBookingsQueryVariables
 >

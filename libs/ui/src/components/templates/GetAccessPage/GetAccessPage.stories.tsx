@@ -1,14 +1,14 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { GetAccessPage } from './GetAccessPage'
+import { GetOwnerAccessPage } from './GetAccessPage'
 
 export default {
-  title: 'templates/GetAccessPage',
-  component: GetAccessPage,
-} as ComponentMeta<typeof GetAccessPage>
+  title: 'templates/GetOwnerAccessPage',
+  component: GetOwnerAccessPage,
+} as ComponentMeta<typeof GetOwnerAccessPage>
 
-const Template: ComponentStory<typeof GetAccessPage> = (args) => (
-  <GetAccessPage {...args} />
+const Template: ComponentStory<typeof GetOwnerAccessPage> = (args) => (
+  <GetOwnerAccessPage {...args} />
 )
 
 export const Primary = Template.bind({})

@@ -1,17 +1,11 @@
 import {
-  GetBillboardsDocument,
-  GetFavotireBillboardsDocument,
   namedOperations,
-  useGetBillboardsQuery,
-  useGetCampaignsQuery,
-  useGetFavoritesQuery,
+  useGetAdvertiserQuery,
+  useCampaignsQuery,
   useGetFavotireBillboardsQuery,
   useRemoveFavoriteMutation,
 } from '@billboards-org/network/src/generated'
-import { useAppSelector } from '@billboards-org/store'
-import { selectUid } from '@billboards-org/store/user'
 import { IconBox } from '@tabler/icons-react'
-import { LinkButton } from '../../atoms/LinkButton'
 import { Container } from '../../atoms/Container'
 import { ReactNode, useState } from 'react'
 import { useWatch, useFormContext } from 'react-hook-form'
@@ -24,23 +18,31 @@ import { RenderDataWithPagination } from '../ShowBillboards'
 import { BillboardCard } from '../../organisms/BillboardsCard'
 import { CampaignCard } from '../../organisms/CampaignCard'
 import { Button } from '../../atoms/Button'
-import { Header } from '../../organisms/Header'
+import { CreateAdvertiser } from '../../organisms/CreateAdvertiser'
+import { useTakeSkip } from '@billboards-org/hooks/src/async'
+import { ShowData } from '../../organisms/ShowData'
 
-export interface IAdvertiserPageProps {}
+export interface IAdvertiserPageProps {
+  uid: string
+}
 
-export const AdvertiserPage = ({}: IAdvertiserPageProps) => {
-  const uid = useAppSelector(selectUid)
+export const AdvertiserPage = ({ uid }: IAdvertiserPageProps) => {
+  const { data } = useGetAdvertiserQuery({
+    variables: { where: { uid } },
+  })
 
-  if (!uid) {
-    return <LinkButton href={'/login'}>Login</LinkButton>
+  if (!data?.advertiser) {
+    return <CreateAdvertiser uid={uid} />
   }
+
   return (
     <Container className="flex flex-col gap-12">
       <FormProviderFilterCampaigns>
-        <FilterCampaigns />
+        <div className="flex justify-end my-2">
+          <FilterCampaigns />
+        </div>
         <ShowCampaignsAdvertiser uid={uid} />
       </FormProviderFilterCampaigns>
-      <ShowFavoritesAdvertiser uid={uid} />
     </Container>
   )
 }
@@ -59,10 +61,10 @@ export const Heading = ({ children }: { children: ReactNode }) => (
 )
 
 export const ShowCampaignsAdvertiser = ({ uid }: { uid: string }) => {
-  const { setValue } = useFormContext<FilterCampaignFormType>()
-  const { status, skip, take } = useWatch<FilterCampaignFormType>()
+  const { setSkip, setTake, skip, take } = useTakeSkip()
+  const { status } = useWatch<FilterCampaignFormType>()
 
-  const { data, loading } = useGetCampaignsQuery({
+  const { data, loading } = useCampaignsQuery({
     variables: {
       skip,
       take,
@@ -75,23 +77,22 @@ export const ShowCampaignsAdvertiser = ({ uid }: { uid: string }) => {
 
   return (
     <div>
-      {' '}
       <Heading>Campaigns</Heading>
-      <RenderDataWithPagination
+      <ShowData
         pagination={{
           resultCount: data?.campaigns.length || 0,
           totalCount: data?.campaignAggregate.count || 0,
+          setSkip,
+          setTake,
           skip,
           take,
-          setSkip: (skip) => setValue('skip', skip),
-          setTake: (take) => setValue('take', take),
         }}
         loading={loading}
       >
         {data?.campaigns.map((campaign) => (
           <CampaignCard campaign={campaign} key={campaign.id} />
         ))}
-      </RenderDataWithPagination>
+      </ShowData>
     </div>
   )
 }
@@ -129,47 +130,5 @@ export const RemoveFavoriteButton = ({
     >
       Remove
     </Button>
-  )
-}
-
-export const ShowFavoritesAdvertiser = ({ uid }: { uid: string }) => {
-  const [skip, setSkip] = useState(0)
-  const [take, setTake] = useState(12)
-
-  const { data, loading } = useGetFavotireBillboardsQuery({
-    variables: {
-      skip,
-      take,
-      where: {
-        favorites: { some: { advertiserId: { equals: uid } } },
-      },
-    },
-  })
-
-  return (
-    <div>
-      <Heading>Favorites</Heading>
-      <RenderDataWithPagination
-        pagination={{
-          resultCount: data?.billboards.length || 0,
-          totalCount: data?.billboardAggregate.count || 0,
-          skip,
-          take,
-          setSkip: (skip) => setSkip(skip),
-          setTake: (take) => setTake(take),
-        }}
-        loading={loading}
-      >
-        {data?.billboards.map((billboard) => (
-          <div>
-            <BillboardCard billboard={billboard} key={billboard.id} />
-            <RemoveFavoriteButton
-              advertiserId={uid}
-              billboardId={billboard.id}
-            />
-          </div>
-        ))}
-      </RenderDataWithPagination>
-    </div>
   )
 }

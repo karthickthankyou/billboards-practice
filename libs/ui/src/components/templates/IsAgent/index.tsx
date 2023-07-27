@@ -1,0 +1,1 @@
+export { IsAgent } from './IsAgent'

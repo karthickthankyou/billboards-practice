@@ -24,7 +24,7 @@ export const FilterCampaigns = ({}: IFilterCampaignsProps) => {
       </Button>
       <Sidebar overlayBlur={false} open={openFilter} setOpen={setOpenFilter}>
         <Sidebar.Header>
-          <Brand shortForm />
+          <Brand />
         </Sidebar.Header>
         <Sidebar.Body>
           <div className="flex flex-col items-start space-y-1">

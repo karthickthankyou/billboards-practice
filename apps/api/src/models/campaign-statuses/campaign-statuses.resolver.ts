@@ -61,21 +61,21 @@ export class CampaignStatusesResolver {
     return this.campaignStatusesService.remove(args)
   }
 
-  @ResolveField(() => Campaign)
+  @ResolveField(() => Campaign, { nullable: true })
   campaign(@Parent() campaignStatus: CampaignStatus) {
     return this.prisma.campaign.findUnique({
       where: { id: campaignStatus.campaignId },
     })
   }
 
-  @ResolveField(() => Agent)
+  @ResolveField(() => Agent, { nullable: true })
   agent(@Parent() campaignStatus: CampaignStatus) {
     return this.prisma.agent.findUnique({
       where: { uid: campaignStatus.agentId },
     })
   }
 
-  @ResolveField(() => [CampaignTimeline])
+  @ResolveField(() => [CampaignTimeline], { nullable: true })
   campaignTimeline(@Parent() campaignStatus: CampaignStatus) {
     return this.prisma.campaignTimeline.findMany({
       where: { campaignId: campaignStatus.campaignId },

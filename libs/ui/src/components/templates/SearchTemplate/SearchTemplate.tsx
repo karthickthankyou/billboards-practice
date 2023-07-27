@@ -1,24 +1,20 @@
-import { useMap, Map } from 'react-map-gl'
+import { toLocalISOString } from '@billboards-org/util'
+import { Map } from '../../organisms/Map'
 import Link from 'next/link'
-
-import { SearchPlaceBox } from '../../organisms/SearchPlaceBox'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '../../atoms/Button'
 import {
-  IconAlertCircle,
   IconCurrentLocation,
-  IconFilter,
+  IconExclamationCircle,
+  IconInfoCircle,
   IconRefresh,
 } from '@tabler/icons-react'
 
 import { FilterSidebar } from '../../organisms/FilterSidebar'
-import { PulsingDot } from '../../atoms/Dot/Dot'
 import { useConvertSearchFormToVariables } from '@billboards-org/forms/src/hooks'
 
 import { useFormContext, useWatch } from 'react-hook-form'
-
-import { DisplayMarkers } from '../../organisms/DisplayMarkers'
 
 import { Switch } from '../../atoms/Switch'
 
@@ -26,10 +22,9 @@ import { HtmlLabel } from '../../atoms/HtmlLabel'
 import { HtmlInput } from '../../atoms/HtmlInput'
 import { Form } from '../../atoms/Form'
 import { FormError } from '../../atoms/FormError'
-import { Dialog2 } from '../../atoms/Dialog2'
 import HScroll from '../../molecules/HScroll'
 
-import { LocationInfo, setRecentSearch } from '@billboards-org/store/search'
+import { LocationInfo } from '@billboards-org/store/search'
 import { useAppDispatch, useAppSelector } from '@billboards-org/store'
 import { SearchBillboardFormType } from '@billboards-org/forms'
 import { notification$ } from '@billboards-org/util/subjects'
@@ -37,18 +32,23 @@ import {
   removeBillboardFromCampaign,
   resetCampaign,
 } from '@billboards-org/store/campaigns'
-import { useCurrentLocation } from '@billboards-org/hooks/src/location'
+import { useSearchLocation } from '@billboards-org/hooks/src/location'
 import { selectUser } from '@billboards-org/store/user'
 import {
   BookingWithInCampaign,
+  SearchBillboardsQuery,
   useCreateCampaignMutation,
   useSearchBillboardsLazyQuery,
 } from '@billboards-org/network/src/generated'
 import { Panel } from '../../organisms/Map/Panel'
 import { DefaultZoomControls } from '../../organisms/Map/ZoomControls/ZoomControls'
-import { useDebouncedValue } from '@billboards-org/hooks/src/async'
-import { dividerClasses } from '@mui/material'
 import { BillboardCardSm } from '../../organisms/BillboardCardSm/BillboardCardSm'
+import { ViewStateChangeEvent, useMap } from 'react-map-gl'
+import { Autocomplete } from '../../atoms/Autocomplete'
+import { MarkerWithPopup } from '../../organisms/DisplayMarkers/DisplayMarkers'
+import { initialViewState } from '@billboards-org/forms/src/createBillboard'
+import { PulsingDot } from '../../atoms/Dot'
+import { Dialog } from '../../atoms/Dialog'
 
 export interface ISearchPageTemplateProps {}
 
@@ -63,15 +63,13 @@ export const Fetching = ({ fetching }: { fetching: boolean }) => {
 type LatLng = { lng: number; lat: number }
 
 export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
-  const [allowed, setAllowed] = useState(false)
-  const [openFilter, setOpenFilter] = useState(false)
   const [openCreateCampaign, setOpenCreateCampaign] = useState(false)
 
   const {
     register,
     setValue,
     trigger,
-    formState: { dirtyFields, errors },
+    formState: { errors },
   } = useFormContext<SearchBillboardFormType>()
 
   const formData = useWatch<SearchBillboardFormType>()
@@ -80,114 +78,62 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
     trigger(['dateRange', 'locationFilter'])
   }, [formData, trigger])
 
-  const [mapRotate, setMapRotate] = useState(true)
   const billboards = useAppSelector((state) => state.campaigns.billboards)
 
-  useEffect(() => {
-    setViewState((state) => ({ ...state, longitude: state.longitude + 0.01 }))
-  }, [mapRotate])
-
-  const { moveMapToCurrentLocation } = useCurrentLocation({
-    allowed,
-    setLocationInfo: (currentLocation: LocationInfo) =>
-      setValue('locationInfo', currentLocation),
-  })
-
-  const [viewState, setViewState] = useState({
-    longitude: -100,
-    latitude: 40,
-    zoom: 3.5,
-  })
-
-  const debouncedViewState = useDebouncedValue(viewState, 300)
-
   const [switchMode, setSwitchMode] = useState(false)
-
-  const dispatch = useAppDispatch()
-
-  const { variables } = useConvertSearchFormToVariables()
-
-  const [fetchData, { data, loading }] = useSearchBillboardsLazyQuery({
-    variables,
-  })
-
-  useEffect(() => {
-    if (variables.dateFilter && variables.locationFilter) fetchData()
-  }, [variables])
-
-  const mapRef = useRef(null)
-
-  useEffect(() => {
-    if (mapRef.current) {
-      // @ts-ignore
-      const { _sw, _ne } = mapRef.current.getBounds()
-      setValue('locationFilter', {
-        nw_lat: _ne.lat,
-        nw_lng: _sw.lng,
-        se_lat: _sw.lat,
-        se_lng: _ne.lng,
-      })
-    }
-  }, [debouncedViewState])
 
   const [showCampaignSuccessDialog, setshowCampaignSuccessDialog] =
     useState(false)
 
+  function handleMapChange(event: ViewStateChangeEvent) {
+    const bounds = event.target.getBounds()
+
+    const locationFilter = {
+      nw_lat: bounds?.getNorthWest().lat || 0,
+      nw_lng: bounds?.getNorthWest().lng || 0,
+      se_lat: bounds?.getSouthEast().lat || 0,
+      se_lng: bounds?.getSouthEast().lng || 0,
+    }
+
+    setValue('locationFilter', locationFilter)
+  }
+
   return (
-    <div>
-      <Map
-        ref={mapRef}
-        {...viewState}
-        projection={'globe'}
-        mapStyle="mapbox://styles/mapbox/light-v11"
-        mapboxAccessToken="pk.eyJ1IjoiaWFta2FydGhpY2siLCJhIjoiY2t4b3AwNjZ0MGtkczJub2VqMDZ6OWNrYSJ9.-FMKkHQHvHUeDEvxz2RJWQ"
-        style={{ height: '92vh' }}
-        pitch={viewState.zoom > 6 ? 45 : 0}
-        scrollZoom={false}
-        onMove={(evt) => {
-          setViewState(evt.viewState)
-        }}
-        // onLoad={(evt) => {
-        //   // @ts-ignore
-        //   const { _sw, _ne } = evt.target.getBounds()
-        //   setLocationFilter({ ne: _ne, sw: _sw })
-        // }}
-        // onMoveEnd={(evt) => {
-        //   // @ts-ignore
-        //   const { _sw, _ne } = evt.target.getBounds()
-        //   //   setLocationFilter({ ne: _ne, sw: _sw })
-        // }}
-      >
-        <DisplayMarkers
-          searchBillboards={data?.searchBillboards || []}
-          switchMode={switchMode}
-        />
-        <Panel position="right-center">
-          <DefaultZoomControls />
-        </Panel>
-        <Panel position="left-top">
-          <SearchPlaceBox
-            setLocationInfo={(locationInfo) => {
-              const { latLng } = locationInfo
-              dispatch(setRecentSearch(locationInfo))
-              setViewState({
-                latitude: latLng[0],
-                longitude: latLng[1],
-                zoom: 12,
-              })
-            }}
-          />
-          {/* , { valueAsDate: true } */}
-          <HtmlInput
-            type="date"
-            placeholder="Start time"
-            {...register('dateRange.startDate')}
-          />
-          <HtmlInput
-            type="date"
-            placeholder="End time"
-            {...register('dateRange.endDate')}
-          />
+    <Map
+      initialViewState={initialViewState}
+      pitch={30}
+      onZoomEnd={handleMapChange}
+      onDragEnd={handleMapChange}
+    >
+      <ShowMarkers switchMode={switchMode} />
+      <Panel position="left-top" className="bg-white/50">
+        <div className="flex flex-col items-stretch gap-2 py-2">
+          {/* Self managing search box. Moves map to the selected location. */}
+          <SearchBox />
+
+          <HtmlLabel
+            title="Start time"
+            error={errors.dateRange?.startDate?.message}
+          >
+            <HtmlInput
+              type="datetime-local"
+              className="w-full p-2 text-lg font-light"
+              min={toLocalISOString(new Date()).slice(0, 16)}
+              {...register('dateRange.startDate')}
+            />
+          </HtmlLabel>
+
+          <HtmlLabel
+            title="End time"
+            error={errors.dateRange?.endDate?.message}
+          >
+            <HtmlInput
+              min={toLocalISOString(new Date()).slice(0, 16)}
+              type="datetime-local"
+              className="w-full p-2 text-lg font-light"
+              {...register('dateRange.endDate')}
+            />
+          </HtmlLabel>
           <div>
             <span>Show angle</span>
             <Switch
@@ -196,112 +142,141 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
               onChange={(e) => setSwitchMode(e.target.checked)}
             />
           </div>
-        </Panel>
-        <Panel position="right-top">
-          <div className="flex gap-2">
-            {billboards.length ? (
-              <Button
-                variant="contained"
-                size="sm"
-                onClick={() => {
-                  setOpenCreateCampaign((state) => !state)
-                }}
-              >
-                Create campaign
-                <PulsingDot>{billboards.length}</PulsingDot>
-              </Button>
-            ) : null}
+        </div>
+      </Panel>
+      <Panel position="right-top">
+        <div className="flex ">
+          {billboards.length ? (
             <Button
-              variant="text"
-              size="none"
-              className="hover:bg-gray-200"
+              variant="contained"
+              size="sm"
               onClick={() => {
-                if (!allowed) {
-                  setAllowed(true)
-                }
-
-                moveMapToCurrentLocation()
+                setOpenCreateCampaign((state) => !state)
               }}
             >
-              <IconCurrentLocation className="stroke-1.5" />
+              Create campaign
+              <PulsingDot>{billboards.length}</PulsingDot>
             </Button>
-            <Button
-              variant="text"
-              size="none"
-              onClick={() => setOpenFilter(true)}
-              className=" hover:bg-gray-200"
-            >
-              <IconFilter className="stroke-1.5 " />
+          ) : null}
 
-              {Object.keys(dirtyFields).length ? <PulsingDot /> : null}
-            </Button>
-            <FilterSidebar open={openFilter} setOpen={setOpenFilter} />
-            <Dialog2
-              open={openCreateCampaign}
-              setOpen={setOpenCreateCampaign}
-              title={'Create campaign'}
-            >
-              <CreateCampaignContent
-                onCompletion={() => {
-                  setOpenCreateCampaign(false)
-                  setshowCampaignSuccessDialog(true)
-                }}
-              />
-            </Dialog2>
-            <Dialog2
-              title="Congratulations!"
-              setOpen={setshowCampaignSuccessDialog}
-              open={showCampaignSuccessDialog}
-            >
-              <div className="space-y-2">
-                <div className="font-bold">
-                  Your campaign has been successfully created! 🎉
-                </div>
-                <div className="text-sm">
-                  Once approved, you'll be on your way to a high-impact
-                  advertising campaign.
-                </div>
-                <Link
-                  href="/advertiser"
-                  className="inline-block text-sm underline underline-offset-4"
-                >
-                  Go to owner page.
-                </Link>
+          <Dialog
+            open={openCreateCampaign}
+            setOpen={setOpenCreateCampaign}
+            title={'Create campaign'}
+          >
+            <CreateCampaignContent
+              onCompletion={() => {
+                setOpenCreateCampaign(false)
+                setshowCampaignSuccessDialog(true)
+              }}
+            />
+          </Dialog>
+          <Dialog
+            setOpen={setshowCampaignSuccessDialog}
+            open={showCampaignSuccessDialog}
+            title={'Success.'}
+          >
+            <div className="space-y-2">
+              <div className="font-bold">
+                Your campaign has been successfully created! 🎉
               </div>
-            </Dialog2>
-          </div>
-        </Panel>
+              <div className="text-sm">
+                Once approved, you'll be on your way to a high-impact
+                advertising campaign.
+              </div>
+              <Link
+                href="/campaigns"
+                className="inline-block text-sm underline underline-offset-4"
+              >
+                Go to dashboard.
+              </Link>
+            </div>
+          </Dialog>
+          <CurrentLocationButton />
+          <FilterSidebar />
+        </div>
+      </Panel>
+      <Panel position="right-center">
+        <DefaultZoomControls />
+      </Panel>
+      {Object.entries(errors).length ? (
         <Panel position="center-bottom">
-          <Fetching fetching={loading} />
-          {Object.entries(errors).map(([title, value]) => (
+          {Object.entries(errors).map(([key, value]) => (
             <div
-              key={title}
-              className="flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm"
+              key={key}
+              className="flex items-center gap-1 p-2 border border-red"
             >
-              <IconAlertCircle /> {value.message}
+              <IconExclamationCircle />
+              <div className="font-medium">
+                {key}: {value.message}
+              </div>
             </div>
           ))}
         </Panel>
-        <StyleMap />
-      </Map>
-    </div>
+      ) : null}
+    </Map>
   )
 }
 
-export const StyleMap = () => {
-  const { current } = useMap()
-  current?.on('style.load', () => {
-    current?.getMap().setFog({
-      color: 'rgb(255, 255, 255)', // Lower atmosphere
-      range: [1, 10],
-      //   @ts-ignore
-      'high-color': 'rgb(200, 200, 200)', // Upper atmosphere
-      'horizon-blend': 0.05, // Atmosphere thickness (default 0.2 at low zooms)
-      'space-color': 'rgb(150, 150, 150)', // Background color
-      'star-intensity': 0.5, // Background star brightness (default 0.35 at low zoooms )
-    })
-  })
-  return null
+export const ZOOM_LIMIT = 8
+
+export const ShowMarkers = ({ switchMode }: { switchMode: boolean }) => {
+  const [billboards, setBillboards] = useState<
+    SearchBillboardsQuery['searchBillboards']
+  >([])
+
+  const { current: map } = useMap()
+  const [searchBillboards, { loading, data }] = useSearchBillboardsLazyQuery()
+
+  const { variables } = useConvertSearchFormToVariables()
+
+  const TOO_ZOOMED_OUT = (map?.getZoom() || 0) < ZOOM_LIMIT
+
+  useEffect(() => {
+    if (variables) {
+      searchBillboards({ variables })
+    }
+  }, [variables])
+  useEffect(() => {
+    if (data?.searchBillboards) {
+      setBillboards(data.searchBillboards || [])
+    }
+  }, [data?.searchBillboards])
+
+  if (data?.searchBillboards.length === 0) {
+    return (
+      <Panel position="center-center" className="bg-white/50">
+        <div className="flex items-center justify-center gap-2 ">
+          <IconInfoCircle /> <div>No billboards found in this area.</div>
+        </div>
+      </Panel>
+    )
+  }
+
+  if (TOO_ZOOMED_OUT) {
+    return (
+      <Panel position="center-center">
+        <div className="p-2 bg-white">Too zoomed out</div>
+      </Panel>
+    )
+  }
+
+  return (
+    <>
+      {loading ? (
+        <Panel position="center-bottom">
+          <IconRefresh className="animate-spin-reverse" />
+        </Panel>
+      ) : null}
+      {billboards.map((garage) => (
+        <MarkerWithPopup
+          switchMode={switchMode}
+          key={garage.id}
+          marker={garage}
+        />
+      ))}
+    </>
+  )
 }
 
 export const CreateCampaignContent = ({
@@ -428,5 +403,101 @@ export const CreateCampaignContent = ({
         Create campaign
       </Button>
     </Form>
+  )
+}
+
+export const CurrentLocationButton = () => {
+  const { current: map } = useMap()
+
+  return (
+    <Button
+      variant="text"
+      className="hover:bg-gray-200"
+      onClick={() => {
+        navigator.geolocation.getCurrentPosition(
+          ({ coords: { latitude, longitude } }) => {
+            map?.flyTo({ center: { lat: latitude, lng: longitude }, zoom: 10 })
+          },
+          (error) => {
+            console.error(error)
+          },
+          { enableHighAccuracy: true, timeout: 20000 },
+          //   { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+        )
+      }}
+    >
+      <IconCurrentLocation className="stroke-1.5" />
+    </Button>
+  )
+}
+
+export const majorCitiesLocationInfo: LocationInfo[] = [
+  {
+    placeName: 'Chennai, Tamil Nadu, India',
+    latLng: [13.0827, 80.2707],
+  },
+  {
+    placeName: 'New York, New York, United States',
+    latLng: [40.7128, -74.006],
+  },
+  {
+    placeName: 'London, Greater London, England, United Kingdom',
+    latLng: [51.5074, -0.1278],
+  },
+  {
+    placeName: 'Paris, France',
+    latLng: [48.8566, 2.3522],
+  },
+  {
+    placeName: 'Berlin, Germany',
+    latLng: [52.52, 13.405],
+  },
+  {
+    placeName: 'Sydney, New South Wales, Australia',
+    latLng: [-33.8688, 151.2093],
+  },
+  {
+    placeName: 'Rio de Janeiro, Brazil',
+    latLng: [-22.9068, -43.1729],
+  },
+  {
+    placeName: 'Cape Town, Western Cape, South Africa',
+    latLng: [-33.9249, 18.4241],
+  },
+  {
+    placeName: 'Moscow, Russia',
+    latLng: [55.7558, 37.6176],
+  },
+  {
+    placeName: 'Beijing, China',
+    latLng: [39.9042, 116.4074],
+  },
+]
+
+export const SearchBox = () => {
+  const { current: map } = useMap()
+  const { loading, setLoading, searchText, setSearchText, locationInfo } =
+    useSearchLocation()
+
+  return (
+    <Autocomplete<LocationInfo, false, false, false>
+      options={locationInfo.length ? locationInfo : majorCitiesLocationInfo}
+      isOptionEqualToValue={(option, value) =>
+        option.placeName === value.placeName
+      }
+      noOptionsText={searchText ? 'No options.' : 'Type something...'}
+      getOptionLabel={(x) => x.placeName}
+      onInputChange={(_, v) => {
+        setLoading(true)
+        setSearchText(v)
+      }}
+      loading={loading}
+      onChange={(_, v) => {
+        if (v) {
+          const { latLng, placeName } = v
+          map?.flyTo({ center: { lat: latLng[0], lng: latLng[1] }, zoom: 10 })
+        }
+      }}
+    />
   )
 }

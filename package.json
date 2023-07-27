@@ -23,6 +23,7 @@
     "format:check": "yarn prettier --check",
     "format:write": "yarn prettier --write",
     "lint": "yarn nx run-many --target=lint",
+    "prevalidate": "yarn format:write",
     "tsc": "yarn nx run-many --target=tsc",
     "validate": "run-p format:check lint tsc",
     "prepare": "husky install",

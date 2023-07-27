@@ -1,16 +1,22 @@
+import { BillboardShadow } from '../../molecules/BillboardShadow'
+
 export interface IBrandProps {
-  shortForm?: boolean
   className?: string
+  type?: 'admin' | 'owner' | 'agent' | ''
 }
 
-export const Brand = ({ shortForm = false, className }: IBrandProps) => {
+export const Brand = ({ className, type = '' }: IBrandProps) => {
   return (
-    <div className="inline-block shadow-gray-100 shadow-[5px_5px_0px_-0px_rgba(0,0,0,0.3)]">
-      <div
-        className={`bg-gray-50 px-2 leading-none select-none border-2 border-white font-black text-2xl ${className}`}
-      >
-        {shortForm ? 'B.' : 'Billboards.'}
-      </div>
+    <div className="flex items-start gap-2">
+      <BillboardShadow>
+        <div className={`bg-gray-25 px-2 font-black text-2xl`}>
+          {'Billboards.'}
+        </div>
+      </BillboardShadow>
+
+      {type ? (
+        <div className="px-1 text-xs shadow-lg text-gray">{type}</div>
+      ) : null}
     </div>
   )
 }

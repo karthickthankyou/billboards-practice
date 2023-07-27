@@ -1,4 +1,3 @@
-import { GetBillboardsQuery } from '@billboards-org/network/src/generated'
 import { LoaderPanel } from '../../molecules/Loader'
 
 import { BillboardCard } from '../../organisms/BillboardsCard'

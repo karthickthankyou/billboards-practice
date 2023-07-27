@@ -19,6 +19,8 @@ import { CampaignTimelinesModule } from './models/campaign-timelines/campaign-ti
 import { PrismaModule } from './common/prisma/prisma.module'
 import { FirebaseModule } from './common/firebase/firebase.module'
 import { AuthModule } from './models/auth/auth.module'
+import { SentryModule } from './common/sentry/sentry.module'
+import { StripeModule } from './common/stripe/stripe.module'
 
 @Module({
   imports: [
@@ -35,6 +37,9 @@ import { AuthModule } from './models/auth/auth.module'
     PrismaModule,
     FirebaseModule,
     AuthModule,
+    SentryModule,
+
+    StripeModule,
 
     FavoritesModule,
     OwnersModule,

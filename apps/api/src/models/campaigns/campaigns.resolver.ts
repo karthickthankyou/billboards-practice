@@ -113,25 +113,25 @@ export class CampaignsResolver {
     return this.campaignsService.remove(args)
   }
 
-  @ResolveField(() => Advertiser)
+  @ResolveField(() => Advertiser, { nullable: true })
   advertiser(@Parent() campaign: Campaign) {
     return this.prisma.advertiser.findUnique({
       where: { uid: campaign.advertiserId },
     })
   }
-  @ResolveField(() => CampaignStatus)
+  @ResolveField(() => CampaignStatus, { nullable: true })
   status(@Parent() campaign: Campaign) {
     return this.prisma.campaignStatus.findUnique({
       where: { campaignId: campaign.id },
     })
   }
-  @ResolveField(() => [Booking])
+  @ResolveField(() => [Booking], { nullable: true })
   bookings(@Parent() campaign: Campaign) {
     return this.prisma.booking.findMany({
       where: { campaignId: campaign.id },
     })
   }
-  @ResolveField(() => [CampaignTimeline])
+  @ResolveField(() => [CampaignTimeline], { nullable: true })
   campaignTimeline(@Parent() campaign: Campaign) {
     return this.prisma.campaignTimeline.findMany({
       where: { campaignId: campaign.id },

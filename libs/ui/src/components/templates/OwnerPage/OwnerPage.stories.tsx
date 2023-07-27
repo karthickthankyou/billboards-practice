@@ -7,9 +7,7 @@ export default {
   component: OwnerPage,
 } as ComponentMeta<typeof OwnerPage>
 
-const Template: ComponentStory<typeof OwnerPage> = (args) => (
-  <OwnerPage {...args} />
-)
+const Template: ComponentStory<typeof OwnerPage> = (args) => <OwnerPage />
 
 export const Primary = Template.bind({})
 Primary.args = {}

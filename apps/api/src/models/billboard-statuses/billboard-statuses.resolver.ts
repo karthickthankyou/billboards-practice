@@ -59,7 +59,7 @@ export class BillboardStatusesResolver {
     return this.billboardStatusesService.remove(args)
   }
 
-  @ResolveField(() => Billboard)
+  @ResolveField(() => Billboard, { nullable: true })
   billboard(@Parent() billboardStatus: BillboardStatus) {
     return this.prisma.billboard.findUnique({
       where: { id: billboardStatus.billboardId },

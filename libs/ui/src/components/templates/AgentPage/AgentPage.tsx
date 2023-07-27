@@ -1,4 +1,8 @@
-import { Tab } from '@headlessui/react'
+import {
+  Tab,
+  Tabs,
+  TabPanel,
+} from '@billboards-org/ui/src/components/molecules/Tabs'
 import { useWatch, useFormContext } from 'react-hook-form'
 
 import { Button } from '../../atoms/Button'
@@ -6,10 +10,11 @@ import { Container } from '../../atoms/Container'
 import {
   BillboardStatusType,
   namedOperations,
+  useAgentMeQuery,
   useCreateBillboardTimelineMutation,
   useCreateCampaignTimelineMutation,
-  useGetBillboardsQuery,
-  useGetCampaignsQuery,
+  useBillboardsQuery,
+  useCampaignsQuery,
 } from '@billboards-org/network/src/generated'
 import { useAppSelector } from '@billboards-org/store'
 import { selectUid } from '@billboards-org/store/user'
@@ -25,7 +30,7 @@ import { FilterCampaigns } from '../../organisms/FilterCampaigns'
 import { FilterOwnerBillboards } from '../../organisms/FilterOwnerBillboards'
 import { RenderDataWithPagination } from '../ShowBillboards'
 import { useState } from 'react'
-import { Dialog2 } from '../../atoms/Dialog2'
+import { Dialog } from '../../atoms/Dialog'
 import { Form } from '../../atoms/Form'
 import { HtmlLabel } from '../../atoms/HtmlLabel'
 import { HtmlInput } from '../../atoms/HtmlInput'
@@ -35,68 +40,64 @@ import HtmlSelect from '../../atoms/HtmlSelect'
 import { HtmlTextArea } from '../../atoms/HtmlTextArea'
 import { BillboardCard } from '../../organisms/BillboardsCard'
 import { CampaignCard } from '../../organisms/CampaignCard'
+import { CreateAgent } from '../../organisms/CreateAgent'
+import { useTakeSkip } from '@billboards-org/hooks/src/async'
+import { ShowData } from '../../organisms/ShowData'
 
-export interface IAgentPageProps {}
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+export interface IAgentPageProps {
+  uid: string
 }
 
-export const AgentPage = ({}: IAgentPageProps) => {
+export const AgentPage = ({ uid }: IAgentPageProps) => {
+  const { data, loading } = useAgentMeQuery()
+  const [value, setValue] = useState(0)
+
+  if (!data?.agentMe) {
+    return <CreateAgent uid={uid} />
+  }
   return (
     <Container>
-      <Tab.Group>
-        <Tab.List className="flex max-w-md p-1 space-x-1 bg-gray-200">
-          <Tab
-            className={({ selected }) =>
-              classNames(
-                'w-full py-1 text-sm border-b-0',
-                selected ? 'bg-white' : 'bg-gray-200',
-              )
-            }
-          >
-            Billboards
-          </Tab>
-          <Tab
-            className={({ selected }) =>
-              classNames(
-                'w-full py-1 text-sm',
-                selected ? 'bg-white' : 'bg-gray-200',
-              )
-            }
-          >
-            Campaigns
-          </Tab>
-        </Tab.List>
-        <Tab.Panels>
-          <Tab.Panel>
-            <FormProviderFilterBillboards>
-              <FilterOwnerBillboards />
-              <ShowBillboardsAgent />
-            </FormProviderFilterBillboards>
-          </Tab.Panel>
-          <Tab.Panel>
-            <FormProviderFilterCampaigns>
-              <FilterCampaigns />
-              <ShowCampaignsAgent />
-            </FormProviderFilterCampaigns>
-          </Tab.Panel>
-        </Tab.Panels>
-      </Tab.Group>
+      <Tabs
+        value={value}
+        onChange={(e, v) => setValue(v)}
+        aria-label="bookings"
+      >
+        <Tab label="Billboards" />
+        <Tab label="Campaigns" />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <FormProviderFilterBillboards>
+          <div className="flex justify-end my-2">
+            <FilterOwnerBillboards />
+          </div>
+          <ShowBillboardsAgent />
+        </FormProviderFilterBillboards>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <FormProviderFilterCampaigns>
+          <div className="flex justify-end my-2">
+            <FilterCampaigns />
+          </div>
+
+          <ShowCampaignsAgent />
+        </FormProviderFilterCampaigns>
+      </TabPanel>
     </Container>
   )
 }
 
 export const ApproveBillboardButton = ({
   billboardId,
+  className,
 }: {
   billboardId: number
+  className?: string
 }) => {
   const uid = useAppSelector(selectUid)
   const [createBillboardTimeline, { loading }] =
     useCreateBillboardTimelineMutation({
       awaitRefetchQueries: true,
-      refetchQueries: [namedOperations.Query.GetBillboards],
+      refetchQueries: [namedOperations.Query.billboards],
     })
   const [showDialog, setshowDialog] = useState(false)
 
@@ -108,10 +109,14 @@ export const ApproveBillboardButton = ({
 
   return (
     <div>
-      <Button onClick={() => setshowDialog(true)} variant="text" size="none">
-        Approve
+      <Button
+        onClick={() => setshowDialog(true)}
+        variant="outlined"
+        className={className}
+      >
+        Update
       </Button>
-      <Dialog2
+      <Dialog
         title="Update billboard status"
         setOpen={setshowDialog}
         open={showDialog}
@@ -150,10 +155,11 @@ export const ApproveBillboardButton = ({
             Submit
           </Button>
         </Form>
-      </Dialog2>
+      </Dialog>
     </div>
   )
 }
+
 export const ApproveCampaignButton = ({
   campaignId,
 }: {
@@ -163,7 +169,7 @@ export const ApproveCampaignButton = ({
   const [createCampaignTimeline, { loading }] =
     useCreateCampaignTimelineMutation({
       awaitRefetchQueries: true,
-      refetchQueries: [namedOperations.Query.GetCampaigns],
+      refetchQueries: [namedOperations.Query.campaigns],
     })
 
   const {
@@ -176,10 +182,10 @@ export const ApproveCampaignButton = ({
 
   return (
     <div>
-      <Button onClick={() => setshowDialog(true)} variant="text" size="none">
-        Approve
+      <Button onClick={() => setshowDialog(true)} variant="outlined">
+        Update
       </Button>
-      <Dialog2
+      <Dialog
         title="Update campaign status"
         setOpen={setshowDialog}
         open={showDialog}
@@ -219,16 +225,16 @@ export const ApproveCampaignButton = ({
             Submit
           </Button>
         </Form>
-      </Dialog2>
+      </Dialog>
     </div>
   )
 }
 
 export const ShowBillboardsAgent = () => {
-  const { setValue } = useFormContext<FilterBillboardFormType>()
-  const { status, type, skip, take } = useWatch<FilterBillboardFormType>()
+  const { setSkip, setTake, skip, take } = useTakeSkip()
+  const { status, type } = useWatch<FilterBillboardFormType>()
 
-  const { loading, data } = useGetBillboardsQuery({
+  const { loading, data } = useBillboardsQuery({
     variables: {
       skip,
       take,
@@ -241,32 +247,34 @@ export const ShowBillboardsAgent = () => {
   })
 
   return (
-    <RenderDataWithPagination
+    <ShowData
       pagination={{
         resultCount: data?.billboards.length || 0,
         totalCount: data?.billboardAggregate.count || 0,
+        setSkip,
+        setTake,
         skip,
         take,
-        setSkip: (skip: number) => setValue('skip', skip),
-        setTake: (take: number) => setValue('take', take),
       }}
       loading={loading}
     >
       {data?.billboards.map((billboard) => (
         <div>
           <BillboardCard billboard={billboard} key={billboard.id} />
-          <ApproveBillboardButton billboardId={billboard.id} />
+          <ApproveBillboardButton billboardId={billboard.id} className="mt-2" />
         </div>
       ))}
-    </RenderDataWithPagination>
+    </ShowData>
   )
 }
 
 export const ShowCampaignsAgent = () => {
   const { setValue } = useFormContext<FilterCampaignFormType>()
-  const { status, skip, take } = useWatch<FilterCampaignFormType>()
+  const { setSkip, setTake, skip, take } = useTakeSkip()
 
-  const { data, loading } = useGetCampaignsQuery({
+  const { status } = useWatch<FilterCampaignFormType>()
+
+  const { data, loading } = useCampaignsQuery({
     variables: {
       take,
       skip,
@@ -277,20 +285,23 @@ export const ShowCampaignsAgent = () => {
   })
 
   return (
-    <RenderDataWithPagination
+    <ShowData
       pagination={{
         resultCount: data?.campaigns.length || 0,
         totalCount: data?.campaignAggregate.count || 0,
         skip,
         take,
-        setSkip: (skip: number) => setValue('skip', skip),
-        setTake: (take: number) => setValue('take', take),
+        setSkip,
+        setTake,
       }}
       loading={loading}
     >
       {data?.campaigns.map((campaign) => (
-        <CampaignCard campaign={campaign} key={campaign.id} />
+        <div className="flex flex-col gap-2">
+          <CampaignCard campaign={campaign} key={campaign.id} />
+          <ApproveCampaignButton campaignId={campaign.id} />
+        </div>
       ))}
-    </RenderDataWithPagination>
+    </ShowData>
   )
 }

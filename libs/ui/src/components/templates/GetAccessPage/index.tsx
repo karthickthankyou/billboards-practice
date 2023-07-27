@@ -1,1 +1,1 @@
-export { GetAccessPage, CreateOwner } from './GetAccessPage'
+export { GetOwnerAccessPage } from './GetAccessPage'

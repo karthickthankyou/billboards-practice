@@ -27,7 +27,7 @@ export const CreateAgent = ({ uid }: ICreateAgentProps) => {
               createAgentInput: { name, uid },
             },
             awaitRefetchQueries: true,
-            refetchQueries: [namedOperations.Query.getAgent],
+            refetchQueries: [namedOperations.Query.agentMe],
           })
         })}
       >

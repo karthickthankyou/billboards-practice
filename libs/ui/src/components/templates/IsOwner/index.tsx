@@ -1,0 +1,1 @@
+export { IsOwner } from './IsOwner'

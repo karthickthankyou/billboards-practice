@@ -74,7 +74,7 @@ export class AdvertisersResolver {
   }
 
   @AllowAuthenticated()
-  @ResolveField(() => [Campaign])
+  @ResolveField(() => [Campaign], { nullable: true })
   campaigns(@Parent() advertiser: Advertiser, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, advertiser.uid)
     return this.prisma.campaign.findMany({
@@ -82,7 +82,7 @@ export class AdvertisersResolver {
     })
   }
   @AllowAuthenticated()
-  @ResolveField(() => [Favorite])
+  @ResolveField(() => [Favorite], { nullable: true })
   favorites(@Parent() advertiser: Advertiser, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, advertiser.uid)
     return this.prisma.favorite.findMany({

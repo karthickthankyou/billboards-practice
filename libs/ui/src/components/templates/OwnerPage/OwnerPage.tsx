@@ -1,66 +1,60 @@
 import { Container } from '../../atoms/Container'
-import { useGetBillboardsQuery } from '@billboards-org/network/src/generated'
+import { useBillboardsQuery } from '@billboards-org/network/src/generated'
 import Link from 'next/link'
-import { FilterOwnerBillboards } from '../../organisms/FilterOwnerBillboards'
-import {
-  FilterBillboardFormType,
-  FormProviderFilterBillboards,
-} from '@billboards-org/forms/src/filterBillboards'
 
-import { useWatch, useFormContext } from 'react-hook-form'
-import { RenderDataWithPagination } from '../ShowBillboards'
 import { BillboardCard } from '../../organisms/BillboardsCard'
-import { ApproveBillboardButton } from '../AgentPage/AgentPage'
+import { IsLoggedIn } from '../IsLoggedIn'
+import { useTakeSkip } from '@billboards-org/hooks/src/async'
+import { ShowData } from '../../organisms/ShowData'
 
-export interface IOwnerPageProps {
-  uid: string
-}
+export interface IOwnerPageProps {}
 
-export const OwnerPage = ({ uid }: IOwnerPageProps) => {
+export const OwnerPage = () => {
   return (
     <Container className="space-y-2">
-      <FormProviderFilterBillboards>
-        <div className="flex items-center justify-end gap-3 mt-4 text-sm">
-          <FilterOwnerBillboards />
-          <Link href="/billboards/new">New billboard</Link>
-        </div>
-        <ShowBillboardsOwner uid={uid} />
-      </FormProviderFilterBillboards>
+      <IsLoggedIn>
+        {(uid) => (
+          <>
+            <div className="flex items-center justify-end gap-3 mt-4 text-sm">
+              <Link href="/createBillboard">New billboard</Link>
+            </div>
+            <ShowBillboardsOwner uid={uid} />
+          </>
+        )}
+      </IsLoggedIn>
     </Container>
   )
 }
 
 export const ShowBillboardsOwner = ({ uid }: { uid: string }) => {
-  const { setValue } = useFormContext<FilterBillboardFormType>()
-  const { status, type, skip, take } = useWatch<FilterBillboardFormType>()
+  const { take, setSkip, setTake, skip } = useTakeSkip()
 
-  const { data, loading } = useGetBillboardsQuery({
+  const { data, loading } = useBillboardsQuery({
     variables: {
       take,
       skip,
       where: {
         ownerId: { equals: uid },
-        status: { is: { status: { in: status } } },
-        type: { in: type },
       },
     },
   })
 
   return (
-    <RenderDataWithPagination
-      pagination={{
-        resultCount: data?.billboards.length || 0,
-        totalCount: data?.billboardAggregate.count || 0,
-        skip,
-        take,
-        setSkip: (skip) => setValue('skip', skip),
-        setTake: (take) => setValue('take', take),
-      }}
+    <ShowData
       loading={loading}
+      title={undefined}
+      pagination={{
+        resultCount: data?.billboards.length,
+        totalCount: data?.billboardAggregate.count,
+        take,
+        setSkip,
+        setTake,
+        skip,
+      }}
     >
       {data?.billboards.map((billboard) => (
         <BillboardCard billboard={billboard} key={billboard.id} />
       ))}
-    </RenderDataWithPagination>
+    </ShowData>
   )
 }

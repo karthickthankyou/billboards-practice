@@ -16,7 +16,7 @@ const primaryPallete = {
 }
 const grayPallete = {
   DEFAULT: 'hsl(208, 10%, 32%)',
-  25: 'hsl(208, 10%, 98%)',
+  25: 'hsl(208, 10%, 95%)',
   50: 'hsl(208, 10%, 90%)',
   100: 'hsl(208, 10%, 80%)',
   200: 'hsl(208, 10%, 70%)',

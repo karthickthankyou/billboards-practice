@@ -1,5 +1,4 @@
 import MapGl, { useMap, Map as MapProps } from 'react-map-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
 
 export type ViewState = {
   latitude: number
@@ -9,17 +8,19 @@ export type ViewState = {
 
 type MapProps = React.ComponentProps<typeof MapGl>
 
-type IMapProps = MapProps & { height?: string }
+type IMapProps = MapProps & { heightClasses?: string }
 
-export const Map = ({ height = 'calc(100vh - 4rem)', ...props }: IMapProps) => {
+export const Map = ({
+  heightClasses = 'h-[calc(100vh-4rem)]',
+  ...props
+}: IMapProps) => {
   return (
-    <div className="overflow-hidden rounded shadow-inner">
+    <div className={`overflow-hidden rounded shadow-inner ${heightClasses}`}>
       <MapGl
         {...props}
         projection={'globe'}
         mapStyle="mapbox://styles/iamkarthick/clebahxqe001701mo1i1adtw3"
         mapboxAccessToken="pk.eyJ1IjoiaWFta2FydGhpY2siLCJhIjoiY2t4b3AwNjZ0MGtkczJub2VqMDZ6OWNrYSJ9.-FMKkHQHvHUeDEvxz2RJWQ"
-        style={{ height }}
         scrollZoom={false}
       >
         <StyleMap />

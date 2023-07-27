@@ -79,7 +79,7 @@ export const RegisterForm = ({ className }: { className?: string }) => {
         Create account
       </Button>
       <div className="mt-4 text-sm ">
-        Already have an autospace account?
+        Already have an billboards account?
         <br />
         <Link href="/login" className="font-bold">
           Login{' '}

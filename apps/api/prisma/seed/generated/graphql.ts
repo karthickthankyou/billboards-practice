@@ -24,9 +24,9 @@ export type Scalars = {
 
 export type Advertiser = {
   __typename?: 'Advertiser'
-  campaigns: Array<Campaign>
+  campaigns?: Maybe<Array<Campaign>>
   createdAt: Scalars['DateTime']
-  favorites: Array<Favorite>
+  favorites?: Maybe<Array<Favorite>>
   name: Scalars['String']
   uid: Scalars['String']
   updatedAt: Scalars['DateTime']
@@ -71,10 +71,10 @@ export type AdvertiserWhereUniqueInput = {
 
 export type Agent = {
   __typename?: 'Agent'
-  billboardTimeline: Array<BillboardTimeline>
-  billboardsStatuses: Array<BillboardStatus>
-  campaignTimeline: Array<CampaignTimeline>
-  campaignsStatuses: Array<CampaignStatus>
+  billboardTimeline?: Maybe<Array<BillboardTimeline>>
+  billboardsStatuses?: Maybe<Array<BillboardStatus>>
+  campaignTimeline?: Maybe<Array<CampaignTimeline>>
+  campaignsStatuses?: Maybe<Array<CampaignStatus>>
   createdAt: Scalars['DateTime']
   name: Scalars['String']
   uid: Scalars['String']
@@ -131,13 +131,14 @@ export type Billboard = {
   __typename?: 'Billboard'
   address?: Maybe<Scalars['String']>
   angle?: Maybe<Scalars['Int']>
-  billboardTimeline: Array<BillboardTimeline>
-  booked: Scalars['Boolean']
-  bookings: Array<Booking>
+  billboardTimeline?: Maybe<Array<BillboardTimeline>>
+  booked?: Maybe<Scalars['Boolean']>
+  bookings?: Maybe<Array<Booking>>
+  campaignsCount?: Maybe<Scalars['Int']>
   createdAt: Scalars['DateTime']
   elevation?: Maybe<Scalars['Int']>
-  favorites: Array<Favorite>
-  height: Scalars['Int']
+  favorites?: Maybe<Array<Favorite>>
+  height: Scalars['Float']
   id: Scalars['Int']
   images?: Maybe<Array<Scalars['String']>>
   impressionsPerDay?: Maybe<Scalars['Int']>
@@ -145,14 +146,14 @@ export type Billboard = {
   lng: Scalars['Float']
   minBookingDays?: Maybe<Scalars['Int']>
   name: Scalars['String']
-  owner: Owner
+  owner?: Maybe<Owner>
   ownerId: Scalars['String']
-  pricePerDay?: Maybe<Scalars['Int']>
-  status: BillboardStatus
+  pricePerDay?: Maybe<Scalars['Float']>
+  status?: Maybe<BillboardStatus>
   totalBookingDays?: Maybe<Scalars['Int']>
   type: BillboardType
   updatedAt: Scalars['DateTime']
-  width: Scalars['Int']
+  width: Scalars['Float']
 }
 
 export type BillboardListRelationFilter = {
@@ -194,16 +195,16 @@ export type BillboardPublic = {
   __typename?: 'BillboardPublic'
   angle?: Maybe<Scalars['Int']>
   elevation?: Maybe<Scalars['Int']>
-  height: Scalars['Int']
+  height: Scalars['Float']
   id: Scalars['Int']
   images?: Maybe<Array<Scalars['String']>>
   impressionsPerDay?: Maybe<Scalars['Int']>
   lat: Scalars['Float']
   lng: Scalars['Float']
   minBookingDays?: Maybe<Scalars['Int']>
-  pricePerDay?: Maybe<Scalars['Int']>
+  pricePerDay?: Maybe<Scalars['Float']>
   type: BillboardType
-  width: Scalars['Int']
+  width: Scalars['Float']
 }
 
 export type BillboardRelationFilter = {
@@ -235,7 +236,7 @@ export type BillboardStatus = {
   __typename?: 'BillboardStatus'
   agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  billboard: Billboard
+  billboard?: Maybe<Billboard>
   billboardId: Scalars['Int']
   createdAt: Scalars['DateTime']
   notes?: Maybe<Scalars['String']>
@@ -307,9 +308,9 @@ export type BillboardStatusWhereUniqueInput = {
 
 export type BillboardTimeline = {
   __typename?: 'BillboardTimeline'
-  agent: Agent
+  agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  billboard: Billboard
+  billboard?: Maybe<Billboard>
   billboardId: Scalars['Int']
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
@@ -411,13 +412,13 @@ export type BillboardWhereUniqueInput = {
 
 export type Booking = {
   __typename?: 'Booking'
-  billboard: Billboard
+  billboard?: Maybe<Billboard>
   billboardId: Scalars['Int']
-  campaign: Campaign
+  campaign?: Maybe<Campaign>
   campaignId: Scalars['Int']
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
-  pricePerDay?: Maybe<Scalars['Int']>
+  pricePerDay?: Maybe<Scalars['Float']>
   updatedAt: Scalars['DateTime']
 }
 
@@ -476,16 +477,16 @@ export type BookingWithInCampaign = {
 
 export type Campaign = {
   __typename?: 'Campaign'
-  advertiser: Advertiser
+  advertiser?: Maybe<Advertiser>
   advertiserId: Scalars['String']
-  bookings: Array<Booking>
-  campaignTimeline: Array<CampaignTimeline>
+  bookings?: Maybe<Array<Booking>>
+  campaignTimeline?: Maybe<Array<CampaignTimeline>>
   createdAt: Scalars['DateTime']
   endDate: Scalars['DateTime']
   id: Scalars['Int']
   name: Scalars['String']
   startDate: Scalars['DateTime']
-  status: CampaignStatus
+  status?: Maybe<CampaignStatus>
   updatedAt: Scalars['DateTime']
 }
 
@@ -530,11 +531,11 @@ export enum CampaignScalarFieldEnum {
 
 export type CampaignStatus = {
   __typename?: 'CampaignStatus'
-  agent: Agent
+  agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  campaign: Campaign
+  campaign?: Maybe<Campaign>
   campaignId: Scalars['Int']
-  campaignTimeline: Array<CampaignTimeline>
+  campaignTimeline?: Maybe<Array<CampaignTimeline>>
   createdAt: Scalars['DateTime']
   status: CampaignStatusType
   updatedAt: Scalars['DateTime']
@@ -601,11 +602,11 @@ export type CampaignStatusWhereUniqueInput = {
 
 export type CampaignTimeline = {
   __typename?: 'CampaignTimeline'
-  agent: Agent
+  agent?: Maybe<Agent>
   agentId?: Maybe<Scalars['String']>
-  campaign: Campaign
+  campaign?: Maybe<Campaign>
   campaignId: Scalars['Int']
-  campaignStatus: CampaignStatus
+  campaignStatus?: Maybe<CampaignStatus>
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
   notes?: Maybe<Scalars['String']>
@@ -703,7 +704,7 @@ export type CreateBillboardInput = {
   address?: InputMaybe<Scalars['String']>
   angle?: InputMaybe<Scalars['Int']>
   elevation?: InputMaybe<Scalars['Int']>
-  height: Scalars['Int']
+  height: Scalars['Float']
   images?: InputMaybe<Array<Scalars['String']>>
   impressionsPerDay?: InputMaybe<Scalars['Int']>
   lat: Scalars['Float']
@@ -711,9 +712,9 @@ export type CreateBillboardInput = {
   minBookingDays?: InputMaybe<Scalars['Int']>
   name: Scalars['String']
   ownerId: Scalars['String']
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
   type: BillboardType
-  width: Scalars['Int']
+  width: Scalars['Float']
 }
 
 export type CreateBillboardStatusInput = {
@@ -733,7 +734,7 @@ export type CreateBillboardTimelineInput = {
 export type CreateBookingInput = {
   billboardId: Scalars['Int']
   campaignId: Scalars['Int']
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
 }
 
 export type CreateCampaignInput = {
@@ -1101,7 +1102,7 @@ export type MutationUpdateOwnerArgs = {
 
 export type Owner = {
   __typename?: 'Owner'
-  billboards: Array<Billboard>
+  billboards?: Maybe<Array<Billboard>>
   createdAt: Scalars['DateTime']
   name: Scalars['String']
   uid: Scalars['String']
@@ -1148,6 +1149,7 @@ export type Query = {
   advertiser?: Maybe<Advertiser>
   advertisers: Array<Advertiser>
   agent?: Maybe<Agent>
+  agentMe?: Maybe<Agent>
   agents: Array<Agent>
   allBillboardTimelines: Array<BillboardTimeline>
   billboard: Billboard
@@ -1159,6 +1161,7 @@ export type Query = {
   billboards: Array<Billboard>
   booking: Booking
   bookings: Array<Booking>
+  bookingsCount: AggregateCountOutput
   campaign: Campaign
   campaignAggregate: AggregateCountOutput
   campaignStatus: CampaignStatus
@@ -1168,7 +1171,11 @@ export type Query = {
   campaigns: Array<Campaign>
   favorite?: Maybe<Favorite>
   favorites: Array<Favorite>
+  favoritesCount: AggregateCountOutput
+  myBillboards: Array<Billboard>
+  myBookings: Array<Booking>
   owner?: Maybe<Owner>
+  ownerMe?: Maybe<Owner>
   owners: Array<Owner>
   searchBillboards: Array<BillboardPublic>
 }
@@ -1187,6 +1194,10 @@ export type QueryAdvertisersArgs = {
 }
 
 export type QueryAgentArgs = {
+  where?: InputMaybe<AgentWhereUniqueInput>
+}
+
+export type QueryAgentMeArgs = {
   where?: InputMaybe<AgentWhereUniqueInput>
 }
 
@@ -1264,6 +1275,10 @@ export type QueryBookingsArgs = {
   where?: InputMaybe<BookingWhereInput>
 }
 
+export type QueryBookingsCountArgs = {
+  BookingWhereInput?: InputMaybe<BookingWhereInput>
+}
+
 export type QueryCampaignArgs = {
   where?: InputMaybe<CampaignWhereUniqueInput>
 }
@@ -1320,7 +1335,33 @@ export type QueryFavoritesArgs = {
   where?: InputMaybe<FavoriteWhereInput>
 }
 
+export type QueryFavoritesCountArgs = {
+  FavoriteWhereInput?: InputMaybe<FavoriteWhereInput>
+}
+
+export type QueryMyBillboardsArgs = {
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  distinct?: InputMaybe<Array<BillboardScalarFieldEnum>>
+  orderBy?: InputMaybe<Array<BillboardOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<BillboardWhereInput>
+}
+
+export type QueryMyBookingsArgs = {
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  distinct?: InputMaybe<Array<BookingScalarFieldEnum>>
+  orderBy?: InputMaybe<Array<BookingOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<BookingWhereInput>
+}
+
 export type QueryOwnerArgs = {
+  where?: InputMaybe<OwnerWhereUniqueInput>
+}
+
+export type QueryOwnerMeArgs = {
   where?: InputMaybe<OwnerWhereUniqueInput>
 }
 
@@ -1434,7 +1475,7 @@ export type UpdateBillboardInput = {
   address?: InputMaybe<Scalars['String']>
   angle?: InputMaybe<Scalars['Int']>
   elevation?: InputMaybe<Scalars['Int']>
-  height?: InputMaybe<Scalars['Int']>
+  height?: InputMaybe<Scalars['Float']>
   id: Scalars['Int']
   images?: InputMaybe<Array<Scalars['String']>>
   impressionsPerDay?: InputMaybe<Scalars['Int']>
@@ -1443,9 +1484,9 @@ export type UpdateBillboardInput = {
   minBookingDays?: InputMaybe<Scalars['Int']>
   name?: InputMaybe<Scalars['String']>
   ownerId?: InputMaybe<Scalars['String']>
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
   type?: InputMaybe<BillboardType>
-  width?: InputMaybe<Scalars['Int']>
+  width?: InputMaybe<Scalars['Float']>
 }
 
 export type UpdateBillboardStatusInput = {
@@ -1467,7 +1508,7 @@ export type UpdateBookingInput = {
   billboardId?: InputMaybe<Scalars['Int']>
   campaignId?: InputMaybe<Scalars['Int']>
   id: Scalars['Int']
-  pricePerDay?: InputMaybe<Scalars['Int']>
+  pricePerDay?: InputMaybe<Scalars['Float']>
 }
 
 export type UpdateCampaignInput = {

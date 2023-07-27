@@ -21,6 +21,8 @@ import {
 } from 'src/common/decorators/auth/auth.decorator'
 import { GetUserType } from '@billboards-org/types'
 import { checkRowLevelPermission } from 'src/common/guards'
+import { AggregateCountOutput } from '../billboards/dto/count.output'
+import { FavoriteWhereInput } from './dto/where.args'
 
 @Resolver(() => Favorite)
 export class FavoritesResolver {
@@ -104,5 +106,17 @@ export class FavoritesResolver {
     return this.prisma.billboard.findUnique({
       where: { id: favorite.billboardId },
     })
+  }
+
+  @Query(() => AggregateCountOutput, { name: 'favoritesCount' })
+  async favoritesCount(
+    @Args('FavoriteWhereInput', { nullable: true }) where: FavoriteWhereInput,
+  ) {
+    const productCount = await this.prisma.favorite.aggregate({
+      _count: { _all: true },
+      where,
+    })
+
+    return { count: productCount._count._all }
   }
 }

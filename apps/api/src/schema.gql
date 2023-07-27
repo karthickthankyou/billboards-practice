@@ -21,14 +21,16 @@ type Advertiser {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
-  campaigns: [Campaign!]!
-  favorites: [Favorite!]!
+  campaigns: [Campaign!]
+  favorites: [Favorite!]
 }
 
 type Billboard {
   lat: Float!
   lng: Float!
-  pricePerDay: Int
+  height: Float!
+  width: Float!
+  pricePerDay: Float
   impressionsPerDay: Int
   minBookingDays: Int
   address: String
@@ -40,16 +42,15 @@ type Billboard {
   name: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  height: Int!
-  width: Int!
   ownerId: String!
-  owner: Owner!
-  status: BillboardStatus!
-  bookings: [Booking!]!
-  billboardTimeline: [BillboardTimeline!]!
-  favorites: [Favorite!]!
+  owner: Owner
+  status: BillboardStatus
+  bookings: [Booking!]
+  billboardTimeline: [BillboardTimeline!]
+  favorites: [Favorite!]
+  campaignsCount: Int
   totalBookingDays: Int
-  booked: Boolean!
+  booked: Boolean
 }
 
 enum BillboardType {
@@ -60,12 +61,16 @@ enum BillboardType {
   THREE_DIMENSIONAL
 }
 
+type AggregateCountOutput {
+  count: Int!
+}
+
 type Owner {
   uid: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
-  billboards: [Billboard!]!
+  billboards: [Billboard!]
 }
 
 type Agent {
@@ -73,10 +78,10 @@ type Agent {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
-  billboardsStatuses: [BillboardStatus!]!
-  campaignsStatuses: [CampaignStatus!]!
-  billboardTimeline: [BillboardTimeline!]!
-  campaignTimeline: [CampaignTimeline!]!
+  billboardsStatuses: [BillboardStatus!]
+  campaignsStatuses: [CampaignStatus!]
+  billboardTimeline: [BillboardTimeline!]
+  campaignTimeline: [CampaignTimeline!]
 }
 
 type BillboardStatus {
@@ -86,7 +91,7 @@ type BillboardStatus {
   createdAt: DateTime!
   updatedAt: DateTime!
   billboardId: Int!
-  billboard: Billboard!
+  billboard: Billboard
   agent: Agent
 }
 
@@ -105,9 +110,9 @@ type CampaignStatus {
   createdAt: DateTime!
   updatedAt: DateTime!
   campaignId: Int!
-  campaign: Campaign!
-  agent: Agent!
-  campaignTimeline: [CampaignTimeline!]!
+  campaign: Campaign
+  agent: Agent
+  campaignTimeline: [CampaignTimeline!]
 }
 
 enum CampaignStatusType {
@@ -127,8 +132,8 @@ type BillboardTimeline {
   createdAt: DateTime!
   updatedAt: DateTime!
   billboardId: Int!
-  billboard: Billboard!
-  agent: Agent!
+  billboard: Billboard
+  agent: Agent
 }
 
 type CampaignTimeline {
@@ -139,9 +144,9 @@ type CampaignTimeline {
   createdAt: DateTime!
   updatedAt: DateTime!
   campaignId: Int!
-  campaign: Campaign!
-  agent: Agent!
-  campaignStatus: CampaignStatus!
+  campaign: Campaign
+  agent: Agent
+  campaignStatus: CampaignStatus
 }
 
 type Campaign {
@@ -152,27 +157,29 @@ type Campaign {
   startDate: DateTime!
   endDate: DateTime!
   advertiserId: String!
-  advertiser: Advertiser!
-  status: CampaignStatus!
-  bookings: [Booking!]!
-  campaignTimeline: [CampaignTimeline!]!
+  advertiser: Advertiser
+  status: CampaignStatus
+  bookings: [Booking!]
+  campaignTimeline: [CampaignTimeline!]
 }
 
 type Booking {
-  pricePerDay: Int
+  pricePerDay: Float
   id: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   campaignId: Int!
   billboardId: Int!
-  campaign: Campaign!
-  billboard: Billboard!
+  campaign: Campaign
+  billboard: Billboard
 }
 
 type BillboardPublic {
   lat: Float!
   lng: Float!
-  pricePerDay: Int
+  height: Float!
+  width: Float!
+  pricePerDay: Float
   impressionsPerDay: Int
   minBookingDays: Int
   images: [String!]
@@ -180,12 +187,6 @@ type BillboardPublic {
   angle: Int
   elevation: Int
   id: Int!
-  height: Int!
-  width: Int!
-}
-
-type AggregateCountOutput {
-  count: Int!
 }
 
 type LoginOutput {
@@ -221,13 +222,17 @@ type RefreshTokenOutput {
 type Query {
   favorites(where: FavoriteWhereInput, orderBy: [FavoriteOrderByWithRelationInput!], cursor: FavoriteWhereUniqueInput, take: Int, skip: Int, distinct: [FavoriteScalarFieldEnum!]): [Favorite!]!
   favorite(where: FavoriteWhereUniqueInput): Favorite
+  favoritesCount(FavoriteWhereInput: FavoriteWhereInput): AggregateCountOutput!
   owners(where: OwnerWhereInput, orderBy: [OwnerOrderByWithRelationInput!], cursor: OwnerWhereUniqueInput, take: Int, skip: Int, distinct: [OwnerScalarFieldEnum!]): [Owner!]!
   owner(where: OwnerWhereUniqueInput): Owner
+  ownerMe(where: OwnerWhereUniqueInput): Owner
   agents(where: AgentWhereInput, orderBy: [AgentOrderByWithRelationInput!], cursor: AgentWhereUniqueInput, take: Int, skip: Int, distinct: [AgentScalarFieldEnum!]): [Agent!]!
   agent(where: AgentWhereUniqueInput): Agent
+  agentMe(where: AgentWhereUniqueInput): Agent
   advertisers(where: AdvertiserWhereInput, orderBy: [AdvertiserOrderByWithRelationInput!], cursor: AdvertiserWhereUniqueInput, take: Int, skip: Int, distinct: [AdvertiserScalarFieldEnum!]): [Advertiser!]!
   advertiser(where: AdvertiserWhereUniqueInput): Advertiser
   billboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
+  myBillboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
   searchBillboards(dateFilter: DateFilterInput, locationFilter: LocationFilterInput!, where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [BillboardPublic!]!
   billboardAggregate(BillboardWhereInput: BillboardWhereInput): AggregateCountOutput!
   billboard(where: BillboardWhereUniqueInput): Billboard!
@@ -240,7 +245,9 @@ type Query {
   campaignAggregate(CampaignWhereInput: CampaignWhereInput): AggregateCountOutput!
   campaign(where: CampaignWhereUniqueInput): Campaign!
   bookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
+  myBookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
   booking(where: BookingWhereUniqueInput): Booking!
+  bookingsCount(BookingWhereInput: BookingWhereInput): AggregateCountOutput!
   campaignStatuses(where: CampaignStatusWhereInput, orderBy: [CampaignStatusOrderByWithRelationInput!], cursor: CampaignStatusWhereUniqueInput, take: Int, skip: Int, distinct: [CampaignStatusScalarFieldEnum!]): [CampaignStatus!]!
   campaignStatus(where: CampaignStatusWhereUniqueInput): CampaignStatus!
   campaignTimelines(where: CampaignTimelineWhereInput, orderBy: [CampaignTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignTimelineScalarFieldEnum!]): [CampaignTimeline!]!
@@ -1025,7 +1032,9 @@ input UpdateAdvertiserInput {
 input CreateBillboardInput {
   lat: Float!
   lng: Float!
-  pricePerDay: Int
+  height: Float!
+  width: Float!
+  pricePerDay: Float
   impressionsPerDay: Int
   minBookingDays: Int
   address: String
@@ -1034,15 +1043,15 @@ input CreateBillboardInput {
   angle: Int
   elevation: Int
   name: String!
-  height: Int!
-  width: Int!
   ownerId: String!
 }
 
 input UpdateBillboardInput {
   lat: Float
   lng: Float
-  pricePerDay: Int
+  height: Float
+  width: Float
+  pricePerDay: Float
   impressionsPerDay: Int
   minBookingDays: Int
   address: String
@@ -1051,8 +1060,6 @@ input UpdateBillboardInput {
   angle: Int
   elevation: Int
   name: String
-  height: Int
-  width: Int
   ownerId: String
   id: Int!
 }
@@ -1112,13 +1119,13 @@ input UpdateCampaignInput {
 }
 
 input CreateBookingInput {
-  pricePerDay: Int
+  pricePerDay: Float
   campaignId: Int!
   billboardId: Int!
 }
 
 input UpdateBookingInput {
-  pricePerDay: Int
+  pricePerDay: Float
   campaignId: Int
   billboardId: Int
   id: Int!

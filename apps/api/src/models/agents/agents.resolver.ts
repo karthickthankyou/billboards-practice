@@ -55,6 +55,12 @@ export class AgentsResolver {
   }
 
   @AllowAuthenticated()
+  @Query(() => Agent, { name: 'agentMe', nullable: true })
+  agentMe(@Args() args: FindUniqueAgentArgs, @GetUser() user: GetUserType) {
+    return this.agentsService.findOne({ where: { uid: user.uid } })
+  }
+
+  @AllowAuthenticated()
   @Mutation(() => Agent)
   updateAgent(
     @Args('updateAgentInput') args: UpdateAgentInput,
@@ -74,7 +80,7 @@ export class AgentsResolver {
   }
 
   @AllowAuthenticated()
-  @ResolveField(() => [BillboardStatus])
+  @ResolveField(() => [BillboardStatus], { nullable: true })
   billboardsStatuses(@Parent() agent: Agent, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, agent.uid)
     return this.prisma.billboardStatus.findMany({
@@ -83,7 +89,7 @@ export class AgentsResolver {
   }
 
   @AllowAuthenticated()
-  @ResolveField(() => [CampaignStatus])
+  @ResolveField(() => [CampaignStatus], { nullable: true })
   campaignsStatuses(@Parent() agent: Agent, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, agent.uid)
     return this.prisma.campaignStatus.findMany({
@@ -91,7 +97,7 @@ export class AgentsResolver {
     })
   }
   @AllowAuthenticated()
-  @ResolveField(() => [BillboardTimeline])
+  @ResolveField(() => [BillboardTimeline], { nullable: true })
   billboardTimeline(@Parent() agent: Agent, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, agent.uid)
     return this.prisma.billboardTimeline.findMany({
@@ -99,7 +105,7 @@ export class AgentsResolver {
     })
   }
   @AllowAuthenticated()
-  @ResolveField(() => [CampaignTimeline])
+  @ResolveField(() => [CampaignTimeline], { nullable: true })
   campaignTimeline(@Parent() agent: Agent, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, agent.uid)
     return this.prisma.campaignTimeline.findMany({

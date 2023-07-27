@@ -15,9 +15,11 @@ export class Billboard implements BillboardObjectType {
   lat: number
   @Field(() => Float)
   lng: number
+  @Field(() => Float)
   height: number
+  @Field(() => Float)
   width: number
-  @Field(() => Number, { nullable: true })
+  @Field(() => Float, { nullable: true })
   pricePerDay: number
   @Field(() => Number, { nullable: true })
   impressionsPerDay: number

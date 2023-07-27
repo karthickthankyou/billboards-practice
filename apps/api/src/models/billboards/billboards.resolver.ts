@@ -49,6 +49,17 @@ export class BillboardsResolver {
   findAll(@Args() args: FindManyBillboardArgs) {
     return this.billboardsService.findAll(args)
   }
+  @AllowAuthenticated()
+  @Query(() => [Billboard], { name: 'myBillboards' })
+  myBillboards(
+    @Args() args: FindManyBillboardArgs,
+    @GetUser() user: GetUserType,
+  ) {
+    return this.prisma.billboard.findMany({
+      ...args,
+      where: { ...args.where, ownerId: user.uid },
+    })
+  }
 
   @Query(() => [BillboardPublic], { name: 'searchBillboards' })
   async search(
@@ -142,14 +153,14 @@ export class BillboardsResolver {
     return this.billboardsService.remove(args)
   }
 
-  @ResolveField(() => Owner)
+  @ResolveField(() => Owner, { nullable: true })
   owner(@Parent() billboard: Billboard) {
     return this.prisma.owner.findUnique({
       where: { uid: billboard.ownerId },
     })
   }
 
-  @ResolveField(() => BillboardStatus)
+  @ResolveField(() => BillboardStatus, { nullable: true })
   status(@Parent() billboard: Billboard) {
     return this.prisma.billboardStatus.findUnique({
       where: { billboardId: billboard.id },
@@ -157,7 +168,7 @@ export class BillboardsResolver {
   }
 
   @AllowAuthenticated()
-  @ResolveField(() => [Booking])
+  @ResolveField(() => [Booking], { nullable: true })
   bookings(@Parent() billboard: Billboard, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, billboard.ownerId)
 
@@ -167,7 +178,7 @@ export class BillboardsResolver {
   }
 
   @AllowAuthenticated()
-  @ResolveField(() => [BillboardTimeline])
+  @ResolveField(() => [BillboardTimeline], { nullable: true })
   billboardTimeline(
     @Parent() billboard: Billboard,
     @GetUser() user: GetUserType,
@@ -180,12 +191,19 @@ export class BillboardsResolver {
   }
 
   @AllowAuthenticated()
-  @ResolveField(() => [Favorite])
+  @ResolveField(() => [Favorite], { nullable: true })
   favorites(@Parent() billboard: Billboard, @GetUser() user: GetUserType) {
     checkRowLevelPermission(user, billboard.ownerId)
 
     return this.prisma.favorite.findMany({
       where: { billboardId: billboard.id },
+    })
+  }
+
+  @ResolveField(() => Number, { nullable: true })
+  async campaignsCount(@Parent() billboard: Billboard) {
+    return this.prisma.campaign.count({
+      where: { bookings: { some: { billboardId: { equals: billboard.id } } } },
     })
   }
 
@@ -200,7 +218,7 @@ export class BillboardsResolver {
     return result[0].total_booked_days || 0
   }
 
-  @ResolveField(() => Boolean)
+  @ResolveField(() => Boolean, { nullable: true })
   async booked(@Parent() billboard: Billboard) {
     const currentDate = new Date()
 

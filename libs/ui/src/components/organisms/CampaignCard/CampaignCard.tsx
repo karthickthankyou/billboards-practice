@@ -1,9 +1,9 @@
-import { GetCampaignsQuery } from '@billboards-org/network/src/generated'
+import { CampaignsQuery } from '@billboards-org/network/src/generated'
 import React, { ReactNode } from 'react'
 import { ApproveCampaignButton } from '../../templates/AgentPage/AgentPage'
 
 type CampaignCardProps = {
-  campaign: GetCampaignsQuery['campaigns'][0]
+  campaign: CampaignsQuery['campaigns'][0]
   agentOnly?: boolean
 }
 
@@ -26,8 +26,8 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
   campaign,
   agentOnly = false,
 }) => {
-  const totalBookings = campaign.bookings.length
-  const totalCost = campaign.bookings.reduce(
+  const totalBookings = campaign.bookings?.length
+  const totalCost = campaign.bookings?.reduce(
     (sum, booking) => sum + (booking.pricePerDay || 0),
     0,
   )
@@ -39,10 +39,10 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
         <div>
           <span
             className={`inline-block text-white text-xs py-0.5 px-2 rounded ${
-              campaign.status.status === 'LIVE' ? 'bg-green-500 ' : 'bg-gray '
+              campaign.status?.status === 'LIVE' ? 'bg-green-500 ' : 'bg-gray '
             }`}
           >
-            {campaign.status.status}
+            {campaign.status?.status}
           </span>
         </div>
       </div>

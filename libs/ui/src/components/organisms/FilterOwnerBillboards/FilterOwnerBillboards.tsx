@@ -28,7 +28,7 @@ export const FilterOwnerBillboards = ({}) => {
       </Button>
       <Sidebar overlayBlur={false} open={openFilter} setOpen={setOpenFilter}>
         <Sidebar.Header>
-          <Brand shortForm />
+          <Brand />
         </Sidebar.Header>
         <Sidebar.Body>
           <div className="flex flex-col items-start space-y-1">
@@ -62,8 +62,8 @@ export const FilterOwnerBillboards = ({}) => {
                             classes={{
                               root: 'border-2 ',
                               selected:
-                                'font-bold  bg-white shadow-lg  border-black',
-                              standard: 'bg-gray-50',
+                                'font-bold  bg-white shadow-lg border-black',
+                              standard: 'bg-gray-25',
                             }}
                             key={value}
                             value={value}

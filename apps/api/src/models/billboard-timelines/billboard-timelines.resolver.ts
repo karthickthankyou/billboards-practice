@@ -83,13 +83,13 @@ export class BillboardTimelinesResolver {
     return this.billboardTimelinesService.remove(args)
   }
 
-  @ResolveField(() => Billboard)
+  @ResolveField(() => Billboard, { nullable: true })
   billboard(@Parent() billboardStatus: BillboardStatus) {
     return this.prisma.billboard.findUnique({
       where: { id: billboardStatus.billboardId },
     })
   }
-  @ResolveField(() => Agent)
+  @ResolveField(() => Agent, { nullable: true })
   agent(@Parent() billboardStatus: BillboardStatus) {
     return this.prisma.agent.findUnique({
       where: { uid: billboardStatus.agentId },

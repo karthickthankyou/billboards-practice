@@ -1,7 +1,13 @@
 import React, { ReactNode } from 'react'
 
-import { IconMinus, IconPlus } from '@tabler/icons-react'
+import {
+  IconMinus,
+  IconPlus,
+  IconRectangle,
+  TablerIconsProps,
+} from '@tabler/icons-react'
 import { useMap } from 'react-map-gl'
+import { IconBillboard } from '../../../../assets/billboard'
 
 export interface IZoomControlsProps {}
 
@@ -38,14 +44,37 @@ const ZoomOut = () => {
   )
 }
 
+export const CenterOfMap = ({
+  onClick,
+  Icon = IconRectangle,
+}: {
+  onClick: (latLng: { lng: number; lat: number }) => void
+  Icon?: (props: TablerIconsProps) => JSX.Element
+}) => {
+  const { current: map } = useMap()
+  return (
+    <button
+      className=" hover:bg-white"
+      type="button"
+      onClick={() => {
+        const { lat, lng } = map?.getCenter() as { lng: number; lat: number }
+        onClick({ lat, lng })
+      }}
+    >
+      <Icon className="w-8 h-8 p-1.5 text-black" />
+    </button>
+  )
+}
+
+export const DefaultZoomControls = ({ children }: { children?: ReactNode }) => (
+  <MapControls>
+    <ZoomIn />
+    <ZoomOut />
+    {children}
+  </MapControls>
+)
+
 MapControls.ZoomIn = ZoomIn
 MapControls.ZoomOut = ZoomOut
 
 export default MapControls
-
-export const DefaultZoomControls = () => (
-  <MapControls>
-    <ZoomIn />
-    <ZoomOut />
-  </MapControls>
-)
