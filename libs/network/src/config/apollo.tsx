@@ -5,91 +5,81 @@ import {
   createHttpLink,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { useAppSelector } from '@billboards-org/store'
-import { selectUser } from '@billboards-org/store/user'
+
 import { ReactNode } from 'react'
+import { useAppDispatch, useAppSelector } from '@billboards-org/store'
+import { selectUser, setUser } from '@billboards-org/store/user'
+
 import jwtDecode from 'jwt-decode'
-import {
-  LoginDocument,
-  LoginMutation,
-  LoginMutationVariables,
-} from '@billboards-org/network/src/generated'
+import { auth } from './firebase'
 
 export interface IApolloProviderProps {
   children: ReactNode
 }
 
+export const getLatestToken = async ({ token }: { token: string }) => {
+  const decoded: any = jwtDecode(token || '')
+
+  const currentTime = new Date()
+
+  const expirytime = new Date(decoded?.exp * 1000)
+  const bufferTime = 5 * 60 * 1000
+  const timeToExpire = expirytime.getTime() - currentTime.getTime()
+
+  console.log(
+    'Auth checK ',
+    currentTime,
+    expirytime,
+    timeToExpire / 1000,
+    'Seconds to expire',
+  )
+
+  if (timeToExpire < bufferTime) {
+    // Refresh token
+    const currentUser = auth.currentUser
+    if (currentUser) {
+      const newToken = await currentUser.getIdToken()
+      return newToken
+    }
+  }
+  return token
+}
+
 export const ApolloProvider = ({ children }: IApolloProviderProps) => {
-  const user = useAppSelector(selectUser)
-  console.log('User: ', user)
+  const { uid, loaded, token } = useAppSelector(selectUser)
+  const dispatch = useAppDispatch()
+
   //   Create an http link
   const httpLink = createHttpLink({
-    uri: 'http://localhost:3000/graphql',
+    uri: process.env.NEXT_PUBLIC_API_URL + '/graphql',
   })
 
   const authLink = setContext(async (_, { headers }) => {
-    if (!user.token) {
+    if (!token) {
       return {
         headers,
       }
     }
-    // return the headers to the context so httpLink can read them
-    const decoded: any = jwtDecode(user.token || '')
 
-    console.log('Auth running...', decoded, new Date(decoded?.exp * 1000))
+    const authToken = await getLatestToken({ token })
+
+    if (authToken !== token) {
+      dispatch(setUser({ uid, token: authToken }))
+    }
 
     return {
       headers: {
         ...headers,
-        authorization: user.token ? `Bearer ${user.token}` : '',
+        authorization: token ? `Bearer ${token}` : '',
       },
     }
   })
-
   // Create an Apollo Client instance
   const apolloClient = new ApolloClient({
-    uri: 'http://localhost:3000/graphql',
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
     connectToDevTools: true,
   })
 
   return <Provider client={apolloClient}>{children}</Provider>
-}
-
-export async function createAuthenticatedClient() {
-  const apolloClient = new ApolloClient({
-    uri: 'http://localhost:3000/graphql',
-    cache: new InMemoryCache(),
-  })
-
-  const { data } = await apolloClient.mutate<
-    LoginMutation,
-    LoginMutationVariables
-  >({
-    mutation: LoginDocument,
-    variables: {
-      credentials: { email: 'admin@email.com', password: '123456' },
-    },
-  })
-
-  const idToken = data?.login.idToken
-
-  const authLink = setContext(async (_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        authorization: idToken ? `Bearer ${idToken}` : '',
-      },
-    }
-  })
-
-  const httpLink = createHttpLink({
-    uri: 'http://localhost:3000/graphql',
-  })
-
-  return new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
-  })
 }

@@ -20,7 +20,7 @@ export const Map = ({
         {...props}
         projection={'globe'}
         mapStyle="mapbox://styles/iamkarthick/clebahxqe001701mo1i1adtw3"
-        mapboxAccessToken="pk.eyJ1IjoiaWFta2FydGhpY2siLCJhIjoiY2t4b3AwNjZ0MGtkczJub2VqMDZ6OWNrYSJ9.-FMKkHQHvHUeDEvxz2RJWQ"
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         scrollZoom={false}
       >
         <StyleMap />
