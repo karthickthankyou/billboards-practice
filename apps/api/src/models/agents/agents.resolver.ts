@@ -16,13 +16,14 @@ import {
   GetUser,
 } from 'src/common/decorators/auth/auth.decorator'
 import { BillboardStatus } from '../billboard-statuses/entities/billboard-status.entity'
-import { GetUserType } from '@billboards-org/types'
+
 import { checkRowLevelPermission } from 'src/common/guards'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { CampaignStatus } from '../campaign-statuses/entities/campaign-status.entity'
 import { BillboardTimeline } from '../billboard-timelines/entities/billboard-timeline.entity'
 import { CampaignTimeline } from '../campaign-timelines/entities/campaign-timeline.entity'
 import { FirebaseService } from 'src/common/firebase/firebase.service'
+import { GetUserType } from 'src/common/types'
 
 @Resolver(() => Agent)
 export class AgentsResolver {

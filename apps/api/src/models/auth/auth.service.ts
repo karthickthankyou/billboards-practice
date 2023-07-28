@@ -11,7 +11,7 @@ import {
   RegisterOutput,
 } from 'src/models/auth/dto/auth.input'
 
-import { Role } from '@billboards-org/types'
+import { Role } from 'src/common/types'
 import { FirebaseService } from 'src/common/firebase/firebase.service'
 
 @Injectable()

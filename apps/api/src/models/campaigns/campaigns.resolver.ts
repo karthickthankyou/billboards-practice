@@ -21,7 +21,7 @@ import {
   GetUser,
 } from 'src/common/decorators/auth/auth.decorator'
 import { checkRowLevelPermission } from 'src/common/guards'
-import { GetUserType } from '@billboards-org/types'
+import { GetUserType } from 'src/common/types'
 import { CampaignStatusType } from '@prisma/client'
 import { AggregateCountOutput } from '../billboards/dto/count.output'
 import { CampaignWhereInput } from './dto/where.args'

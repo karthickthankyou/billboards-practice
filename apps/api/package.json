@@ -39,8 +39,6 @@
     "stripe": "^12.14.0"
   },
   "devDependencies": {
-    "@billboards-org/generators": "*",
-    "@billboards-org/types": "*",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",

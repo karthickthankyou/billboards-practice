@@ -20,7 +20,7 @@ import {
   GetUser,
 } from 'src/common/decorators/auth/auth.decorator'
 import { Campaign } from '../campaigns/entities/campaign.entity'
-import { GetUserType } from '@billboards-org/types'
+import { GetUserType } from 'src/common/types'
 import { checkRowLevelPermission } from 'src/common/guards'
 import { Favorite } from '../favorites/entities/favorite.entity'
 

@@ -19,7 +19,7 @@ import {
   AllowAuthenticated,
   GetUser,
 } from 'src/common/decorators/auth/auth.decorator'
-import { GetUserType } from '@billboards-org/types'
+import { GetUserType } from 'src/common/types'
 import { AggregateCountOutput } from '../billboards/dto/count.output'
 import { BookingWhereInput } from './dto/where.args'
 

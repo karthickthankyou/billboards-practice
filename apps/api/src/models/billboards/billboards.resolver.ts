@@ -21,13 +21,12 @@ import {
   AllowAuthenticated,
   GetUser,
 } from 'src/common/decorators/auth/auth.decorator'
-import { GetUserType } from '@billboards-org/types'
+import { GetUserType } from 'src/common/types'
 import { checkRowLevelPermission } from 'src/common/guards'
 import { BillboardPublic } from './dto/billboard-public.output'
 import { DateFilterInput, LocationFilterInput } from './dto/filters.input'
 import { AggregateCountOutput } from './dto/count.output'
 import { BillboardWhereInput } from './dto/where.args'
-import { CampaignStatus } from '../campaign-statuses/entities/campaign-status.entity'
 
 @Resolver(() => Billboard)
 export class BillboardsResolver {

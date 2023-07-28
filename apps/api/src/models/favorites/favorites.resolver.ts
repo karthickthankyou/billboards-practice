@@ -19,7 +19,7 @@ import {
   AllowAuthenticated,
   GetUser,
 } from 'src/common/decorators/auth/auth.decorator'
-import { GetUserType } from '@billboards-org/types'
+import { GetUserType } from 'src/common/types'
 import { checkRowLevelPermission } from 'src/common/guards'
 import { AggregateCountOutput } from '../billboards/dto/count.output'
 import { FavoriteWhereInput } from './dto/where.args'
