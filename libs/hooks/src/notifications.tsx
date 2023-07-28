@@ -14,6 +14,7 @@ import {
   catchError,
   EMPTY,
 } from 'rxjs'
+import { makeId } from '@billboards-org/util'
 
 export const useNotification = () => {
   const dispatch = useAppDispatch()
@@ -25,6 +26,7 @@ export const useNotification = () => {
         distinctUntilChanged(),
         map((v) => ({ ...v, id: makeId(12) })),
         tap((v) => {
+          console.log('noti', v)
           dispatch(addNotification(v))
         }),
         delay(4000),
@@ -40,7 +42,4 @@ export const useNotification = () => {
       subscription.unsubscribe()
     }
   }, [dispatch])
-}
-function makeId(arg0: number): any {
-  throw new Error('Function not implemented.')
 }

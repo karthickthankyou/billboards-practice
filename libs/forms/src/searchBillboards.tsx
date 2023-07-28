@@ -127,10 +127,10 @@ const getDates = () => {
 }
 
 export const searchBillboardsDefaultValues = {
-  pricePerHour: [0, 200] as [number, number],
+  pricePerHour: [0, 20_000] as [number, number],
   width: [0, 200] as [number, number],
   height: [0, 200] as [number, number],
-  impressionsPerDay: [0, 100000] as [number, number],
+  impressionsPerDay: [0, 1_000_000] as [number, number],
   type: AllBillboardTypes.sort(),
 }
 

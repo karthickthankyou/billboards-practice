@@ -3,6 +3,7 @@ import { Campaign as CampaignType } from '@prisma/client'
 
 @ObjectType()
 export class Campaign implements CampaignType {
+  totalDays: number
   id: number
   createdAt: Date
   updatedAt: Date

@@ -63,7 +63,7 @@ export const FilterOwnerBillboards = ({}) => {
                               root: 'border-2 ',
                               selected:
                                 'font-bold  bg-white shadow-lg border-black',
-                              standard: 'bg-gray-25',
+                              standard: 'bg-gray-50',
                             }}
                             key={value}
                             value={value}

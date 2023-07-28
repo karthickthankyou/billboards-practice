@@ -22,6 +22,25 @@ export const BillboardFields = gql`
   }
 `
 
+export const CampaignFields = gql`
+  fragment CampaignFields on Campaign {
+    id
+    name
+    startDate
+    endDate
+    createdAt
+    advertiserId
+    updatedAt
+    status {
+      status
+    }
+    bookings {
+      billboardId
+      pricePerDay
+    }
+  }
+`
+
 export const BillboardFieldsMinimal = gql`
   fragment BillboardFieldsMinimal on Billboard {
     id
@@ -162,20 +181,34 @@ export const campaigns = gql`
       orderBy: $orderBy
       where: $where
     ) {
-      id
-      name
-      startDate
-      endDate
-      createdAt
-      advertiserId
-      updatedAt
-      status {
-        status
-      }
-      bookings {
-        billboardId
-        pricePerDay
-      }
+      ...CampaignFields
+    }
+    campaignAggregate(CampaignWhereInput: $where) {
+      count
+    }
+  }
+`
+
+export const myCampaigns = gql`
+  query myCampaigns(
+    $distinct: [CampaignScalarFieldEnum!]
+    $skip: Int
+    $take: Int
+    $cursor: WhereUniqueInputNumber
+    $orderBy: [CampaignOrderByWithRelationInput!]
+    $where: CampaignWhereInput
+  ) {
+    myCampaigns(
+      distinct: $distinct
+      skip: $skip
+      take: $take
+      cursor: $cursor
+      orderBy: $orderBy
+      where: $where
+    ) {
+      ...CampaignFields
+      totalCost
+      totalDays
     }
     campaignAggregate(CampaignWhereInput: $where) {
       count

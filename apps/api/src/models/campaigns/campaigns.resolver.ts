@@ -40,6 +40,10 @@ export class CampaignsResolver {
     @GetUser() user: GetUserType,
   ) {
     const { advertiserId, bookings, endDate, name, startDate } = args
+    const diffInDays = Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+    )
+
     checkRowLevelPermission(user, args.advertiserId)
     const campaign = await this.prisma.campaign.create({
       data: {
@@ -48,6 +52,7 @@ export class CampaignsResolver {
         endDate,
         name,
         startDate,
+        totalDays: diffInDays,
         status: {
           create: { status: CampaignStatusType.NEW },
         },
@@ -64,6 +69,18 @@ export class CampaignsResolver {
   @Query(() => [Campaign], { name: 'campaigns' })
   findAll(@Args() args: FindManyCampaignArgs) {
     return this.campaignsService.findAll(args)
+  }
+
+  @AllowAuthenticated()
+  @Query(() => [Campaign], { name: 'myCampaigns' })
+  myCampaigns(
+    @Args() args: FindManyCampaignArgs,
+    @GetUser() user: GetUserType,
+  ) {
+    return this.campaignsService.findAll({
+      ...args,
+      where: { ...args.where, advertiserId: { equals: user.uid } },
+    })
   }
 
   @Query(() => AggregateCountOutput, { name: 'campaignAggregate' })
@@ -136,5 +153,19 @@ export class CampaignsResolver {
     return this.prisma.campaignTimeline.findMany({
       where: { campaignId: campaign.id },
     })
+  }
+
+  @ResolveField(() => Number, { nullable: true })
+  async totalCost(@Parent() parent: Campaign) {
+    const totalCost = await this.prisma.booking.aggregate({
+      _sum: { pricePerDay: true },
+      where: {
+        campaign: {
+          id: parent.id,
+          status: { status: CampaignStatusType.LIVE },
+        },
+      },
+    })
+    return totalCost._sum.pricePerDay
   }
 }

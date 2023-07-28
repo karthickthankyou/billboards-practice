@@ -21,6 +21,8 @@ export class CampaignWhereUniqueInput
 @InputType()
 export class CampaignWhereInput implements Required<Prisma.CampaignWhereInput> {
   @Field(() => IntFilter, { nullable: true })
+  totalDays: IntFilter
+  @Field(() => IntFilter, { nullable: true })
   id: IntFilter
   @Field(() => DateTimeFilter, { nullable: true })
   createdAt: DateTimeFilter

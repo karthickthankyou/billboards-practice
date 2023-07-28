@@ -10,6 +10,8 @@ export class CampaignOrderByWithRelationInput
   implements Required<Prisma.CampaignOrderByWithRelationInput>
 {
   @Field(() => Prisma.SortOrder, { nullable: true })
+  totalDays: Prisma.SortOrder
+  @Field(() => Prisma.SortOrder, { nullable: true })
   id: Prisma.SortOrder
   @Field(() => Prisma.SortOrder, { nullable: true })
   createdAt: Prisma.SortOrder

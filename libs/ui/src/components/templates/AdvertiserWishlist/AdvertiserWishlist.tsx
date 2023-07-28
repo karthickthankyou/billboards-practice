@@ -7,6 +7,7 @@ import {
 import { ShowData } from '../../organisms/ShowData'
 import { BillboardCard } from '../../organisms/BillboardsCard'
 import { PlainButton } from '../../atoms/PlainButton'
+import { ShowDataSimple } from '../../organisms/ShowData/ShowData'
 
 export interface IAdvertiserWishlistProps {
   uid: string
@@ -19,16 +20,16 @@ export const AdvertiserWishlist = ({ uid }: IAdvertiserWishlistProps) => {
   })
   return (
     <div>
-      <ShowData
+      <ShowDataSimple
         loading={false}
         pagination={{
-          resultCount: data?.favorites.length,
-          totalCount: data?.favoritesCount.count,
+          resultCount: data?.favorites.length || 0,
           setSkip,
           setTake,
           skip,
           take,
         }}
+        title={'Favorites'}
       >
         {data?.favorites.map((fav) => (
           <div>
@@ -40,7 +41,7 @@ export const AdvertiserWishlist = ({ uid }: IAdvertiserWishlistProps) => {
             />
           </div>
         ))}
-      </ShowData>
+      </ShowDataSimple>
     </div>
   )
 }

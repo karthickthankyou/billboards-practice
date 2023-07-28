@@ -13,6 +13,7 @@ import { AppLevelListeners } from '@billboards-org/ui/src/components/atoms/AppLe
 import { MenuItem } from '@billboards-org/types'
 const MENUITEMS: MenuItem[] = [
   { label: 'Search', href: '/billboards' },
+  { label: 'Expenses', href: '/expenses' },
   { label: 'Favorites', href: '/favorites' },
 ]
 const SUBMENUITEMS: MenuItem[] = [

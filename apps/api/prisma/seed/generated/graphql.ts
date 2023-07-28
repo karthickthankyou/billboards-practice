@@ -487,6 +487,8 @@ export type Campaign = {
   name: Scalars['String']
   startDate: Scalars['DateTime']
   status?: Maybe<CampaignStatus>
+  totalCost?: Maybe<Scalars['Int']>
+  totalDays: Scalars['Int']
   updatedAt: Scalars['DateTime']
 }
 
@@ -511,6 +513,7 @@ export type CampaignOrderByWithRelationInput = {
   startDate?: InputMaybe<SortOrder>
   status?: InputMaybe<CampaignStatusOrderByWithRelationInput>
   timeline?: InputMaybe<CampaignTimelineOrderByRelationAggregateInput>
+  totalDays?: InputMaybe<SortOrder>
   updatedAt?: InputMaybe<SortOrder>
 }
 
@@ -526,6 +529,7 @@ export enum CampaignScalarFieldEnum {
   Id = 'id',
   Name = 'name',
   StartDate = 'startDate',
+  TotalDays = 'totalDays',
   UpdatedAt = 'updatedAt',
 }
 
@@ -679,6 +683,7 @@ export type CampaignWhereInput = {
   startDate?: InputMaybe<DateTimeFilter>
   status?: InputMaybe<CampaignStatusRelationFilter>
   timeline?: InputMaybe<CampaignTimelineListRelationFilter>
+  totalDays?: InputMaybe<IntFilter>
   updatedAt?: InputMaybe<DateTimeFilter>
 }
 
@@ -1174,6 +1179,7 @@ export type Query = {
   favoritesCount: AggregateCountOutput
   myBillboards: Array<Billboard>
   myBookings: Array<Booking>
+  myCampaigns: Array<Campaign>
   owner?: Maybe<Owner>
   ownerMe?: Maybe<Owner>
   owners: Array<Owner>
@@ -1355,6 +1361,15 @@ export type QueryMyBookingsArgs = {
   skip?: InputMaybe<Scalars['Int']>
   take?: InputMaybe<Scalars['Int']>
   where?: InputMaybe<BookingWhereInput>
+}
+
+export type QueryMyCampaignsArgs = {
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  distinct?: InputMaybe<Array<CampaignScalarFieldEnum>>
+  orderBy?: InputMaybe<Array<CampaignOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<CampaignWhereInput>
 }
 
 export type QueryOwnerArgs = {

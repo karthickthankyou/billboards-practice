@@ -35,54 +35,62 @@ export const Earnings = ({}: IEarningsProps) => {
         </HtmlLabel>
       </div>
       <table className="w-full mt-4 border-separate border-spacing-y-1">
-        <tr className="bg-white rounded">
-          <th className="py-2 text-left">ID</th>
-          <th className="py-2 text-left">Name</th>
-          <th className="text-center">Start date</th>
-          <th className="text-center">Campaigns</th>
-          <th className="text-right">Total earnings</th>
-        </tr>
-        {data?.myBillboards?.length === 0 ? (
-          <tr className="text-center bg-white rounded">
-            <td colSpan={5}>
-              <div className="py-6 bg-gray-25">
-                <div>No results.</div>
-                {searchText ? (
-                  <PlainButton
-                    className="text-xs"
-                    onClick={() => setSearchText(null)}
-                  >
-                    Clear search text.
-                  </PlainButton>
-                ) : null}
-              </div>
-            </td>
+        <thead>
+          <tr className="bg-white rounded">
+            <th className="py-2 text-left">ID</th>
+            <th className="py-2 text-left">Name</th>
+            <th className="text-center">Start date</th>
+            <th className="text-center">Campaigns</th>
+            <th className="text-right">Total earnings</th>
           </tr>
-        ) : null}
-
-        {data?.myBillboards?.map((billboard) => (
-          <tr key={billboard.id} className="p-2 bg-white rounded">
-            <td className="text-left">{billboard?.id}</td>
-            <td className="text-left">
-              <div className="font-semibold">{billboard?.name}</div>
-              <div className="text-xs text-gray">{billboard?.address}</div>
-            </td>
-            <td className="p-2 text-center">
-              <div>{format(new Date(billboard.createdAt), 'PP')}</div>
-            </td>{' '}
-            <td className="text-center">{billboard?.campaignsCount}</td>
-            <td className="text-right">
-              <div className="font-bold">
-                Rs.{' '}
-                {(billboard.totalBookingDays || 0) *
-                  (billboard.pricePerDay || 0)}
-              </div>
-              <div className="text-xs text-gray">
-                {billboard.totalBookingDays} days
-              </div>
-            </td>{' '}
-          </tr>
-        ))}
+        </thead>
+        <tbody>
+          {data?.myBillboards?.length === 0 ? (
+            <tr className="text-center bg-white rounded">
+              <td colSpan={5}>
+                <div className="py-6 bg-gray-25">
+                  <div>No results.</div>
+                  {searchText ? (
+                    <PlainButton
+                      className="text-xs"
+                      onClick={() => setSearchText(null)}
+                    >
+                      Clear search text.
+                    </PlainButton>
+                  ) : null}
+                </div>
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+        <tbody>
+          {data?.myBillboards?.map((billboard) => (
+            <tr key={billboard.id} className="p-2 bg-white rounded">
+              <td className="text-left">{billboard?.id}</td>
+              <td className="text-left">
+                <div className="font-semibold">{billboard?.name}</div>
+                <div className="text-xs text-gray">{billboard?.address}</div>
+              </td>
+              <td className="p-2 text-center">
+                <div>{format(new Date(billboard.createdAt), 'd MMMM')}</div>
+                <div className="text-xs text-gray">
+                  {format(new Date(billboard.createdAt), 'yyyy')}
+                </div>
+              </td>{' '}
+              <td className="text-center">{billboard?.campaignsCount}</td>
+              <td className="text-right">
+                <div className="font-bold">
+                  Rs.{' '}
+                  {(billboard.totalBookingDays || 0) *
+                    (billboard.pricePerDay || 0)}
+                </div>
+                <div className="text-xs text-gray">
+                  {billboard.totalBookingDays} days
+                </div>
+              </td>{' '}
+            </tr>
+          ))}
+        </tbody>
       </table>
       {loading ? 'Loading...' : null}
       <div className="flex justify-center">

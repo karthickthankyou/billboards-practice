@@ -85,9 +85,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
   const [showCampaignSuccessDialog, setshowCampaignSuccessDialog] =
     useState(false)
 
-  function handleMapChange(event: ViewStateChangeEvent) {
-    const bounds = event.target.getBounds()
-
+  function handleMapChange(bounds: mapboxgl.LngLatBounds) {
     const locationFilter = {
       nw_lat: bounds?.getNorthWest().lat || 0,
       nw_lng: bounds?.getNorthWest().lng || 0,
@@ -102,8 +100,9 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
     <Map
       initialViewState={initialViewState}
       pitch={30}
-      onZoomEnd={handleMapChange}
-      onDragEnd={handleMapChange}
+      onZoomEnd={(e) => handleMapChange(e.target.getBounds())}
+      onDragEnd={(e) => handleMapChange(e.target.getBounds())}
+      onLoad={(e) => handleMapChange(e.target.getBounds())}
     >
       <ShowMarkers switchMode={switchMode} />
       <Panel position="left-top" className="bg-white/50">
@@ -116,7 +115,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
             error={errors.dateRange?.startDate?.message}
           >
             <HtmlInput
-              type="datetime-local"
+              type="date"
               className="w-full p-2 text-lg font-light"
               min={toLocalISOString(new Date()).slice(0, 16)}
               {...register('dateRange.startDate')}
@@ -129,7 +128,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
           >
             <HtmlInput
               min={toLocalISOString(new Date()).slice(0, 16)}
-              type="datetime-local"
+              type="date"
               className="w-full p-2 text-lg font-light"
               {...register('dateRange.endDate')}
             />
@@ -221,10 +220,6 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
 export const ZOOM_LIMIT = 8
 
 export const ShowMarkers = ({ switchMode }: { switchMode: boolean }) => {
-  const [billboards, setBillboards] = useState<
-    SearchBillboardsQuery['searchBillboards']
-  >([])
-
   const { current: map } = useMap()
   const [searchBillboards, { loading, data }] = useSearchBillboardsLazyQuery()
 
@@ -237,11 +232,6 @@ export const ShowMarkers = ({ switchMode }: { switchMode: boolean }) => {
       searchBillboards({ variables })
     }
   }, [variables])
-  useEffect(() => {
-    if (data?.searchBillboards) {
-      setBillboards(data.searchBillboards || [])
-    }
-  }, [data?.searchBillboards])
 
   if (data?.searchBillboards.length === 0) {
     return (
@@ -268,11 +258,11 @@ export const ShowMarkers = ({ switchMode }: { switchMode: boolean }) => {
           <IconRefresh className="animate-spin-reverse" />
         </Panel>
       ) : null}
-      {billboards.map((garage) => (
+      {data?.searchBillboards.map((billboard) => (
         <MarkerWithPopup
           switchMode={switchMode}
-          key={garage.id}
-          marker={garage}
+          key={billboard.id}
+          marker={billboard}
         />
       ))}
     </>
@@ -305,6 +295,7 @@ export const CreateCampaignContent = ({
           }),
         )
         if (!user.uid) {
+          console.log('uiser', user.uid, notification$)
           notification$.next({ message: 'You are not logged in.' })
           return
         }
@@ -390,7 +381,7 @@ export const CreateCampaignContent = ({
           {billboards.reduce(
             (acc, bill) => acc + (bill?.impressionsPerDay || 0),
             0,
-          )}{' '}
+          )}
         </span>
         daily impressions.
       </div>

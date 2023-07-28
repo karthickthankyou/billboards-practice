@@ -1,6 +1,6 @@
 import { ReactNode, useMemo, useState } from 'react'
 import { Marker, Popup } from 'react-map-gl'
-
+import Link from 'next/link'
 import { Button } from '../../atoms/Button'
 
 import { IconBillboard } from '../../../assets/billboard'
@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Tooltip from '../../atoms/Tooltip'
 
 import { useAppDispatch, useAppSelector } from '@billboards-org/store'
-import { selectUser } from '@billboards-org/store/user'
+import { selectUid, selectUser } from '@billboards-org/store/user'
 import { notification$ } from '@billboards-org/util/subjects'
 import {
   addBillboardToCampaign,
@@ -149,7 +149,7 @@ export const MarkerWithPopup = ({
         <Popup
           latitude={marker.lat}
           longitude={marker.lng}
-          onOpen={() => console.log('Opened')}
+          //   onOpen={() => console.log('Opened')}
           closeOnClick={false}
           anchor="bottom"
           offset={24}
@@ -194,7 +194,6 @@ export const MarkerWithPopup = ({
         longitude={marker.lng}
         rotation={switchMode ? marker.angle || 0 : 0}
         onClick={() => {
-          console.log('Cklicked', marker.id)
           setShowPopup((state) => !state)
         }}
       >
@@ -275,6 +274,8 @@ export const ButtonStatus = ({
     (state) => state.campaigns.billboards,
   )
 
+  const uid = useAppSelector(selectUid)
+
   if (billboardsInCampaign.filter((bill) => bill.id === billboard.id).length) {
     return (
       <Button
@@ -290,13 +291,17 @@ export const ButtonStatus = ({
   }
 
   return (
-    <Button
-      className="w-full"
-      onClick={() => {
-        dispatch(addBillboardToCampaign(billboard))
-      }}
-    >
-      Add to campaign
-    </Button>
+    <div className="w-full ">
+      <Button
+        fullWidth
+        disabled={!uid}
+        onClick={() => {
+          dispatch(addBillboardToCampaign(billboard))
+        }}
+      >
+        Add to campaign
+      </Button>
+      {!uid ? <div className="mt-2">Login to proceed.</div> : null}
+    </div>
   )
 }

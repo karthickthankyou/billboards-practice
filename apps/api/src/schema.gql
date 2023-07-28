@@ -150,6 +150,7 @@ type CampaignTimeline {
 }
 
 type Campaign {
+  totalDays: Int!
   id: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -161,6 +162,7 @@ type Campaign {
   status: CampaignStatus
   bookings: [Booking!]
   campaignTimeline: [CampaignTimeline!]
+  totalCost: Int
 }
 
 type Booking {
@@ -242,6 +244,7 @@ type Query {
   billboardTimeline(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
   billboardTimelineInstance(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
   campaigns(where: CampaignWhereInput, orderBy: [CampaignOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignScalarFieldEnum!]): [Campaign!]!
+  myCampaigns(where: CampaignWhereInput, orderBy: [CampaignOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignScalarFieldEnum!]): [Campaign!]!
   campaignAggregate(CampaignWhereInput: CampaignWhereInput): AggregateCountOutput!
   campaign(where: CampaignWhereUniqueInput): Campaign!
   bookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
@@ -331,6 +334,7 @@ input CampaignListRelationFilter {
 }
 
 input CampaignWhereInput {
+  totalDays: IntFilter
   id: IntFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -822,6 +826,7 @@ input BillboardTimelineWhereUniqueInput {
 }
 
 input CampaignOrderByWithRelationInput {
+  totalDays: SortOrder
   id: SortOrder
   createdAt: SortOrder
   updatedAt: SortOrder
@@ -852,6 +857,7 @@ enum CampaignScalarFieldEnum {
   name
   startDate
   endDate
+  totalDays
   advertiserId
 }
 

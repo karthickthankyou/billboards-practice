@@ -488,6 +488,8 @@ export type Campaign = {
   name: Scalars['String']
   startDate: Scalars['DateTime']
   status?: Maybe<CampaignStatus>
+  totalCost?: Maybe<Scalars['Int']>
+  totalDays: Scalars['Int']
   updatedAt: Scalars['DateTime']
 }
 
@@ -512,6 +514,7 @@ export type CampaignOrderByWithRelationInput = {
   startDate?: InputMaybe<SortOrder>
   status?: InputMaybe<CampaignStatusOrderByWithRelationInput>
   timeline?: InputMaybe<CampaignTimelineOrderByRelationAggregateInput>
+  totalDays?: InputMaybe<SortOrder>
   updatedAt?: InputMaybe<SortOrder>
 }
 
@@ -527,6 +530,7 @@ export enum CampaignScalarFieldEnum {
   Id = 'id',
   Name = 'name',
   StartDate = 'startDate',
+  TotalDays = 'totalDays',
   UpdatedAt = 'updatedAt',
 }
 
@@ -680,6 +684,7 @@ export type CampaignWhereInput = {
   startDate?: InputMaybe<DateTimeFilter>
   status?: InputMaybe<CampaignStatusRelationFilter>
   timeline?: InputMaybe<CampaignTimelineListRelationFilter>
+  totalDays?: InputMaybe<IntFilter>
   updatedAt?: InputMaybe<DateTimeFilter>
 }
 
@@ -1175,6 +1180,7 @@ export type Query = {
   favoritesCount: AggregateCountOutput
   myBillboards: Array<Billboard>
   myBookings: Array<Booking>
+  myCampaigns: Array<Campaign>
   owner?: Maybe<Owner>
   ownerMe?: Maybe<Owner>
   owners: Array<Owner>
@@ -1356,6 +1362,15 @@ export type QueryMyBookingsArgs = {
   skip?: InputMaybe<Scalars['Int']>
   take?: InputMaybe<Scalars['Int']>
   where?: InputMaybe<BookingWhereInput>
+}
+
+export type QueryMyCampaignsArgs = {
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  distinct?: InputMaybe<Array<CampaignScalarFieldEnum>>
+  orderBy?: InputMaybe<Array<CampaignOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<CampaignWhereInput>
 }
 
 export type QueryOwnerArgs = {
@@ -1571,6 +1586,23 @@ export type BillboardFieldsFragment = {
   } | null
 }
 
+export type CampaignFieldsFragment = {
+  __typename?: 'Campaign'
+  id: number
+  name: string
+  startDate: any
+  endDate: any
+  createdAt: any
+  advertiserId: string
+  updatedAt: any
+  status?: { __typename?: 'CampaignStatus'; status: CampaignStatusType } | null
+  bookings?: Array<{
+    __typename?: 'Booking'
+    billboardId: number
+    pricePerDay?: number | null
+  }> | null
+}
+
 export type BillboardFieldsMinimalFragment = {
   __typename?: 'Billboard'
   id: number
@@ -1761,6 +1793,45 @@ export type CampaignsQuery = {
   __typename?: 'Query'
   campaigns: Array<{
     __typename?: 'Campaign'
+    id: number
+    name: string
+    startDate: any
+    endDate: any
+    createdAt: any
+    advertiserId: string
+    updatedAt: any
+    status?: {
+      __typename?: 'CampaignStatus'
+      status: CampaignStatusType
+    } | null
+    bookings?: Array<{
+      __typename?: 'Booking'
+      billboardId: number
+      pricePerDay?: number | null
+    }> | null
+  }>
+  campaignAggregate: { __typename?: 'AggregateCountOutput'; count: number }
+}
+
+export type MyCampaignsQueryVariables = Exact<{
+  distinct?: InputMaybe<
+    Array<CampaignScalarFieldEnum> | CampaignScalarFieldEnum
+  >
+  skip?: InputMaybe<Scalars['Int']>
+  take?: InputMaybe<Scalars['Int']>
+  cursor?: InputMaybe<WhereUniqueInputNumber>
+  orderBy?: InputMaybe<
+    Array<CampaignOrderByWithRelationInput> | CampaignOrderByWithRelationInput
+  >
+  where?: InputMaybe<CampaignWhereInput>
+}>
+
+export type MyCampaignsQuery = {
+  __typename?: 'Query'
+  myCampaigns: Array<{
+    __typename?: 'Campaign'
+    totalCost?: number | null
+    totalDays: number
     id: number
     name: string
     startDate: any
@@ -2115,6 +2186,7 @@ export const namedOperations = {
     earnings: 'earnings',
     GetFavotireBillboards: 'GetFavotireBillboards',
     campaigns: 'campaigns',
+    myCampaigns: 'myCampaigns',
     SearchBillboards: 'SearchBillboards',
     getOwner: 'getOwner',
     ownerMe: 'ownerMe',
@@ -2141,6 +2213,7 @@ export const namedOperations = {
   },
   Fragment: {
     BillboardFields: 'BillboardFields',
+    CampaignFields: 'CampaignFields',
     BillboardFieldsMinimal: 'BillboardFieldsMinimal',
   },
 }
@@ -2163,6 +2236,24 @@ export const BillboardFieldsFragmentDoc = /*#__PURE__*/ gql`
     booked
     lat
     lng
+  }
+`
+export const CampaignFieldsFragmentDoc = /*#__PURE__*/ gql`
+  fragment CampaignFields on Campaign {
+    id
+    name
+    startDate
+    endDate
+    createdAt
+    advertiserId
+    updatedAt
+    status {
+      status
+    }
+    bookings {
+      billboardId
+      pricePerDay
+    }
   }
 `
 export const BillboardFieldsMinimalFragmentDoc = /*#__PURE__*/ gql`
@@ -2563,25 +2654,13 @@ export const CampaignsDocument = /*#__PURE__*/ gql`
       orderBy: $orderBy
       where: $where
     ) {
-      id
-      name
-      startDate
-      endDate
-      createdAt
-      advertiserId
-      updatedAt
-      status {
-        status
-      }
-      bookings {
-        billboardId
-        pricePerDay
-      }
+      ...CampaignFields
     }
     campaignAggregate(CampaignWhereInput: $where) {
       count
     }
   }
+  ${CampaignFieldsFragmentDoc}
 `
 
 /**
@@ -2636,6 +2715,87 @@ export type CampaignsLazyQueryHookResult = ReturnType<
 export type CampaignsQueryResult = Apollo.QueryResult<
   CampaignsQuery,
   CampaignsQueryVariables
+>
+export const MyCampaignsDocument = /*#__PURE__*/ gql`
+  query myCampaigns(
+    $distinct: [CampaignScalarFieldEnum!]
+    $skip: Int
+    $take: Int
+    $cursor: WhereUniqueInputNumber
+    $orderBy: [CampaignOrderByWithRelationInput!]
+    $where: CampaignWhereInput
+  ) {
+    myCampaigns(
+      distinct: $distinct
+      skip: $skip
+      take: $take
+      cursor: $cursor
+      orderBy: $orderBy
+      where: $where
+    ) {
+      ...CampaignFields
+      totalCost
+      totalDays
+    }
+    campaignAggregate(CampaignWhereInput: $where) {
+      count
+    }
+  }
+  ${CampaignFieldsFragmentDoc}
+`
+
+/**
+ * __useMyCampaignsQuery__
+ *
+ * To run a query within a React component, call `useMyCampaignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyCampaignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyCampaignsQuery({
+ *   variables: {
+ *      distinct: // value for 'distinct'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      cursor: // value for 'cursor'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useMyCampaignsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    MyCampaignsQuery,
+    MyCampaignsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<MyCampaignsQuery, MyCampaignsQueryVariables>(
+    MyCampaignsDocument,
+    options,
+  )
+}
+export function useMyCampaignsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MyCampaignsQuery,
+    MyCampaignsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<MyCampaignsQuery, MyCampaignsQueryVariables>(
+    MyCampaignsDocument,
+    options,
+  )
+}
+export type MyCampaignsQueryHookResult = ReturnType<typeof useMyCampaignsQuery>
+export type MyCampaignsLazyQueryHookResult = ReturnType<
+  typeof useMyCampaignsLazyQuery
+>
+export type MyCampaignsQueryResult = Apollo.QueryResult<
+  MyCampaignsQuery,
+  MyCampaignsQueryVariables
 >
 export const CreateAgentDocument = /*#__PURE__*/ gql`
   mutation CreateAgent($createAgentInput: CreateAgentInput!) {

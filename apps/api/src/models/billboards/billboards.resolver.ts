@@ -27,6 +27,7 @@ import { BillboardPublic } from './dto/billboard-public.output'
 import { DateFilterInput, LocationFilterInput } from './dto/filters.input'
 import { AggregateCountOutput } from './dto/count.output'
 import { BillboardWhereInput } from './dto/where.args'
+import { CampaignStatus } from '../campaign-statuses/entities/campaign-status.entity'
 
 @Resolver(() => Billboard)
 export class BillboardsResolver {
@@ -209,13 +210,14 @@ export class BillboardsResolver {
 
   @ResolveField(() => Number, { nullable: true })
   async totalBookingDays(@Parent() billboard: Billboard) {
-    const result = await this.prisma.$queryRaw`
-    SELECT SUM(EXTRACT(day FROM ("endDate"::timestamp - "startDate"::timestamp))) as total_booked_days
-    FROM "Booking" JOIN "Campaign" ON "Booking"."campaignId" = "Campaign"."id"
-    WHERE "Booking"."billboardId" = ${billboard.id};
-  `
-    console.log('result', result)
-    return result[0].total_booked_days || 0
+    const bookingDaysSum = await this.prisma.campaign.aggregate({
+      _sum: { totalDays: true },
+      where: {
+        status: { status: { equals: 'LIVE' } },
+        bookings: { some: { billboardId: { equals: billboard.id } } },
+      },
+    })
+    return bookingDaysSum._sum.totalDays
   }
 
   @ResolveField(() => Boolean, { nullable: true })
