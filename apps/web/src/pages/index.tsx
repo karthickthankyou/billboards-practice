@@ -41,7 +41,9 @@ export default function Home() {
             </p>
             <button
               className="px-3 py-1 mt-4 text-black bg-white rounded-0"
-              onClick={() => router.push('/owner')}
+              onClick={() =>
+                router.push(process.env.NEXT_PUBLIC_OWNER_URL || '')
+              }
             >
               List your space
             </button>
