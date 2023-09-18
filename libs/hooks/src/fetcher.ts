@@ -22,7 +22,8 @@ export const useAsync = <T, U>(
   })
 
   const callAsyncFn = useCallback(
-    async (args: U) => {
+    async (args: U): Promise<T | null> => {
+      let dataObj = null
       setState({
         loading: true,
         error: null,
@@ -36,8 +37,10 @@ export const useAsync = <T, U>(
           loading: false,
           error: null,
           success: true,
-          data,
+          data: data,
         })
+        dataObj = data
+        return data
       } catch (err) {
         const errorString = manageErr
           ? manageErr(err)
@@ -49,6 +52,7 @@ export const useAsync = <T, U>(
           data: null,
         })
       }
+      return dataObj
     },
     [asyncFn, manageErr],
   )

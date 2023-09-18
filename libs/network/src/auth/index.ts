@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   UserCredential,
+  sendEmailVerification,
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
 
@@ -34,7 +35,14 @@ export const register = async ({
     password,
   )
   const { user } = userCredential
-  if (displayName) updateProfile(user, { displayName, photoURL })
+  console.log('register: displayName', displayName, user)
+  if (displayName && user) {
+    sendEmailVerification(auth.currentUser || user)
+
+    await updateProfile(auth.currentUser || user, { displayName, photoURL })
+    await user.reload() // Reload the user's information
+  }
+
   return userCredential
 }
 

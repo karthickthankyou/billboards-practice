@@ -5,7 +5,6 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect } from 'react'
 
 export const useUserListener = () => {
-  //   useRefreshToken()
   const dispatch = useAppDispatch()
 
   useEffect(
@@ -33,26 +32,3 @@ export const useUserListener = () => {
     [],
   )
 }
-
-// export const useRefreshToken = () => {
-//   const dispatch = useAppDispatch()
-
-//   useEffect(() => {
-//     const refreshToken = setInterval(async () => {
-//       if (auth.currentUser) {
-//         try {
-//           const token = await auth.currentUser.getIdToken(true)
-//           dispatch(
-//             setUser({
-//               token,
-//             }),
-//           )
-//         } catch (error) {
-//           console.log(error)
-//         }
-//       }
-//     }, 59 * 60 * 1000)
-
-//     return () => clearInterval(refreshToken)
-//   }, [dispatch])
-// }
