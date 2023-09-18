@@ -1392,7 +1392,7 @@ export type QueryOwnersArgs = {
 
 export type QuerySearchBillboardsArgs = {
   cursor?: InputMaybe<WhereUniqueInputNumber>
-  dateFilter?: InputMaybe<DateFilterInput>
+  dateFilter: DateFilterInput
   distinct?: InputMaybe<Array<BillboardScalarFieldEnum>>
   locationFilter: LocationFilterInput
   orderBy?: InputMaybe<Array<BillboardOrderByWithRelationInput>>

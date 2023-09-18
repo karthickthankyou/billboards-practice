@@ -15,6 +15,10 @@ export const useConvertSearchFormToVariables = () => {
   const [variables, setVariables] = useState<SearchBillboardsQueryVariables>(
     () => ({
       locationFilter: { nw_lat: 0, nw_lng: 0, se_lat: 0, se_lng: 0 },
+      dateFilter: {
+        endDate: new Date().toISOString(),
+        startDate: new Date().toISOString(),
+      },
     }),
   )
 

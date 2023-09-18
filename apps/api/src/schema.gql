@@ -222,39 +222,159 @@ type RefreshTokenOutput {
 }
 
 type Query {
-  favorites(where: FavoriteWhereInput, orderBy: [FavoriteOrderByWithRelationInput!], cursor: FavoriteWhereUniqueInput, take: Int, skip: Int, distinct: [FavoriteScalarFieldEnum!]): [Favorite!]!
+  favorites(
+    where: FavoriteWhereInput
+    orderBy: [FavoriteOrderByWithRelationInput!]
+    cursor: FavoriteWhereUniqueInput
+    take: Int
+    skip: Int
+    distinct: [FavoriteScalarFieldEnum!]
+  ): [Favorite!]!
   favorite(where: FavoriteWhereUniqueInput): Favorite
   favoritesCount(FavoriteWhereInput: FavoriteWhereInput): AggregateCountOutput!
-  owners(where: OwnerWhereInput, orderBy: [OwnerOrderByWithRelationInput!], cursor: OwnerWhereUniqueInput, take: Int, skip: Int, distinct: [OwnerScalarFieldEnum!]): [Owner!]!
+  owners(
+    where: OwnerWhereInput
+    orderBy: [OwnerOrderByWithRelationInput!]
+    cursor: OwnerWhereUniqueInput
+    take: Int
+    skip: Int
+    distinct: [OwnerScalarFieldEnum!]
+  ): [Owner!]!
   owner(where: OwnerWhereUniqueInput): Owner
   ownerMe: Owner
-  agents(where: AgentWhereInput, orderBy: [AgentOrderByWithRelationInput!], cursor: AgentWhereUniqueInput, take: Int, skip: Int, distinct: [AgentScalarFieldEnum!]): [Agent!]!
+  agents(
+    where: AgentWhereInput
+    orderBy: [AgentOrderByWithRelationInput!]
+    cursor: AgentWhereUniqueInput
+    take: Int
+    skip: Int
+    distinct: [AgentScalarFieldEnum!]
+  ): [Agent!]!
   agent(where: AgentWhereUniqueInput): Agent
   agentMe(where: AgentWhereUniqueInput): Agent
-  advertisers(where: AdvertiserWhereInput, orderBy: [AdvertiserOrderByWithRelationInput!], cursor: AdvertiserWhereUniqueInput, take: Int, skip: Int, distinct: [AdvertiserScalarFieldEnum!]): [Advertiser!]!
+  advertisers(
+    where: AdvertiserWhereInput
+    orderBy: [AdvertiserOrderByWithRelationInput!]
+    cursor: AdvertiserWhereUniqueInput
+    take: Int
+    skip: Int
+    distinct: [AdvertiserScalarFieldEnum!]
+  ): [Advertiser!]!
   advertiser(where: AdvertiserWhereUniqueInput): Advertiser
   advertiserMe(where: AdvertiserWhereUniqueInput): Advertiser
-  billboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
-  myBillboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
-  searchBillboards(dateFilter: DateFilterInput, locationFilter: LocationFilterInput!, where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [BillboardPublic!]!
-  billboardAggregate(BillboardWhereInput: BillboardWhereInput): AggregateCountOutput!
+  billboards(
+    where: BillboardWhereInput
+    orderBy: [BillboardOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [BillboardScalarFieldEnum!]
+  ): [Billboard!]!
+  myBillboards(
+    where: BillboardWhereInput
+    orderBy: [BillboardOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [BillboardScalarFieldEnum!]
+  ): [Billboard!]!
+  searchBillboards(
+    dateFilter: DateFilterInput!
+    locationFilter: LocationFilterInput!
+    where: BillboardWhereInput
+    orderBy: [BillboardOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [BillboardScalarFieldEnum!]
+  ): [BillboardPublic!]!
+  billboardAggregate(
+    BillboardWhereInput: BillboardWhereInput
+  ): AggregateCountOutput!
   billboard(where: BillboardWhereUniqueInput): Billboard!
-  billboardStatuses(where: BillboardStatusWhereInput, orderBy: [BillboardStatusOrderByWithRelationInput!], cursor: BillboardStatusWhereUniqueInput, take: Int, skip: Int, distinct: [BillboardStatusScalarFieldEnum!]): [BillboardStatus!]!
+  billboardStatuses(
+    where: BillboardStatusWhereInput
+    orderBy: [BillboardStatusOrderByWithRelationInput!]
+    cursor: BillboardStatusWhereUniqueInput
+    take: Int
+    skip: Int
+    distinct: [BillboardStatusScalarFieldEnum!]
+  ): [BillboardStatus!]!
   billboardStatus(where: BillboardStatusWhereUniqueInput): BillboardStatus!
-  allBillboardTimelines(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
-  billboardTimeline(where: BillboardTimelineWhereInput, orderBy: [BillboardTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardTimelineScalarFieldEnum!]): [BillboardTimeline!]!
-  billboardTimelineInstance(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
-  campaigns(where: CampaignWhereInput, orderBy: [CampaignOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignScalarFieldEnum!]): [Campaign!]!
-  myCampaigns(where: CampaignWhereInput, orderBy: [CampaignOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignScalarFieldEnum!]): [Campaign!]!
-  campaignAggregate(CampaignWhereInput: CampaignWhereInput): AggregateCountOutput!
+  allBillboardTimelines(
+    where: BillboardTimelineWhereInput
+    orderBy: [BillboardTimelineOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [BillboardTimelineScalarFieldEnum!]
+  ): [BillboardTimeline!]!
+  billboardTimeline(
+    where: BillboardTimelineWhereInput
+    orderBy: [BillboardTimelineOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [BillboardTimelineScalarFieldEnum!]
+  ): [BillboardTimeline!]!
+  billboardTimelineInstance(
+    where: BillboardTimelineWhereUniqueInput
+  ): BillboardTimeline!
+  campaigns(
+    where: CampaignWhereInput
+    orderBy: [CampaignOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [CampaignScalarFieldEnum!]
+  ): [Campaign!]!
+  myCampaigns(
+    where: CampaignWhereInput
+    orderBy: [CampaignOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [CampaignScalarFieldEnum!]
+  ): [Campaign!]!
+  campaignAggregate(
+    CampaignWhereInput: CampaignWhereInput
+  ): AggregateCountOutput!
   campaign(where: CampaignWhereUniqueInput): Campaign!
-  bookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
-  myBookings(where: BookingWhereInput, orderBy: [BookingOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BookingScalarFieldEnum!]): [Booking!]!
+  bookings(
+    where: BookingWhereInput
+    orderBy: [BookingOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [BookingScalarFieldEnum!]
+  ): [Booking!]!
+  myBookings(
+    where: BookingWhereInput
+    orderBy: [BookingOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [BookingScalarFieldEnum!]
+  ): [Booking!]!
   booking(where: BookingWhereUniqueInput): Booking!
   bookingsCount(BookingWhereInput: BookingWhereInput): AggregateCountOutput!
-  campaignStatuses(where: CampaignStatusWhereInput, orderBy: [CampaignStatusOrderByWithRelationInput!], cursor: CampaignStatusWhereUniqueInput, take: Int, skip: Int, distinct: [CampaignStatusScalarFieldEnum!]): [CampaignStatus!]!
+  campaignStatuses(
+    where: CampaignStatusWhereInput
+    orderBy: [CampaignStatusOrderByWithRelationInput!]
+    cursor: CampaignStatusWhereUniqueInput
+    take: Int
+    skip: Int
+    distinct: [CampaignStatusScalarFieldEnum!]
+  ): [CampaignStatus!]!
   campaignStatus(where: CampaignStatusWhereUniqueInput): CampaignStatus!
-  campaignTimelines(where: CampaignTimelineWhereInput, orderBy: [CampaignTimelineOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [CampaignTimelineScalarFieldEnum!]): [CampaignTimeline!]!
+  campaignTimelines(
+    where: CampaignTimelineWhereInput
+    orderBy: [CampaignTimelineOrderByWithRelationInput!]
+    cursor: WhereUniqueInputNumber
+    take: Int
+    skip: Int
+    distinct: [CampaignTimelineScalarFieldEnum!]
+  ): [CampaignTimeline!]!
   campaignTimeline(where: CampaignTimelineWhereUniqueInput): CampaignTimeline!
 }
 
@@ -949,24 +1069,46 @@ type Mutation {
   createBillboard(createBillboardInput: CreateBillboardInput!): Billboard!
   updateBillboard(updateBillboardInput: UpdateBillboardInput!): Billboard!
   removeBillboard(where: BillboardWhereUniqueInput): Billboard!
-  createBillboardStatus(createBillboardStatusInput: CreateBillboardStatusInput!): BillboardStatus!
-  updateBillboardStatus(updateBillboardStatusInput: UpdateBillboardStatusInput!): BillboardStatus!
-  removeBillboardStatus(where: BillboardStatusWhereUniqueInput): BillboardStatus!
-  createBillboardTimeline(createBillboardTimelineInput: CreateBillboardTimelineInput!): BillboardTimeline!
-  updateBillboardTimeline(updateBillboardTimelineInput: UpdateBillboardTimelineInput!): BillboardTimeline!
-  removeBillboardTimeline(where: BillboardTimelineWhereUniqueInput): BillboardTimeline!
+  createBillboardStatus(
+    createBillboardStatusInput: CreateBillboardStatusInput!
+  ): BillboardStatus!
+  updateBillboardStatus(
+    updateBillboardStatusInput: UpdateBillboardStatusInput!
+  ): BillboardStatus!
+  removeBillboardStatus(
+    where: BillboardStatusWhereUniqueInput
+  ): BillboardStatus!
+  createBillboardTimeline(
+    createBillboardTimelineInput: CreateBillboardTimelineInput!
+  ): BillboardTimeline!
+  updateBillboardTimeline(
+    updateBillboardTimelineInput: UpdateBillboardTimelineInput!
+  ): BillboardTimeline!
+  removeBillboardTimeline(
+    where: BillboardTimelineWhereUniqueInput
+  ): BillboardTimeline!
   createCampaign(createCampaignInput: CreateCampaignInput!): Campaign!
   updateCampaign(updateCampaignInput: UpdateCampaignInput!): Campaign!
   removeCampaign(where: CampaignWhereUniqueInput): Campaign!
   createBooking(createBookingInput: CreateBookingInput!): Booking!
   updateBooking(updateBookingInput: UpdateBookingInput!): Booking!
   removeBooking(where: BookingWhereUniqueInput): Booking!
-  createCampaignStatus(createCampaignStatusInput: CreateCampaignStatusInput!): CampaignStatus!
-  updateCampaignStatus(updateCampaignStatusInput: UpdateCampaignStatusInput!): CampaignStatus!
+  createCampaignStatus(
+    createCampaignStatusInput: CreateCampaignStatusInput!
+  ): CampaignStatus!
+  updateCampaignStatus(
+    updateCampaignStatusInput: UpdateCampaignStatusInput!
+  ): CampaignStatus!
   removeCampaignStatus(where: CampaignStatusWhereUniqueInput): CampaignStatus!
-  createCampaignTimeline(createCampaignTimelineInput: CreateCampaignTimelineInput!): CampaignTimeline!
-  updateCampaignTimeline(updateCampaignTimelineInput: UpdateCampaignTimelineInput!): CampaignTimeline!
-  removeCampaignTimeline(where: CampaignTimelineWhereUniqueInput): CampaignTimeline!
+  createCampaignTimeline(
+    createCampaignTimelineInput: CreateCampaignTimelineInput!
+  ): CampaignTimeline!
+  updateCampaignTimeline(
+    updateCampaignTimelineInput: UpdateCampaignTimelineInput!
+  ): CampaignTimeline!
+  removeCampaignTimeline(
+    where: CampaignTimelineWhereUniqueInput
+  ): CampaignTimeline!
 }
 
 input LoginInput {
@@ -989,7 +1131,9 @@ input SetRoleInput {
   role: RoleEnum!
 }
 
-"""Enum for roles"""
+"""
+Enum for roles
+"""
 enum RoleEnum {
   admin
   moderator

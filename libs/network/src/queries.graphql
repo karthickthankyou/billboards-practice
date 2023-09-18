@@ -226,7 +226,7 @@ mutation Login($credentials: LoginInput!) {
 
 query SearchBillboards(
   $locationFilter: LocationFilterInput!
-  $dateFilter: DateFilterInput
+  $dateFilter: DateFilterInput!
   $where: BillboardWhereInput
   $orderBy: [BillboardOrderByWithRelationInput!]
   $cursor: WhereUniqueInputNumber

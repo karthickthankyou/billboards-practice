@@ -1393,7 +1393,7 @@ export type QueryOwnersArgs = {
 
 export type QuerySearchBillboardsArgs = {
   cursor?: InputMaybe<WhereUniqueInputNumber>
-  dateFilter?: InputMaybe<DateFilterInput>
+  dateFilter: DateFilterInput
   distinct?: InputMaybe<Array<BillboardScalarFieldEnum>>
   locationFilter: LocationFilterInput
   orderBy?: InputMaybe<Array<BillboardOrderByWithRelationInput>>
@@ -1903,7 +1903,7 @@ export type LoginMutation = {
 
 export type SearchBillboardsQueryVariables = Exact<{
   locationFilter: LocationFilterInput
-  dateFilter?: InputMaybe<DateFilterInput>
+  dateFilter: DateFilterInput
   where?: InputMaybe<BillboardWhereInput>
   orderBy?: InputMaybe<
     Array<BillboardOrderByWithRelationInput> | BillboardOrderByWithRelationInput
@@ -2974,7 +2974,7 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<
 export const SearchBillboardsDocument = /*#__PURE__*/ gql`
   query SearchBillboards(
     $locationFilter: LocationFilterInput!
-    $dateFilter: DateFilterInput
+    $dateFilter: DateFilterInput!
     $where: BillboardWhereInput
     $orderBy: [BillboardOrderByWithRelationInput!]
     $cursor: WhereUniqueInputNumber

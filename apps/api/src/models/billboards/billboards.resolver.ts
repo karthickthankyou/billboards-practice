@@ -63,7 +63,7 @@ export class BillboardsResolver {
 
   @Query(() => [BillboardPublic], { name: 'searchBillboards' })
   async search(
-    @Args('dateFilter', { nullable: true }) dateFilter: DateFilterInput,
+    @Args('dateFilter') dateFilter: DateFilterInput,
     @Args('locationFilter')
     locationFilter: LocationFilterInput,
     @Args()
