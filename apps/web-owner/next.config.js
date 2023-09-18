@@ -5,7 +5,12 @@ const nextConfig = {
     externalDir: true,
   },
   images: {
-    domains: ['firebasestorage.googleapis.com', 'placehold.co'],
+    domains: [
+      'firebasestorage.googleapis.com',
+      'placehold.co',
+      'images.unsplash.com',
+      'res.cloudinary.com',
+    ],
   },
 }
 
