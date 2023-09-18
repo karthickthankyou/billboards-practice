@@ -12,7 +12,6 @@ import { FindManyOwnerArgs, FindUniqueOwnerArgs } from './dto/find.args'
 import { CreateOwnerInput } from './dto/create-owner.input'
 import { UpdateOwnerInput } from './dto/update-owner.input'
 import { Billboard } from '../billboards/entities/billboard.entity'
-import { BillboardStatus } from '@prisma/client'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import {
   AllowAuthenticated,

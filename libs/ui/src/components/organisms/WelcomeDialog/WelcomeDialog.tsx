@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { Dialog } from '../../atoms/Dialog'
 
 export interface IWelcomeDialogProps {
   delay?: number
 }
 
-export const WelcomeDialog = ({ delay = 2000 }: IWelcomeDialogProps) => {
+export const WelcomeDialog = ({ delay = 5000 }: IWelcomeDialogProps) => {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -21,16 +22,22 @@ export const WelcomeDialog = ({ delay = 2000 }: IWelcomeDialogProps) => {
     return () => clearTimeout(timeoutId)
   }, [delay])
 
-  console.log('open ', open)
-
   return (
     <Dialog
       open={open}
       setOpen={setOpen}
       title={'Hey, thanks for checking out my app.'}
     >
-      <div>Hey there.</div>
+      <div>
+        Hey there. I&apos;m Karthick Ragavendran. The creator of this
+        application.
+      </div>
       <div>Im looking for a full time job..</div>
+      <div>
+        <Link href="https://www.linkedin.com/in/iamkarthickr/" target="_blank">
+          Contact me through Linkedin.
+        </Link>
+      </div>
     </Dialog>
   )
 }
