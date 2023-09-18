@@ -275,7 +275,6 @@ export const SearchBox = ({
 export const MapMarker = () => {
   const { setValue } = useFormContext<FormTypeCreateBillboard>()
   const { lat, lng, angle } = useWatch<FormTypeCreateBillboard>()
-  console.log('lat, lng', lat, lng)
 
   return (
     <Marker

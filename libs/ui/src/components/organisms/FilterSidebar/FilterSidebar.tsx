@@ -84,7 +84,7 @@ const FilterSidebar = () => {
                       value={value}
                       onChange={onChange}
                       valueLabelFormat={(sliderValue) =>
-                        `${sliderValue.toLocaleString()} ft`
+                        `${sliderValue.toLocaleString()} m`
                       }
                       step={10}
                     />
@@ -109,7 +109,7 @@ const FilterSidebar = () => {
                       value={value}
                       onChange={onChange}
                       valueLabelFormat={(sliderValue) =>
-                        `${sliderValue.toLocaleString()} ft`
+                        `${sliderValue.toLocaleString()} m`
                       }
                       step={10}
                     />

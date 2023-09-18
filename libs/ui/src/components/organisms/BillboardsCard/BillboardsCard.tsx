@@ -19,8 +19,8 @@ export const TitleValue = ({
 }) => {
   return (
     <div>
-      <p className="text-sm font-bold">{title}</p>
-      <p className="text-gray-600">{children}</p>
+      <div className="text-sm font-bold">{title}</div>
+      <div className="text-gray-600">{children}</div>
     </div>
   )
 }
@@ -31,10 +31,10 @@ export const BillboardCard: React.FC<BillboardCardProps> = ({ billboard }) => {
       <BillboardShadow>
         <Image
           src={billboard.images?.[0] || ''}
-          width={200}
+          width={300}
           height={300}
           alt=""
-          className="w-full shadow-xl"
+          className="object-cover w-full shadow-xl aspect-square"
         />
       </BillboardShadow>
       <div className="mt-1 space-y-2">
@@ -54,7 +54,7 @@ export const BillboardCard: React.FC<BillboardCardProps> = ({ billboard }) => {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <TitleValue title="Dimensions">
-            {billboard.width} x {billboard.height}ft
+            {billboard.width} x {billboard.height} m
           </TitleValue>
           <TitleValue title="Angle">
             <p className="text-gray-600">{billboard.angle || 'N/A'}</p>

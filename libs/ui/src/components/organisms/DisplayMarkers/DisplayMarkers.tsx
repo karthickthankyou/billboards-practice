@@ -151,7 +151,7 @@ export const MarkerWithPopup = ({
           longitude={marker.lng}
           //   onOpen={() => console.log('Opened')}
           closeOnClick={false}
-          anchor="bottom"
+          anchor="center"
           offset={24}
           closeButton={false}
         >
@@ -159,10 +159,10 @@ export const MarkerWithPopup = ({
             <div className="p-2 space-y-2">
               <div className="grid grid-cols-2 gap-1">
                 <TitleValue title="Elevation">
-                  {marker.elevation || '-'} ft
+                  {marker.elevation || '-'} m
                 </TitleValue>
-                <TitleValue title="Height">{marker.height} ft</TitleValue>
-                <TitleValue title="Width">{marker.width} ft</TitleValue>
+                <TitleValue title="Height">{marker.height} m</TitleValue>
+                <TitleValue title="Width">{marker.width} m</TitleValue>
                 <TitleValue title="Type">{displayText[marker.type]}</TitleValue>
               </div>
               <TitleValue title="Daily impressions">
@@ -189,7 +189,7 @@ export const MarkerWithPopup = ({
       ) : null}
 
       <Marker
-        anchor="bottom"
+        anchor="center"
         latitude={marker.lat}
         longitude={marker.lng}
         rotation={switchMode ? marker.angle || 0 : 0}

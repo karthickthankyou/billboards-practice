@@ -33,7 +33,7 @@ export const BillboardCardSm: React.FC<IBillboardCardSmProps> = ({
           <div className="mt-4">
             <p>Rs. {billboard.pricePerDay?.toFixed(2)} per day</p>
             <p>
-              {billboard.width} x {billboard.height} ft
+              {billboard.width} x {billboard.height} m
             </p>
             <p>{billboard.impressionsPerDay} impressions per day</p>
           </div>

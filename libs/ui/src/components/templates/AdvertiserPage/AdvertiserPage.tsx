@@ -36,7 +36,7 @@ export const AdvertiserPage = ({ uid }: IAdvertiserPageProps) => {
   }
 
   return (
-    <Container className="flex flex-col gap-12">
+    <Container className="flex flex-col">
       <FormProviderFilterCampaigns>
         <div className="flex justify-end my-2">
           <FilterCampaigns />
