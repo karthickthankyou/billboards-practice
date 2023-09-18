@@ -17,13 +17,13 @@ const config: CodegenConfig = {
         avoidOptionals: false,
         exposeQueryKeys: true,
         fetcher: {
-          endpoint: 'http://localhost:3001/graphql',
+          endpoint: 'http://localhost:3000/graphql',
         },
         pureMagicComment: true,
       },
     },
     '../../apps/api/prisma/seed/generated/': {
-      documents: '../../apps/api/**/*.gql.tsx',
+      documents: '../../apps/api/**/*.graphql',
       preset: 'client',
       plugins: [],
     },
