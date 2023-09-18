@@ -26,7 +26,7 @@ export const IsLoggedIn = ({
       return <>{notLoggedIn}</>
     } else {
       return (
-        <AlertSection title="You are not logged in.">
+        <AlertSection title="Login to continue.">
           <Link href="/login">Login</Link>
         </AlertSection>
       )
