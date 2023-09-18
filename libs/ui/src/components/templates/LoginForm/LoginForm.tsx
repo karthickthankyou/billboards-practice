@@ -40,13 +40,10 @@ const LoginForm = ({ className }: ILoginFormProps) => {
     },
   )
 
-  const debounce$ = useDebounce(1000)
-
   const router = useRouter()
 
   if (user.uid) {
-    notification$.next({ message: 'Logged in. Redirecting...' })
-    debounce$.next(() => router.push('/'))
+    router.push('/')
   }
   return (
     <Form

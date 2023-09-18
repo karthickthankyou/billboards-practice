@@ -10,48 +10,47 @@ import {
   useFormRegister,
 } from '@billboards-org/forms/src/register'
 import { useAsync } from '@billboards-org/hooks/src/fetcher'
-import { useAppDispatch, useAppSelector } from '@billboards-org/store'
+import { useAppSelector } from '@billboards-org/store'
 import { selectUser } from '@billboards-org/store/user'
 import { notification$ } from '@billboards-org/util/subjects'
-import { useDebounce } from '@billboards-org/hooks/src/async'
 import { useRouter } from 'next/navigation'
 
-export interface ISignupFormProps {}
+export interface ISignupFormProps {
+  onCompletion?: (args: { displayName: string; uid: string }) => void
+}
 
-export const RegisterForm = ({ className }: { className?: string }) => {
+export const RegisterForm = ({ onCompletion }: ISignupFormProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useFormRegister()
 
-  const { loading, error, success, callAsyncFn } = useAsync(
+  const { data, loading, error, success, callAsyncFn } = useAsync(
     (data: FormTypeRegister) => registerUser(data),
     (err: any) => {
-      if (err.code === 'auth/user-not-found') {
-        return 'Invalid email.'
-      } else if (err.code === 'auth/wrong-password') {
-        return 'Invalid password.'
+      console.log('err', err)
+      if (err.code === 'auth/email-already-in-use') {
+        const error = 'Email already in use.'
+        notification$.next({ message: error, duration: 8000, type: 'error' })
+        return error
       }
       return 'Something went wrong. Please try again.'
     },
   )
 
   const user = useAppSelector(selectUser)
-  const debounce$ = useDebounce(4000)
   const router = useRouter()
 
   if (user.uid) {
-    notification$.next({ message: 'Logged in. Redirecting...' })
-    debounce$.next(() => router.push('/'))
+    router.push('/')
   }
 
   return (
     <Form
       onSubmit={handleSubmit(async (data) => {
-        const { email, password } = data
-        const user = await callAsyncFn({ email, password })
-        console.log('Login data: ', data, user)
+        const { email, password, displayName } = data
+        await callAsyncFn({ email, password, displayName })
       })}
     >
       <HtmlLabel title="Email" error={errors.email?.message}>
@@ -75,7 +74,7 @@ export const RegisterForm = ({ className }: { className?: string }) => {
           Please fix the above {Object.keys(errors).length} errors
         </div>
       ) : null}
-      <Button type="submit" fullWidth>
+      <Button type="submit" isLoading={loading} fullWidth>
         Create account
       </Button>
       <div className="mt-4 text-sm ">
