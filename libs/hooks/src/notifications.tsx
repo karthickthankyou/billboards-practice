@@ -10,11 +10,12 @@ import {
   distinctUntilChanged,
   map,
   tap,
-  delay,
   catchError,
   EMPTY,
+  timer,
 } from 'rxjs'
 import { makeId } from '@billboards-org/util'
+import { delayWhen } from 'rxjs/operators'
 
 export const useNotification = () => {
   const dispatch = useAppDispatch()
@@ -26,10 +27,9 @@ export const useNotification = () => {
         distinctUntilChanged(),
         map((v) => ({ ...v, id: makeId(12) })),
         tap((v) => {
-          console.log('noti', v)
           dispatch(addNotification(v))
         }),
-        delay(4000),
+        delayWhen((v) => timer(v.duration || 4000)),
         tap((v) => {
           dispatch(removeNotification(v.id))
         }),
