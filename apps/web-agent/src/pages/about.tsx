@@ -1,7 +1,6 @@
 import { Container } from '@billboards-org/ui/src/components/atoms/Container'
 
 const About = () => {
-  // create a component
   return (
     <Container className="grid grid-cols-2 mt-6">
       <div className="flex flex-col max-w-md gap-4 text-lg leading-loose">

@@ -34,7 +34,7 @@ const How = () => {
           Thanks for considering us!
         </ul>
         <br />
-        The Billboards Team
+        The Billboards Team{' '}
         <span className="text-sm text-gray">
           (Psst... it&apos;s just me, Karthick Ragavendran.)
         </span>
