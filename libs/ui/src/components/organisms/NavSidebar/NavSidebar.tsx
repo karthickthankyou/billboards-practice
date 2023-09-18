@@ -50,13 +50,13 @@ export const NavSidebar = ({ menuItems }: INavSidebarProps) => {
             <>
               <Link
                 href="/login"
-                className="py-2 block w-full border border-black rounded text-black text-center mt-1.5 font-medium capitalize"
+                className="py-2 block w-full border border-black text-black text-center mt-1.5 font-medium"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="py-2 block w-full bg-black font-medium rounded border border-black text-white text-center mt-1.5 capitalize"
+                className="py-2 block w-full bg-black font-medium border border-black text-white text-center mt-1.5"
               >
                 Create account
               </Link>
