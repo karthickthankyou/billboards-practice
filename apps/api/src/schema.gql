@@ -227,12 +227,13 @@ type Query {
   favoritesCount(FavoriteWhereInput: FavoriteWhereInput): AggregateCountOutput!
   owners(where: OwnerWhereInput, orderBy: [OwnerOrderByWithRelationInput!], cursor: OwnerWhereUniqueInput, take: Int, skip: Int, distinct: [OwnerScalarFieldEnum!]): [Owner!]!
   owner(where: OwnerWhereUniqueInput): Owner
-  ownerMe(where: OwnerWhereUniqueInput): Owner
+  ownerMe: Owner
   agents(where: AgentWhereInput, orderBy: [AgentOrderByWithRelationInput!], cursor: AgentWhereUniqueInput, take: Int, skip: Int, distinct: [AgentScalarFieldEnum!]): [Agent!]!
   agent(where: AgentWhereUniqueInput): Agent
   agentMe(where: AgentWhereUniqueInput): Agent
   advertisers(where: AdvertiserWhereInput, orderBy: [AdvertiserOrderByWithRelationInput!], cursor: AdvertiserWhereUniqueInput, take: Int, skip: Int, distinct: [AdvertiserScalarFieldEnum!]): [Advertiser!]!
   advertiser(where: AdvertiserWhereUniqueInput): Advertiser
+  advertiserMe(where: AdvertiserWhereUniqueInput): Advertiser
   billboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
   myBillboards(where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [Billboard!]!
   searchBillboards(dateFilter: DateFilterInput, locationFilter: LocationFilterInput!, where: BillboardWhereInput, orderBy: [BillboardOrderByWithRelationInput!], cursor: WhereUniqueInputNumber, take: Int, skip: Int, distinct: [BillboardScalarFieldEnum!]): [BillboardPublic!]!

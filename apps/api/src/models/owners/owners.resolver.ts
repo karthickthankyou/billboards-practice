@@ -51,7 +51,7 @@ export class OwnersResolver {
 
   @AllowAuthenticated()
   @Query(() => Owner, { name: 'ownerMe', nullable: true })
-  ownerMe(@Args() args: FindUniqueOwnerArgs, @GetUser() user: GetUserType) {
+  ownerMe(@GetUser() user: GetUserType) {
     return this.ownersService.findOne({ where: { uid: user.uid } })
   }
 

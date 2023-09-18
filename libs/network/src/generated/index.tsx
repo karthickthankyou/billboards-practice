@@ -1153,6 +1153,7 @@ export type OwnerWhereUniqueInput = {
 export type Query = {
   __typename?: 'Query'
   advertiser?: Maybe<Advertiser>
+  advertiserMe?: Maybe<Advertiser>
   advertisers: Array<Advertiser>
   agent?: Maybe<Agent>
   agentMe?: Maybe<Agent>
@@ -1188,6 +1189,10 @@ export type Query = {
 }
 
 export type QueryAdvertiserArgs = {
+  where?: InputMaybe<AdvertiserWhereUniqueInput>
+}
+
+export type QueryAdvertiserMeArgs = {
   where?: InputMaybe<AdvertiserWhereUniqueInput>
 }
 
@@ -1374,10 +1379,6 @@ export type QueryMyCampaignsArgs = {
 }
 
 export type QueryOwnerArgs = {
-  where?: InputMaybe<OwnerWhereUniqueInput>
-}
-
-export type QueryOwnerMeArgs = {
   where?: InputMaybe<OwnerWhereUniqueInput>
 }
 
@@ -1979,6 +1980,32 @@ export type OwnerMeQuery = {
   } | null
 }
 
+export type AdvertiserMeQueryVariables = Exact<{ [key: string]: never }>
+
+export type AdvertiserMeQuery = {
+  __typename?: 'Query'
+  advertiserMe?: {
+    __typename?: 'Advertiser'
+    updatedAt: any
+    uid: string
+    name: string
+    createdAt: any
+  } | null
+}
+
+export type AgentMeQueryVariables = Exact<{ [key: string]: never }>
+
+export type AgentMeQuery = {
+  __typename?: 'Query'
+  agentMe?: {
+    __typename?: 'Agent'
+    name: string
+    uid: string
+    createdAt: any
+    updatedAt: any
+  } | null
+}
+
 export type GetRolesQueryVariables = Exact<{
   uid?: InputMaybe<Scalars['String']>
 }>
@@ -2060,19 +2087,6 @@ export type AgentQueryVariables = Exact<{
 export type AgentQuery = {
   __typename?: 'Query'
   agent?: {
-    __typename?: 'Agent'
-    name: string
-    uid: string
-    createdAt: any
-    updatedAt: any
-  } | null
-}
-
-export type AgentMeQueryVariables = Exact<{ [key: string]: never }>
-
-export type AgentMeQuery = {
-  __typename?: 'Query'
-  agentMe?: {
     __typename?: 'Agent'
     name: string
     uid: string
@@ -2190,11 +2204,12 @@ export const namedOperations = {
     SearchBillboards: 'SearchBillboards',
     getOwner: 'getOwner',
     ownerMe: 'ownerMe',
+    advertiserMe: 'advertiserMe',
+    agentMe: 'agentMe',
     getRoles: 'getRoles',
     getFavorite: 'getFavorite',
     getAgent: 'getAgent',
     agent: 'agent',
-    agentMe: 'agentMe',
     getAdvertiser: 'getAdvertiser',
     favorites: 'favorites',
     myBookings: 'myBookings',
@@ -3218,6 +3233,119 @@ export type OwnerMeQueryResult = Apollo.QueryResult<
   OwnerMeQuery,
   OwnerMeQueryVariables
 >
+export const AdvertiserMeDocument = /*#__PURE__*/ gql`
+  query advertiserMe {
+    advertiserMe {
+      updatedAt
+      uid
+      name
+      createdAt
+    }
+  }
+`
+
+/**
+ * __useAdvertiserMeQuery__
+ *
+ * To run a query within a React component, call `useAdvertiserMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdvertiserMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdvertiserMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAdvertiserMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    AdvertiserMeQuery,
+    AdvertiserMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<AdvertiserMeQuery, AdvertiserMeQueryVariables>(
+    AdvertiserMeDocument,
+    options,
+  )
+}
+export function useAdvertiserMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AdvertiserMeQuery,
+    AdvertiserMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<AdvertiserMeQuery, AdvertiserMeQueryVariables>(
+    AdvertiserMeDocument,
+    options,
+  )
+}
+export type AdvertiserMeQueryHookResult = ReturnType<
+  typeof useAdvertiserMeQuery
+>
+export type AdvertiserMeLazyQueryHookResult = ReturnType<
+  typeof useAdvertiserMeLazyQuery
+>
+export type AdvertiserMeQueryResult = Apollo.QueryResult<
+  AdvertiserMeQuery,
+  AdvertiserMeQueryVariables
+>
+export const AgentMeDocument = /*#__PURE__*/ gql`
+  query agentMe {
+    agentMe {
+      name
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/**
+ * __useAgentMeQuery__
+ *
+ * To run a query within a React component, call `useAgentMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAgentMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAgentMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAgentMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<AgentMeQuery, AgentMeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<AgentMeQuery, AgentMeQueryVariables>(
+    AgentMeDocument,
+    options,
+  )
+}
+export function useAgentMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AgentMeQuery,
+    AgentMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<AgentMeQuery, AgentMeQueryVariables>(
+    AgentMeDocument,
+    options,
+  )
+}
+export type AgentMeQueryHookResult = ReturnType<typeof useAgentMeQuery>
+export type AgentMeLazyQueryHookResult = ReturnType<typeof useAgentMeLazyQuery>
+export type AgentMeQueryResult = Apollo.QueryResult<
+  AgentMeQuery,
+  AgentMeQueryVariables
+>
 export const GetRolesDocument = /*#__PURE__*/ gql`
   query getRoles($uid: String) {
     agent: agent(where: { uid: $uid }) {
@@ -3592,59 +3720,6 @@ export type AgentLazyQueryHookResult = ReturnType<typeof useAgentLazyQuery>
 export type AgentQueryResult = Apollo.QueryResult<
   AgentQuery,
   AgentQueryVariables
->
-export const AgentMeDocument = /*#__PURE__*/ gql`
-  query agentMe {
-    agentMe {
-      name
-      uid
-      createdAt
-      updatedAt
-    }
-  }
-`
-
-/**
- * __useAgentMeQuery__
- *
- * To run a query within a React component, call `useAgentMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useAgentMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAgentMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useAgentMeQuery(
-  baseOptions?: Apollo.QueryHookOptions<AgentMeQuery, AgentMeQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<AgentMeQuery, AgentMeQueryVariables>(
-    AgentMeDocument,
-    options,
-  )
-}
-export function useAgentMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    AgentMeQuery,
-    AgentMeQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<AgentMeQuery, AgentMeQueryVariables>(
-    AgentMeDocument,
-    options,
-  )
-}
-export type AgentMeQueryHookResult = ReturnType<typeof useAgentMeQuery>
-export type AgentMeLazyQueryHookResult = ReturnType<typeof useAgentMeLazyQuery>
-export type AgentMeQueryResult = Apollo.QueryResult<
-  AgentMeQuery,
-  AgentMeQueryVariables
 >
 export const GetAdvertiserDocument = /*#__PURE__*/ gql`
   query getAdvertiser($where: AdvertiserWhereUniqueInput) {

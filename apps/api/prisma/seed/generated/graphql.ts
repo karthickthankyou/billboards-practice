@@ -1152,6 +1152,7 @@ export type OwnerWhereUniqueInput = {
 export type Query = {
   __typename?: 'Query'
   advertiser?: Maybe<Advertiser>
+  advertiserMe?: Maybe<Advertiser>
   advertisers: Array<Advertiser>
   agent?: Maybe<Agent>
   agentMe?: Maybe<Agent>
@@ -1187,6 +1188,10 @@ export type Query = {
 }
 
 export type QueryAdvertiserArgs = {
+  where?: InputMaybe<AdvertiserWhereUniqueInput>
+}
+
+export type QueryAdvertiserMeArgs = {
   where?: InputMaybe<AdvertiserWhereUniqueInput>
 }
 
@@ -1373,10 +1378,6 @@ export type QueryMyCampaignsArgs = {
 }
 
 export type QueryOwnerArgs = {
-  where?: InputMaybe<OwnerWhereUniqueInput>
-}
-
-export type QueryOwnerMeArgs = {
   where?: InputMaybe<OwnerWhereUniqueInput>
 }
 

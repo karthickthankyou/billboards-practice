@@ -53,6 +53,15 @@ export class AdvertisersResolver {
   }
 
   @AllowAuthenticated()
+  @Query(() => Advertiser, { name: 'advertiserMe', nullable: true })
+  advertiserMe(
+    @Args() args: FindUniqueAdvertiserArgs,
+    @GetUser() user: GetUserType,
+  ) {
+    return this.advertisersService.findOne({ where: { uid: user.uid } })
+  }
+
+  @AllowAuthenticated()
   @Mutation(() => Advertiser)
   updateAdvertiser(
     @Args('updateAdvertiserInput') args: UpdateAdvertiserInput,
