@@ -1,18 +1,14 @@
 import {
-  Box,
   GradientTexture,
   OrbitControls,
   PerspectiveCamera,
   Plane,
   useVideoTexture,
-  Text,
 } from '@react-three/drei'
 
 import React, { ReactNode, Suspense, useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { Button } from '@billboards-org/ui/src/components/atoms/Button'
-import { getRandomValues } from 'crypto'
 import { Loader } from '@billboards-org/ui/src/components/molecules/Loader'
 
 const createGradientTexture = (a: number, b: number, offset: number) => {
@@ -304,8 +300,8 @@ const generateCityLayout = ({
   const cityLayout = []
 
   while (cityLayout.length < count) {
-    const x = getRandomInt(-20, 20)
-    const z = getRandomInt(-20, 20)
+    const x = getRandomInt(-18, 18)
+    const z = getRandomInt(-18, 18)
 
     if (z !== 0 && x !== 0 && !positionExists(cityLayout, [x, 0, z])) {
       cityLayout.push([x, 0, z] as [number, number, number])
@@ -397,7 +393,7 @@ export const BillboardCity = ({
         {cityLayout.map((position, index) => (
           <GradientCube
             key={index}
-            height={getRandomInt(2, 8)}
+            height={getRandomInt(1, 10)}
             position={position}
           />
         ))}

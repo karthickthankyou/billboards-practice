@@ -96,12 +96,12 @@ export class BillboardsResolver {
                 status: { status: 'LIVE' },
                 OR: [
                   {
-                    startDate: { lt: new Date(endDate) },
-                    endDate: { gt: new Date(startDate) },
+                    startDate: { lte: new Date(endDate) },
+                    endDate: { gte: new Date(startDate) },
                   },
                   {
-                    startDate: { gt: new Date(startDate) },
-                    endDate: { lt: new Date(endDate) },
+                    startDate: { gte: new Date(startDate) },
+                    endDate: { lte: new Date(endDate) },
                   },
                 ],
               },

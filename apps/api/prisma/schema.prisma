@@ -19,37 +19,6 @@ model Owner {
     billboards Billboard[]
 }
 
-model Billboard {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    name String @default("")
-    lat  Float
-    lng  Float
-
-    height Float
-    width  Float
-
-    pricePerDay       Float?
-    impressionsPerDay Int?
-    minBookingDays    Int?
-    address           String?
-    images            String[]
-
-    type    BillboardType
-    owner   Owner         @relation(fields: [ownerId], references: [uid])
-    ownerId String
-
-    bookings  Booking[]
-    angle     Int?
-    elevation Int?
-
-    status            BillboardStatus?
-    billboardTimeline BillboardTimeline[]
-    favorites         Favorite[]
-}
-
 model Agent {
     uid       String   @id
     createdAt DateTime @default(now())
@@ -70,6 +39,37 @@ model Advertiser {
 
     campaigns Campaign[]
     favorites Favorite[]
+}
+
+model Billboard {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name String @default("")
+    lat  Float
+    lng  Float
+
+    height Float
+    width  Float
+
+    pricePerDay       Float?
+    impressionsPerDay Int?
+    minBookingDays    Int?
+    address           String?
+    images            String[]
+    angle             Int?
+    elevation         Int?
+
+    type    BillboardType
+    owner   Owner         @relation(fields: [ownerId], references: [uid])
+    ownerId String
+
+    bookings Booking[]
+
+    status            BillboardStatus?
+    billboardTimeline BillboardTimeline[]
+    favorites         Favorite[]
 }
 
 model Favorite {
