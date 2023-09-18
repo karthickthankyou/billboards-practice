@@ -60,8 +60,6 @@ export const Fetching = ({ fetching }: { fetching: boolean }) => {
   ) : null
 }
 
-type LatLng = { lng: number; lat: number }
-
 export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
   const [openCreateCampaign, setOpenCreateCampaign] = useState(false)
 
@@ -217,7 +215,7 @@ export const SearchPageTemplate = ({}: ISearchPageTemplateProps) => {
   )
 }
 
-export const ZOOM_LIMIT = 8
+export const ZOOM_LIMIT = 4
 
 export const ShowMarkers = ({ switchMode }: { switchMode: boolean }) => {
   const { current: map } = useMap()
