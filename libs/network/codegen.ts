@@ -6,7 +6,7 @@ const config: CodegenConfig = {
   watch: true,
   generates: {
     './src/generated/index.tsx': {
-      documents: './src/**/*.gql.tsx',
+      documents: './src/**/*.graphql',
       plugins: [
         'typescript',
         'typescript-operations',

@@ -1,0 +1,437 @@
+fragment BillboardFields on Billboard {
+  id
+  height
+  width
+  angle
+  name
+  address
+  createdAt
+  pricePerDay
+  status {
+    status
+  }
+  images
+  totalBookingDays
+  minBookingDays
+  booked
+  lat
+  lng
+}
+
+fragment CampaignFields on Campaign {
+  id
+  name
+  startDate
+  endDate
+  createdAt
+  advertiserId
+  updatedAt
+  status {
+    status
+  }
+  bookings {
+    billboardId
+    pricePerDay
+  }
+}
+
+fragment BillboardFieldsMinimal on Billboard {
+  id
+  name
+  address
+  createdAt
+  pricePerDay
+  status {
+    status
+  }
+  totalBookingDays
+  campaignsCount
+}
+
+query billboards(
+  $where: BillboardWhereInput
+  $orderBy: [BillboardOrderByWithRelationInput!]
+  $cursor: WhereUniqueInputNumber
+  $take: Int
+  $skip: Int
+  $distinct: [BillboardScalarFieldEnum!]
+) {
+  billboards(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    ...BillboardFields
+  }
+  billboardAggregate(BillboardWhereInput: $where) {
+    count
+  }
+}
+
+query myBillboards(
+  $where: BillboardWhereInput
+  $orderBy: [BillboardOrderByWithRelationInput!]
+  $cursor: WhereUniqueInputNumber
+  $take: Int
+  $skip: Int
+  $distinct: [BillboardScalarFieldEnum!]
+) {
+  myBillboards(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    ...BillboardFieldsMinimal
+  }
+  billboardAggregate(BillboardWhereInput: $where) {
+    count
+  }
+}
+
+query earnings(
+  $where: BillboardWhereInput
+  $orderBy: [BillboardOrderByWithRelationInput!]
+  $cursor: WhereUniqueInputNumber
+  $take: Int
+  $skip: Int
+  $distinct: [BillboardScalarFieldEnum!]
+) {
+  billboards(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    ...BillboardFields
+  }
+  billboardAggregate(BillboardWhereInput: $where) {
+    count
+  }
+}
+
+query GetFavotireBillboards(
+  $where: BillboardWhereInput
+  $orderBy: [BillboardOrderByWithRelationInput!]
+  $cursor: WhereUniqueInputNumber
+  $take: Int
+  $skip: Int
+  $distinct: [BillboardScalarFieldEnum!]
+) {
+  billboards(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    ...BillboardFields
+  }
+  billboardAggregate(BillboardWhereInput: $where) {
+    count
+  }
+}
+
+mutation createBillboard($createBillboardInput: CreateBillboardInput!) {
+  createBillboard(createBillboardInput: $createBillboardInput) {
+    id
+  }
+}
+
+query campaigns(
+  $distinct: [CampaignScalarFieldEnum!]
+  $skip: Int
+  $take: Int
+  $cursor: WhereUniqueInputNumber
+  $orderBy: [CampaignOrderByWithRelationInput!]
+  $where: CampaignWhereInput
+) {
+  campaigns(
+    distinct: $distinct
+    skip: $skip
+    take: $take
+    cursor: $cursor
+    orderBy: $orderBy
+    where: $where
+  ) {
+    ...CampaignFields
+  }
+  campaignAggregate(CampaignWhereInput: $where) {
+    count
+  }
+}
+
+query myCampaigns(
+  $distinct: [CampaignScalarFieldEnum!]
+  $skip: Int
+  $take: Int
+  $cursor: WhereUniqueInputNumber
+  $orderBy: [CampaignOrderByWithRelationInput!]
+  $where: CampaignWhereInput
+) {
+  myCampaigns(
+    distinct: $distinct
+    skip: $skip
+    take: $take
+    cursor: $cursor
+    orderBy: $orderBy
+    where: $where
+  ) {
+    ...CampaignFields
+    totalCost
+    totalDays
+  }
+  campaignAggregate(CampaignWhereInput: $where) {
+    count
+  }
+}
+
+mutation CreateAgent($createAgentInput: CreateAgentInput!) {
+  createAgent(createAgentInput: $createAgentInput) {
+    name
+    createdAt
+    uid
+    updatedAt
+  }
+}
+
+mutation CreateAdvertiser($createAdvertiserInput: CreateAdvertiserInput!) {
+  createAdvertiser(createAdvertiserInput: $createAdvertiserInput) {
+    name
+    createdAt
+    uid
+    updatedAt
+  }
+}
+
+mutation Login($credentials: LoginInput!) {
+  login(credentials: $credentials) {
+    refreshToken
+    localId
+    kind
+    idToken
+    expiresIn
+    email
+    displayName
+  }
+}
+
+query SearchBillboards(
+  $locationFilter: LocationFilterInput!
+  $dateFilter: DateFilterInput
+  $where: BillboardWhereInput
+  $orderBy: [BillboardOrderByWithRelationInput!]
+  $cursor: WhereUniqueInputNumber
+  $take: Int
+  $skip: Int
+  $distinct: [BillboardScalarFieldEnum!]
+) {
+  searchBillboards(
+    locationFilter: $locationFilter
+    dateFilter: $dateFilter
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    pricePerDay
+    minBookingDays
+    images
+    lat
+    lng
+    elevation
+    height
+    width
+    type
+    angle
+    impressionsPerDay
+  }
+}
+
+mutation createOwner($createOwnerInput: CreateOwnerInput!) {
+  createOwner(createOwnerInput: $createOwnerInput) {
+    updatedAt
+    uid
+    name
+    createdAt
+  }
+}
+
+query getOwner($where: OwnerWhereUniqueInput) {
+  owner(where: $where) {
+    updatedAt
+    uid
+    name
+    createdAt
+    billboards {
+      id
+    }
+  }
+}
+
+query ownerMe {
+  ownerMe {
+    updatedAt
+    uid
+    name
+    createdAt
+    billboards {
+      id
+    }
+  }
+}
+
+query advertiserMe {
+  advertiserMe {
+    updatedAt
+    uid
+    name
+    createdAt
+  }
+}
+
+query agentMe {
+  agentMe {
+    name
+    uid
+    createdAt
+    updatedAt
+  }
+}
+
+query getRoles($uid: String) {
+  agent: agent(where: { uid: $uid }) {
+    uid
+  }
+  owner: owner(where: { uid: $uid }) {
+    uid
+  }
+  advertiser: advertiser(where: { uid: $uid }) {
+    uid
+  }
+}
+
+mutation createCampaign($createCampaignInput: CreateCampaignInput!) {
+  createCampaign(createCampaignInput: $createCampaignInput) {
+    id
+  }
+}
+
+mutation removeFavorite($where: FavoriteWhereUniqueInput) {
+  removeFavorite(where: $where) {
+    advertiserId
+    billboardId
+  }
+}
+
+mutation createFavorite($createFavoriteInput: CreateFavoriteInput!) {
+  createFavorite(createFavoriteInput: $createFavoriteInput) {
+    advertiserId
+    billboardId
+  }
+}
+
+query getFavorite($where: FavoriteWhereUniqueInput) {
+  favorite(where: $where) {
+    advertiserId
+    billboardId
+  }
+}
+
+query getAgent($where: AgentWhereUniqueInput) {
+  agent(where: $where) {
+    name
+    uid
+    createdAt
+    updatedAt
+  }
+}
+
+query agent($where: AgentWhereUniqueInput) {
+  agent(where: $where) {
+    name
+    uid
+    createdAt
+    updatedAt
+  }
+}
+
+query getAdvertiser($where: AdvertiserWhereUniqueInput) {
+  advertiser(where: $where) {
+    name
+    uid
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createBillboardTimeline(
+  $createBillboardTimelineInput: CreateBillboardTimelineInput!
+) {
+  createBillboardTimeline(
+    createBillboardTimelineInput: $createBillboardTimelineInput
+  ) {
+    id
+  }
+}
+
+mutation createCampaignTimeline(
+  $createCampaignTimelineInput: CreateCampaignTimelineInput!
+) {
+  createCampaignTimeline(
+    createCampaignTimelineInput: $createCampaignTimelineInput
+  ) {
+    id
+  }
+}
+
+query favorites(
+  $skip: Int
+  $take: Int
+  $where: FavoriteWhereInput
+  $orderBy: [FavoriteOrderByWithRelationInput!]
+) {
+  favorites(skip: $skip, take: $take, where: $where, orderBy: $orderBy) {
+    billboard {
+      ...BillboardFields
+    }
+  }
+  favoritesCount(FavoriteWhereInput: $where) {
+    count
+  }
+}
+
+query myBookings(
+  $skip: Int
+  $take: Int
+  $orderBy: [BookingOrderByWithRelationInput!]
+  $where: BookingWhereInput
+) {
+  myBookings(skip: $skip, take: $take, orderBy: $orderBy, where: $where) {
+    id
+    createdAt
+    billboard {
+      name
+    }
+    campaign {
+      name
+      startDate
+      endDate
+    }
+    pricePerDay
+  }
+  bookingsCount(BookingWhereInput: $where) {
+    count
+  }
+}
